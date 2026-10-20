@@ -185,7 +185,7 @@ var VERSE={
  "3.27":{k:"dharma",text:T("All actions are carried out by the qualities of prakṛti. One confused by the ego thinks, “I am the doer.”","すべての行為は、プラクリティのグナによってなされる。我執に惑う者は「わたしが為している」と思う。")}
 };
 var ROUNDS=[
- {name:T("Mockery","嘲り"),event:T("The crowd mocks a missed shot.","外した一矢を、観衆があざ笑う。"),crowd:T("“Did the bird pay you to miss?”","「鳥に頼まれて外したのか？」"),
+ {name:T("Mockery","嘲り"),event:T("The crowd mocks a third-place finish.","三位に終わり、観衆があざ笑う。"),crowd:T("“Did the bird pay you to miss?”","「鳥に頼まれて外したのか？」"),
   archer:T("“Laugh while you can. I will make them swallow every word.”","「笑っていろ。その言葉、全部のみ込ませてやる。」"),seed:"anger",dp:0.55,
   reached:T("“…If I shoot to silence them, I have stopped looking at the target.”","「……黙らせるために射れば、もう的を見ていないことになる。」"),
   missed:T("“A lovely verse. Save it for another day. Hand me an arrow.”","「いい句だ。別の日に聞こう。矢をくれ。」")},
@@ -275,7 +275,7 @@ function renderArcher(){
     var fit=VERSE[game.pick].k===SEED[R.seed].k, sd=SEED[R.seed];
     h+='<div class="result" aria-live="polite"><p class="verdict '+(fit?"ok":"no")+'">'+esc(tr(fit?T("The verse reached the archer","句が届いた"):T("The verse did not reach","句は届かなかった")))+'</p>';
     h+='<p class="archer-say" style="font-family:var(--font-display)"><span class="who">'+esc(tr(T("Archer","射手")))+'</span>'+esc(tr(fit?R.reached:R.missed))+'</p>';
-    h+='<p class="note">'+esc(L()==="ja"?("この心の種は「"+tr(sd.name)+"」、国は"+tr(KING[sd.k])+"でした。"):("The seed of this mind was "+tr(sd.name)+", in the kingdom of "+tr(KING[sd.k])+"."))+(game.pick==="3.27"?" "+esc(tr(T("Yes, prakṛti is the same word as our name. We noticed.","プラクリティは、当社の名前と同じ語です。気づいていました。"))):"")+'</p>';
+    h+='<p class="note">'+esc(L()==="ja"?("この心の種は「"+tr(sd.name)+"」、国は"+tr(KING[sd.k])+"でした。"):("The seed of this mind was "+tr(sd.name)+", in the kingdom of "+tr(KING[sd.k])+"."))+(game.pick==="3.27"?" "+esc(tr(T("Yes, prakṛti is the same word as our product's name. We noticed.","プラクリティは、この製品の名前と同じ語です。気づいていました。"))):"")+'</p>';
     h+='<button type="button" class="btn btn-primary" data-g="next" style="justify-self:start">'+esc(tr(game.r<ROUNDS.length-1?T("Next round","次の回へ"):T("See the archer's journey","射手の旅路を見る")))+'</button></div>';
   }
   host.innerHTML=h;
