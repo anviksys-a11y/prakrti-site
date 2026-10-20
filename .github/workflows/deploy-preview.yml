@@ -1,0 +1,20 @@
+# プルリクエストを出すと、確認用の仮のアドレスに公開し、そのアドレスをプルリクエストに書き込む（7日で消える）
+name: Deploy a preview
+on: pull_request
+jobs:
+  preview:
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install beautifulsoup4 budoux
+      - run: python build.py
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PRAKRTI_SITE }}
+          projectId: prakrti-site
+          expires: 7d

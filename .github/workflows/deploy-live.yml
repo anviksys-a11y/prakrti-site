@@ -1,0 +1,23 @@
+# main に変更が入ると、組み立て（build.py の検査つき）をして本番に公開する
+name: Deploy to the live site
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+concurrency: live
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install beautifulsoup4 budoux
+      - run: python build.py
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PRAKRTI_SITE }}
+          projectId: prakrti-site
+          channelId: live

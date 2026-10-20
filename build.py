@@ -1,0 +1,532 @@
+#!/usr/bin/env python3
+"""Build the Prakrti GSA introduction site.
+
+src/site.html  bilingual content (elements marked class="en" / class="ja")
+src/site.css   styles
+src/site.js    interactive parts (world map, archer taste, Vibhakti taste)
+src/fonts/     the six site fonts (SIL Open Font License), served from this site
+site.config.json  base URL, contact address, invitation form URL
+
+Output: dist/  (English at /, Japanese at /ja/, one folder per page)
+Run:    python3 build.py
+The build stops with an error if a page uses a forbidden word, if an English
+page shows Japanese text outside the legal original, if a link or font file is
+missing, or if a page loads anything from another host.
+"""
+import bisect
+import html
+import json
+import os
+import posixpath
+import re
+import shutil
+import sys
+
+from bs4 import BeautifulSoup, NavigableString
+
+try:
+    import budoux
+except ImportError:
+    sys.exit("build.py needs BudouX for Japanese line breaks. Run: pip install budoux")
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+SRC = os.path.join(HERE, "src")
+DIST = os.path.join(HERE, "dist")
+CONFIG = json.load(open(os.path.join(HERE, "site.config.json"), encoding="utf-8"))
+BASE = CONFIG["base_url"].rstrip("/")
+EMAIL = CONFIG["contact_email"]
+INVITE_URL = CONFIG.get("invite_form_url", "").strip()
+APP_URL = CONFIG["app_url"].rstrip("/")   # the app itself; "#app" and "#app:/path" in site.html point here
+INVITE_OPEN = bool(CONFIG.get("invite_open", True))   # false until the test launch
+
+# Fonts are served from the site itself, so a visit sends nothing to another host.
+# src/fonts/fonts.css holds one @font-face per subset; only the subsets that cover
+# a character the site uses are copied into dist/assets/fonts/.
+FONT_DIR = os.path.join(SRC, "fonts")
+FACE = re.compile(r"@font-face\{[^}]*\}")
+
+# page token -> folder name ("" is the language home)
+PAGES = [
+    ("home", ""),
+    ("world", "world"),
+    ("starter", "starter-set"),
+    ("engine", "how-judging-works"),
+    ("rpd", "rpd"),
+    ("premium", "premium"),
+    ("schools", "schools"),
+    ("principles", "principles"),
+    ("company", "company"),
+    ("legal", "legal"),
+]
+SLUG = dict(PAGES)
+
+META = {
+    "home": {
+        "en": ("Prakrti GSA | Self-inquiry with the Bhagavad Gītā",
+               "Write the shape of your mind, test it in the light of the Gītā, repair it with others and check it against your life. Begin with the free Starter Set."),
+        "ja": ("Prakrti GSA | バガヴァッド・ギーターと歩む自己探究",
+               "自分の心の型を書き、ギーターの光で試し、人と直し合い、暮らしの中で確かめる。無料のスターターセットから始められます。"),
+    },
+    "world": {
+        "en": ("World map | Prakrti GSA",
+               "Every part of Prakrti GSA on one map: the Starter Set, the workshop, the Arena, the Exchange, the scripture hall, classrooms and game tables."),
+        "ja": ("世界地図 | Prakrti GSA",
+               "Prakrti GSA のすべてを一枚の地図で。スターターセット、工房、The Arena、Exchange、聖典の間、教室、遊びの卓。"),
+    },
+    "starter": {
+        "en": ("Starter Set | Prakrti GSA",
+               "Three free things to play first, none of them using AI: The Charioteer and the Archer, Fetching Water Episode 0, and the verse board with Vibhakti."),
+        "ja": ("スターターセット | Prakrti GSA",
+               "最初に遊ぶ無料の三つ。どれも AI を使いません。『御者と射手』『水を汲みに 第0話』、聖句盤と Vibhakti。"),
+    },
+    "engine": {
+        "en": ("How judging works | Prakrti GSA",
+               "The AI reads each turn and a fixed formula decides. Pressure, ceiling and reserve, the prediction seal, the inner memo and the map of three kingdoms."),
+        "ja": ("判定のしくみ | Prakrti GSA",
+               "AI は読み、数式が決める。圧・天井・心の体力、予言の封、本音メモ、三国の地図。"),
+    },
+    "rpd": {
+        "en": ("Mahābhārata RPD | Prakrti GSA",
+               "Tabletop role-playing techniques for reading the epic and looking at yourself. You live in the margins of history."),
+        "ja": ("Mahābhārata RPD | Prakrti GSA",
+               "テーブルトーク RPG の技法で叙事詩を読み、自分を省みる。あなたは歴史の余白を生きます。"),
+    },
+    "premium": {
+        "en": ("Premium | Prakrti GSA",
+               "US$199 a month, tax included, one price. Premium opens everything that needs the AI."),
+        "ja": ("Premium | Prakrti GSA",
+               "月額 199 米ドル（税込）、価格は一つ。AI を使うすべての場所が開きます。"),
+    },
+    "schools": {
+        "en": ("For yoga schools | Prakrti GSA",
+               "A School License for RYT200 cohorts: the school pays and trainees join free. $199 a month for up to 12 trainees."),
+        "ja": ("ヨガの学校へ | Prakrti GSA",
+               "RYT200 の講座のための School License。払うのは学校で、受講生は無料。12 名まで月 $199。"),
+    },
+    "principles": {
+        "en": ("Principles | Prakrti GSA",
+               "No rankings, observation that stays yours, pseudonyms, publishing on purpose, and a formula that judges in place of the AI."),
+        "ja": ("原則 | Prakrti GSA",
+               "順位を出さない、観測は本人だけ、仮名、公開は自分の意思で、判定は AI ではなく数式。"),
+    },
+    "company": {
+        "en": ("Company | Prakrti GSA",
+               "Anviksiki Simulation Systems Inc., Tokyo, the company behind Prakrti GSA."),
+        "ja": ("会社 | Prakrti GSA",
+               "Prakrti GSA を運営する株式会社Anviksiki Simulation Systems（東京）。"),
+    },
+    "legal": {
+        "en": ("Specified Commercial Transactions Act notice | Prakrti GSA",
+               "Seller details, price, payment, cancellation and refund terms for Prakrti GSA."),
+        "ja": ("特定商取引法に基づく表記 | Prakrti GSA",
+               "Prakrti GSA の販売事業者、価格、支払い、解約と返金についての表記。"),
+    },
+}
+
+COPYRIGHT = {
+    "en": "© 2026 Anviksiki Simulation Systems Inc.",
+    "ja": "© 2026 株式会社Anviksiki Simulation Systems",
+}
+
+# words the game screens never use; the site follows the same rule
+BANNED = re.compile(
+    r"salvation|enlighten|\bguru|therap|\bheal(s|ed|ing|er)?\b|\bchosen\b|救い|悟り|修行|カウンセリング|癒やし|癒し|浄化",
+    re.I)
+JA_CHARS = re.compile(r"[　-ヿ㐀-鿿＀-￯]")
+
+# Japanese display text breaks only between phrases. Chrome can do this by itself
+# (word-break: auto-phrase) but Safari and Firefox cannot, so the build marks the
+# phrase boundaries with <wbr> for every browser.
+JA_PARSER = budoux.load_default_japanese_parser()
+PHRASED = "h1, h2, h3, h4, .eyebrow, .lede, .btn, .link-arrow"
+
+
+def page_dir(lang, token):
+    parts = (["ja"] if lang == "ja" else []) + ([SLUG[token]] if SLUG[token] else [])
+    return "/".join(parts)
+
+
+def rel(from_dir, to_dir):
+    r = posixpath.relpath(to_dir or ".", from_dir or ".")
+    return "./" if r == "." else r + "/"
+
+
+def absolute(lang, token):
+    d = page_dir(lang, token)
+    return BASE + "/" + (d + "/" if d else "")
+
+
+def invite_block(lang, kind):
+    """The invitation section: a form link once a form exists, an email address until then."""
+    school = kind == "school"
+    if not INVITE_OPEN:
+        if lang == "en":
+            text = ("School applications open with the test launch. This page will say how to apply."
+                    if school else
+                    "Invitations open with the test launch. This page will say how to apply.")
+        else:
+            text = ("学校のお申し込みは、テストローンチと同時に受け付けを始めます。申し込み方法は、そのときこのページでお知らせします。"
+                    if school else
+                    "招待の受け付けは、テストローンチと同時に始めます。申し込み方法は、そのときこのページでお知らせします。")
+        return f'<div class="invite-block"><p class="muted">{text}</p></div>'
+    if INVITE_URL:
+        if lang == "en":
+            text = "The form takes about a minute. We reply by email."
+            label = "Request an invitation"
+        else:
+            text = "フォームの入力は一分ほどです。返事はメールでお送りします。"
+            label = "招待を申し込む"
+        return (f'<div class="invite-block"><p>{text}</p>'
+                f'<a class="btn btn-primary" href="{html.escape(INVITE_URL)}" rel="noopener" style="justify-self:start">{label}</a></div>')
+    if lang == "en":
+        text = ("Write to us with your school's name, the number of trainees and when your cohort starts."
+                if school else
+                "Write to us with your name and a line about what brings you to Prakrti.")
+        copy_label, copied = "Copy", "Copied"
+    else:
+        text = ("学校の名前、受講生の人数、講座の始まる時期を添えて、メールでお知らせください。"
+                if school else
+                "お名前と、Prakrti に関心を持った理由をひとこと添えて、メールでお知らせください。")
+        copy_label, copied = "コピー", "コピーしました"
+    mail = html.escape(EMAIL)
+    return (f'<div class="invite-block"><p>{text}</p>'
+            f'<div class="copy-row"><span class="mail">{mail}</span>'
+            f'<button type="button" class="btn btn-sm" data-copy="{mail}">{copy_label}</button>'
+            f'<span class="note" data-copied hidden>{copied}</span></div></div>')
+
+
+def phrase_breaks(soup, root):
+    """Put <wbr> between the Japanese phrases of headings, ledes and buttons, and mark them .ph."""
+    targets = root.select(PHRASED)
+    chosen = set(map(id, targets))
+    for el in targets:
+        if any(id(p) in chosen for p in el.parents):
+            continue
+        nodes = [n for n in el.find_all(string=True) if n.parent.name not in ("script", "style")]
+        text = "".join(nodes)
+        if not JA_CHARS.search(text):
+            continue
+        cuts, pos = [], 0
+        for part in JA_PARSER.parse(text)[:-1]:
+            pos += len(part)
+            cuts.append(pos)
+        start = 0
+        for n in nodes:
+            s = str(n)
+            end = start + len(s)
+            local = [c - start for c in cuts if start <= c < end]
+            if local:
+                pieces, prev = [], 0
+                for c in local:
+                    if c > prev:
+                        pieces.append(NavigableString(s[prev:c]))
+                    pieces.append(soup.new_tag("wbr"))
+                    prev = c
+                pieces.append(NavigableString(s[prev:]))
+                n.replace_with(*pieces)
+            start = end
+        el["class"] = el.get("class", []) + ["ph"]
+
+
+def build_page(raw, lang, token):
+    other = "ja" if lang == "en" else "en"
+    soup = BeautifulSoup(raw, "html.parser")
+    for el in soup.select("." + other):
+        el.decompose()
+    header = soup.select_one("header.site-head")
+    footer = soup.select_one("footer.foot")
+    section = soup.select_one(f'section.page[data-page="{token}"]')
+    cur = page_dir(lang, token)
+
+    for part in (header, section, footer):
+        for a in part.find_all("a", href=True):
+            h = a["href"]
+            if h.startswith("#") and h[1:] in SLUG:
+                a["href"] = rel(cur, page_dir(lang, h[1:]))
+            elif h == "#app" or h.startswith("#app:"):
+                a["href"] = APP_URL + (h[5:] if h.startswith("#app:") else "/")
+    for a in header.select("[data-nav]"):
+        if a["data-nav"] == token:
+            a["aria-current"] = "page"
+        elif a.has_attr("aria-current"):
+            del a["aria-current"]
+
+    switch = header.select_one(".lang")
+    switch.clear()
+    for code, label in (("en", "EN"), ("ja", "JA")):
+        link = soup.new_tag("a", href=rel(cur, page_dir(code, token)))
+        link["hreflang"] = code
+        link["lang"] = code
+        if code == lang:
+            link["aria-current"] = "true"
+        link.string = label
+        switch.append(link)
+    menu = header.select_one("#menu-btn")
+    if menu is not None:
+        menu["aria-controls"] = "site-nav"
+
+    if section.has_attr("hidden"):
+        del section["hidden"]
+    for el in section.select("[data-invite-label]"):
+        del el["data-invite-label"]
+        if not INVITE_OPEN:   # until the test launch: no "Request an invitation" wording
+            el.clear()
+            el.string = ("Invitations" if el.name == "h2" else "About Premium") if lang == "en" else \
+                        ("招待について" if el.name == "h2" else "Premium について")
+    for box in section.select(".invite"):
+        box.replace_with(BeautifulSoup(invite_block(lang, box.get("data-pre", "self")), "html.parser"))
+    mail = section.select_one("#contact-mail")
+    if mail is not None:
+        mail.string = EMAIL
+        mail["class"] = mail.get("class", []) + ["mail"]
+        del mail["id"]
+        row = mail.parent
+        row["class"] = row.get("class", []) + ["copy-row"]
+        if row.has_attr("style"):
+            del row["style"]
+        btn = row.select_one("[data-copy]")
+        if btn is not None:
+            btn["data-copy"] = EMAIL
+    proto = footer.select_one(".proto")
+    if proto is not None:
+        proto.clear()
+        proto.string = COPYRIGHT[lang]
+    for table in section.select("table"):
+        heads = []
+        for th in table.select("thead th"):   # data-short-en / data-short-ja: a shorter name for phones
+            heads.append(th.get("data-short-" + lang) or th.get_text(" ", strip=True))
+            for code in ("en", "ja"):
+                if th.has_attr("data-short-" + code):
+                    del th["data-short-" + code]
+        for tr in table.select("tbody tr") if heads else []:
+            for i, td in enumerate(tr.find_all("td", recursive=False)):
+                if i < len(heads) and heads[i]:
+                    td["data-label"] = heads[i]   # shown on phones, where the table becomes stacked rows
+    if lang == "ja":
+        for part in (header, section, footer):
+            phrase_breaks(soup, part)
+
+    title, desc = META[token][lang]
+    canonical = absolute(lang, token)
+    prefix = rel(cur, "")
+    lang_root = rel(cur, "ja" if lang == "ja" else "")
+    org = ""
+    if token in ("home", "company"):
+        org = ('<script type="application/ld+json">' + json.dumps({
+            "@context": "https://schema.org", "@type": "Organization",
+            "name": "Anviksiki Simulation Systems Inc.", "url": BASE + "/",
+            "email": EMAIL, "brand": {"@type": "Brand", "name": "Prakrti GSA"},
+        }, ensure_ascii=False) + "</script>\n")
+    skip = "Skip to content" if lang == "en" else "本文へ移動"
+    head = f"""<!doctype html>
+<html lang="{lang}" data-lang="{lang}" data-root="{lang_root}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{html.escape(title)}</title>
+<meta name="description" content="{html.escape(desc)}">
+<link rel="canonical" href="{canonical}">
+<link rel="alternate" hreflang="en" href="{absolute('en', token)}">
+<link rel="alternate" hreflang="ja" href="{absolute('ja', token)}">
+<link rel="alternate" hreflang="x-default" href="{absolute('en', token)}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Prakrti GSA">
+<meta property="og:title" content="{html.escape(title)}">
+<meta property="og:description" content="{html.escape(desc)}">
+<meta property="og:url" content="{canonical}">
+<meta property="og:locale" content="{'en_US' if lang == 'en' else 'ja_JP'}">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#F0F2F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1528" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="{prefix}assets/site.css">
+<script src="{prefix}assets/site.js" defer></script>
+{org}</head>
+<body>
+<a class="skip" href="#main">{skip}</a>
+"""
+    body = f'{header}\n<main id="main">\n{section}\n</main>\n{footer}\n</body>\n</html>\n'
+    return head + body
+
+
+def page_404():
+    return """<!doctype html>
+<html lang="en" data-lang="en" data-root="/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Page not found | Prakrti GSA</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<main id="main" class="wrap page-head">
+<p class="eyebrow">404</p>
+<h1>This road is not on the map.</h1>
+<p class="lede">The page you asked for does not exist. <span lang="ja">お探しのページは見つかりませんでした。</span></p>
+<div class="cta-row"><a class="btn btn-primary" href="/">Prakrti GSA</a><a class="btn" href="/ja/" lang="ja">日本語のトップへ</a></div>
+</main>
+</body>
+</html>
+"""
+
+
+FAVICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><polygon points="28.1,9 28.1,23 16,30 3.9,23 3.9,9 16,2" fill="#E0AF42" stroke="#182039" stroke-width="2"/><circle cx="16" cy="16" r="4.2" fill="#182039"/></svg>
+"""
+
+
+def sitemap():
+    lines = ['<?xml version="1.0" encoding="UTF-8"?>',
+             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
+    for token, _ in PAGES:
+        for lang in ("en", "ja"):
+            lines.append("  <url>")
+            lines.append(f"    <loc>{absolute(lang, token)}</loc>")
+            lines.append(f'    <xhtml:link rel="alternate" hreflang="en" href="{absolute("en", token)}"/>')
+            lines.append(f'    <xhtml:link rel="alternate" hreflang="ja" href="{absolute("ja", token)}"/>')
+            lines.append(f'    <xhtml:link rel="alternate" hreflang="x-default" href="{absolute("en", token)}"/>')
+            lines.append("  </url>")
+    lines.append("</urlset>")
+    return "\n".join(lines) + "\n"
+
+
+def used_codepoints(texts):
+    """Every character the site can show: page markup, scripts and styles, escapes decoded."""
+    used = set()
+    for t in texts:
+        t = re.sub(r"\\u([0-9a-fA-F]{4})", lambda m: chr(int(m.group(1), 16)), t)
+        t = re.sub(r"\\([0-9a-fA-F]{1,6})\s?", lambda m: chr(int(m.group(1), 16)), t)
+        used.update(ord(c) for c in html.unescape(t))
+    return sorted(used)
+
+
+def unicode_ranges(spec):
+    """'U+0000-00FF,U+0131,U+4??' -> [(0x0, 0xFF), (0x131, 0x131), (0x400, 0x4FF)]"""
+    out = []
+    for part in spec.split(","):
+        part = part.strip()[2:]
+        if "?" in part:
+            out.append((int(part.replace("?", "0"), 16), int(part.replace("?", "F"), 16)))
+        elif "-" in part:
+            lo, hi = part.split("-")
+            out.append((int(lo, 16), int(hi, 16)))
+        else:
+            out.append((int(part, 16), int(part, 16)))
+    return out
+
+
+def font_faces(used):
+    """The @font-face rules (and their files) whose unicode-range covers a used character."""
+    rules, files = [], []
+    for rule in FACE.findall(open(os.path.join(FONT_DIR, "fonts.css"), encoding="utf-8").read()):
+        m = re.search(r"unicode-range:([^;}]+)", rule)
+        if m:
+            hit = False
+            for lo, hi in unicode_ranges(m.group(1)):
+                i = bisect.bisect_left(used, lo)
+                if i < len(used) and used[i] <= hi:
+                    hit = True
+                    break
+            if not hit:
+                continue
+        rules.append(rule)
+        files.append(re.search(r"url\(fonts/([^)]+)\)", rule).group(1))
+    return rules, files
+
+
+def check(pages):
+    problems = []
+    js = open(os.path.join(DIST, "assets", "site.js"), encoding="utf-8").read()
+    for m in BANNED.finditer(js):
+        problems.append(f"assets/site.js: forbidden word '{m.group(0)}'")
+    css = open(os.path.join(DIST, "assets", "site.css"), encoding="utf-8").read()
+    for ref in re.findall(r"url\(\s*([^)\s]+)\s*\)", css):
+        ref = ref.strip("'\"")
+        if ref.startswith(("data:", "#")):
+            continue
+        if re.match(r"^(https?:)?//", ref):
+            problems.append(f"assets/site.css: loads from another host: {ref}")
+        elif not os.path.exists(os.path.join(DIST, "assets", ref)):
+            problems.append(f"assets/site.css: missing file {ref}")
+    for path, (lang, markup) in pages.items():
+        soup = BeautifulSoup(markup, "html.parser")
+        for s in soup(["script", "style"]):
+            s.decompose()
+        text = soup.get_text(" ")
+        for m in BANNED.finditer(text):
+            problems.append(f"{path}: forbidden word '{m.group(0)}'")
+        if lang == "en":
+            for el in soup.select('[lang="ja"]'):
+                el.decompose()
+            found = set(JA_CHARS.findall(soup.get_text(" ")))
+            if found:
+                problems.append(f"{path}: Japanese characters on an English page: {''.join(sorted(found))[:40]}")
+        here = posixpath.dirname(path)
+        for a in BeautifulSoup(markup, "html.parser").find_all(["a", "link", "script", "img", "iframe"]):
+            ref = a.get("href") or a.get("src")
+            loads = a.name in ("script", "img", "iframe") or (
+                a.name == "link" and set(a.get("rel", [])) & {"stylesheet", "preload", "preconnect", "modulepreload", "icon"})
+            if ref and loads and re.match(r"^(https?:)?//", ref):
+                problems.append(f"{path}: loads from another host: {ref}")
+                continue
+            if not ref or re.match(r"^(https?:|mailto:|tel:|#|data:)", ref):
+                continue
+            target = posixpath.normpath(posixpath.join(here, ref.split("#")[0]))
+            full = os.path.join(DIST, target)
+            if ref.endswith("/") or os.path.isdir(full):
+                full = os.path.join(full, "index.html")
+            if not os.path.exists(full):
+                problems.append(f"{path}: broken link {ref}")
+    return problems
+
+
+def main():
+    raw = open(os.path.join(SRC, "site.html"), encoding="utf-8").read()
+    css = open(os.path.join(SRC, "site.css"), encoding="utf-8").read()
+    js = open(os.path.join(SRC, "site.js"), encoding="utf-8").read()
+    if os.path.isdir(DIST):
+        shutil.rmtree(DIST)
+    os.makedirs(os.path.join(DIST, "assets", "fonts"))
+    shutil.copy(os.path.join(SRC, "site.js"), os.path.join(DIST, "assets", "site.js"))
+    pages = {}
+    for lang in ("en", "ja"):
+        for token, _ in PAGES:
+            d = page_dir(lang, token)
+            out_dir = os.path.join(DIST, d)
+            os.makedirs(out_dir, exist_ok=True)
+            markup = build_page(raw, lang, token)
+            path = posixpath.join(d, "index.html") if d else "index.html"
+            with open(os.path.join(DIST, path), "w", encoding="utf-8") as f:
+                f.write(markup)
+            pages[path] = (lang, markup)
+    with open(os.path.join(DIST, "404.html"), "w", encoding="utf-8") as f:
+        f.write(page_404())
+    used = used_codepoints([m for _, m in pages.values()] + [page_404(), js, css])
+    rules, files = font_faces(used)
+    for name in files:
+        shutil.copy(os.path.join(FONT_DIR, name), os.path.join(DIST, "assets", "fonts", name))
+    for name in os.listdir(FONT_DIR):
+        if name.startswith("LICENSE"):
+            shutil.copy(os.path.join(FONT_DIR, name), os.path.join(DIST, "assets", "fonts", name))
+    with open(os.path.join(DIST, "assets", "site.css"), "w", encoding="utf-8") as f:
+        f.write("/* fonts: SIL Open Font License 1.1, see fonts/LICENSE-*.txt */\n" + "\n".join(rules) + "\n" + css)
+    font_bytes = sum(os.path.getsize(os.path.join(DIST, "assets", "fonts", n)) for n in files)
+    with open(os.path.join(DIST, "favicon.svg"), "w", encoding="utf-8") as f:
+        f.write(FAVICON)
+    with open(os.path.join(DIST, "sitemap.xml"), "w", encoding="utf-8") as f:
+        f.write(sitemap())
+    with open(os.path.join(DIST, "robots.txt"), "w", encoding="utf-8") as f:
+        f.write(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
+    problems = check(pages)
+    for p in problems:
+        print("PROBLEM:", p)
+    print(f"Built {len(pages)} pages into dist/ (invitations {'open' if INVITE_OPEN else 'closed until the test launch'}).")
+    print(f"Fonts: {len(files)} of {len(FACE.findall(open(os.path.join(FONT_DIR, 'fonts.css'), encoding='utf-8').read()))} "
+          f"subset files are needed ({font_bytes / 1e6:.1f} MB on the server; a visitor downloads only the ones a page uses).")
+    if problems:
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
