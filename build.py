@@ -55,6 +55,7 @@ PAGES = [
     ("premium", "premium"),
     ("schools", "schools"),
     ("principles", "principles"),
+    ("readings", "readings"),
     ("company", "company"),
     ("legal", "legal"),
 ]
@@ -108,6 +109,12 @@ META = {
                "No rankings, observation that stays yours, pseudonyms, publishing on purpose, and a formula that judges in place of the AI."),
         "ja": ("原則 | Prakrti GSA",
                "順位を出さない、観測は本人だけ、仮名、公開は自分の意思で、判定は AI ではなく数式。"),
+    },
+    "readings": {
+        "en": ("Two readings | Prakrti GSA",
+               "The battle within, read two ways: Paramahansa Yogananda's reading of the Gita and Prakrti GSA's three kingdoms, side by side."),
+        "ja": ("二つの読み方 | Prakrti GSA",
+               "心の戦いを二通りに読む。パラマハンサ・ヨガナンダのギーターの読みと、Prakrti GSA の三つの国の読みを並べて。"),
     },
     "company": {
         "en": ("Company | Prakrti GSA",
@@ -319,7 +326,7 @@ def build_page(raw, lang, token):
         }, ensure_ascii=False) + "</script>\n")
     skip = "Skip to content" if lang == "en" else "本文へ移動"
     head = f"""<!doctype html>
-<html lang="{lang}" data-lang="{lang}" data-root="{lang_root}">
+<html lang="{lang}" data-lang="{lang}" data-root="{lang_root}" data-app="{APP_URL}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">

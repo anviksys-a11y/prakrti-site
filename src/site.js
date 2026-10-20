@@ -8,7 +8,8 @@ function L(){return root.getAttribute("data-lang")==="ja"?"ja":"en"}
 function tr(o){if(o==null)return "";if(typeof o==="string")return o;var v=o[L()];return v==null?o.en:v}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 var ROOT=root.getAttribute("data-root")||"";
-var SLUG={home:"",world:"world/",starter:"starter-set/",engine:"how-judging-works/",rpd:"rpd/",premium:"premium/",schools:"schools/",principles:"principles/",company:"company/",legal:"legal/"};
+var APP=root.getAttribute("data-app")||"";
+var SLUG={home:"",world:"world/",starter:"starter-set/",engine:"how-judging-works/",rpd:"rpd/",premium:"premium/",schools:"schools/",principles:"principles/",readings:"readings/",company:"company/",legal:"legal/"};
 function url(t){var u=ROOT+(SLUG[t]==null?"":SLUG[t]);return u||"./"}
 var TIKA=T("Commentary","注釈");
 function tikaInline(text){return '<p class="tika" style="padding-top:0"><span class="tika-label"><span class="deva" lang="sa">टीका</span>'+esc(tr(TIKA))+'</span>'+esc(tr(text))+'</p>'}
@@ -27,13 +28,13 @@ var LINKS={starter:T("Open the Starter Set","スターターセットへ"),rpd:T
 var PLACES=[
  {id:"archer",ch:"s",name:T("The Charioteer and the Archer","御者と射手"),short:T("Charioteer & Archer","御者と射手"),
   desc:T("Drive the chariot while the archer shoots. When the crowd shakes the archer's mind, stop for a Timeout and offer one of three verses. The archer's mind runs on the same formula as the Arena.","射手が射るあいだ、戦車を操ります。観衆の声で射手の心が揺れたら、作戦タイムで三枚の句から一枚を差し出します。射手の心は、The Arena と同じ式で動いています。"),
-  status:["free","noai","guest"],page:"starter"},
+  status:["free","noai","guest"],page:"starter",app:"/mahabharata/krida"},
  {id:"rpd0",ch:"s",name:T("RPD · Fetching Water, Episode 0","RPD『水を汲みに』第0話"),short:T("RPD Episode 0","RPD 第0話"),
   desc:T("Sri Krishna asks you for water, and a life begins in a village at the edge of the desert. A solo story with no game master, played on screen.","聖クリシュナに水を頼まれ、砂漠の外れの村で一つの人生が始まります。GM のいない一人用の物語で、画面の上で遊びます。"),
-  status:["starter","noai"],page:"rpd"},
+  status:["starter","noai"],page:"rpd",app:"/mahabharata/works"},
  {id:"verse",ch:"s",name:T("The verse board and the language room","聖句盤と語学教室"),short:T("Verse Board","聖句盤"),
   desc:T("Every verse of the Gītā and the Yoga Sūtras with the Sanskrit, a translation and a full grammatical analysis. The language room turns the grammar into quizzes, and Vibhakti, a declension game, is being added.","ギーターとヨーガ・スートラの全句を、原文・訳・文法解析つきで読めます。語学教室では、文法をクイズで遊べます。格変化ゲーム『Vibhakti』も加える予定です。"),
-  status:["free","noai","read"],page:"starter"},
+  status:["free","noai","read"],page:"starter",app:"/scripture"},
  {id:"prism",ch:"1",name:T("Prism","Prism"),short:T("Prism","Prism"),
   desc:T("Write a single line and the AI scans it for fragments of the structure of your mind. It is the lightest way into dialogue.","一行書くと、AI が心の構造の断片を読み取ります。対話へのいちばん軽い入口です。"),
   status:["daily","unlimited"],page:"premium"},
@@ -144,7 +145,7 @@ function makeMap(host){
       }).join("")+'</div>';
     }).join("");
     var p=BY[selected];
-    $(".place-panel",host).innerHTML='<p class="eyebrow">'+esc(tr(CH[p.ch]))+' · '+p.n+'</p><h3>'+esc(tr(p.name))+'</h3><p>'+esc(tr(p.desc))+'</p>'+chipsHTML(p.status)+(p.joke?tikaInline(p.joke):'')+'<a class="link-arrow" href="'+url(p.page)+'">'+esc(tr(LINKS[p.page]))+'</a>';
+    $(".place-panel",host).innerHTML='<p class="eyebrow">'+esc(tr(CH[p.ch]))+' · '+p.n+'</p><h3>'+esc(tr(p.name))+'</h3><p>'+esc(tr(p.desc))+'</p>'+chipsHTML(p.status)+(p.joke?tikaInline(p.joke):'')+'<div class="cta-row">'+(p.app&&APP?'<a class="link-arrow" href="'+APP+p.app+'">'+esc(tr(T("Open in the app","アプリで開く")))+'</a>':'')+'<a class="link-arrow" href="'+url(p.page)+'">'+esc(tr(LINKS[p.page]))+'</a></div>';
   }
   function layout(force){
     var W=Math.round(frame.clientWidth);
