@@ -124,7 +124,7 @@ function makeMap(host){
     });
     var hp=pts[0], here='<g class="here" transform="translate('+f1(hp[0])+','+f1(hp[1])+')"><circle r="16"/>'+(portrait?'':'<text x="-10" y="-24" text-anchor="start">'+esc(tr(T("You are here · locative case","いまここ ・ 処格")))+'</text>')+'</g>';
     svg.setAttribute("viewBox","0 0 "+W+" "+H);
-    svg.setAttribute("aria-label",tr(T("Map of the Prakrti world. The Starter Set is lit; the other places are covered by fog until you select them.","Prakrti の世界地図。スターターセットだけが明るく、ほかの場所は選ぶまで霧に覆われています。")));
+    svg.setAttribute("aria-label",tr(T("Map of the Prakrti GSA world. The Starter Set is lit; the other places are covered by fog until you select them.","Prakrti GSA の世界地図。スターターセットだけが明るく、ほかの場所は選ぶまで霧に覆われています。")));
     svg.innerHTML='<g>'+polys+'</g><g>'+bord+'</g><g>'+road+'</g>'+here+'<g>'+labs+'</g>';
   }
   function paint(){
@@ -250,7 +250,7 @@ function renderArcher(){
       return '<li><span class="n">'+(i+1)+'</span><span>'+esc(tr(R.name))+' → '+esc(tr(SEED[R.seed].name))+' · '+esc(tr(T("Gītā ","ギーター ")))+e.v+' · <b class="'+(e.fit?"yes":"")+'">'+esc(tr(e.fit?T("reached","届いた"):T("did not reach","届かなかった")))+'</b></span></li>';
     }).join("")+'</ul>';
     h+=kingdomMap();
-    h+='<p class="scene"><span class="archer-say">'+esc(tr(T("In the game, you steadied someone else's mind. In Prakrti, the archer is you.","ゲームでは、他人の心を整えました。Prakrti では、射手はあなた自身です。")))+'</span></p>';
+    h+='<p class="scene"><span class="archer-say">'+esc(tr(T("In the game, you steadied someone else's mind. In Prakrti GSA, the archer is you.","ゲームでは、他人の心を整えました。Prakrti GSA では、射手はあなた自身です。")))+'</span></p>';
     h+='<div class="cta-row"><a class="btn btn-primary" href="'+url("starter")+'">'+esc(tr(T("Begin with the Starter Set","スターターセットから始める")))+'</a><a class="btn" href="'+url("engine")+'">'+esc(tr(T("How judging works","判定のしくみ")))+'</a></div>';
     h+='<button type="button" class="btn btn-sm" data-g="again" style="justify-self:start">'+esc(tr(T("Play again","もう一度遊ぶ")))+'</button>';
     host.innerHTML=h;return;

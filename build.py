@@ -181,12 +181,12 @@ def invite_block(lang, kind):
     if lang == "en":
         text = ("Write to us with your school's name, the number of trainees and when your cohort starts."
                 if school else
-                "Write to us with your name and a line about what brings you to Prakrti.")
+                "Write to us with your name and a line about what brings you to Prakrti GSA.")
         copy_label, copied = "Copy", "Copied"
     else:
         text = ("学校の名前、受講生の人数、講座の始まる時期を添えて、メールでお知らせください。"
                 if school else
-                "お名前と、Prakrti に関心を持った理由をひとこと添えて、メールでお知らせください。")
+                "お名前と、Prakrti GSA に関心を持った理由をひとこと添えて、メールでお知らせください。")
         copy_label, copied = "コピー", "コピーしました"
     mail = html.escape(EMAIL)
     return (f'<div class="invite-block"><p>{text}</p>'

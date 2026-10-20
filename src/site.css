@@ -61,6 +61,10 @@ h4{font-size:1.04rem;line-height:1.3}
 /* build.py puts <wbr> between Japanese phrases (BudouX) and adds .ph, so lines break only between phrases in every browser */
 :root[data-lang="ja"] .ph{word-break:keep-all;overflow-wrap:break-word}
 p{margin:0}
+/* the service name, spelled out on the first page */
+.fullname{display:flex;flex-wrap:wrap;align-items:baseline;gap:.2em .7em;margin:0 0 .4em;padding-bottom:.55em;border-bottom:1px solid var(--rule)}
+.fn-short{font-family:var(--font-display);font-weight:600;font-size:1.35rem;color:var(--ink);white-space:nowrap}
+.fn-long{font-family:var(--font-display);font-weight:500;font-size:1.05rem;color:var(--silk);letter-spacing:.01em}
 ul,ol{margin:0;padding-left:1.2em}
 .eyebrow{font-family:var(--font-mono);font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:1.5}
 :root[data-lang="ja"] .eyebrow{letter-spacing:.05em;font-size:.82rem}
@@ -80,7 +84,7 @@ ul,ol{margin:0;padding-left:1.2em}
 .mark{display:flex;align-items:baseline;gap:.55em;text-decoration:none;margin-right:auto}
 .mark-deva{font-family:var(--font-deva);font-size:1.35rem;color:var(--silk);line-height:1}
 .mark-name{font-family:var(--font-display);font-weight:600;font-size:1.3rem;letter-spacing:-.01em;white-space:nowrap}
-.mark-gsa{font-family:var(--font-mono);font-size:.72rem;font-weight:500;letter-spacing:.12em;margin-left:.2em;color:var(--muted)}
+.mark-gsa{font:inherit;margin-left:.28em;color:inherit}
 .nav{display:flex;gap:4px 18px;flex-wrap:wrap}
 .nav a{text-decoration:none;font-size:.98rem;padding:.2em 0;border-bottom:1.5px solid transparent;color:var(--ink-2)}
 .nav a:hover{color:var(--ink)}
