@@ -15,7 +15,7 @@ function tikaInline(text){return '<p class="tika" style="padding-top:0"><span cl
 
 /* ---------- places on the world map ---------- */
 var STATUS={
-  free:T("Free","無料"), noai:T("No AI","AI なし"), guest:T("No account needed","登録なしで遊べる"),
+  free:T("Free","無料"), noai:T("No AI","AI なし"), guest:T("No account needed","登録なしで遊べる"), read:T("Reading needs no account","読むのは登録なしで"),
   starter:T("Free in the Starter Set","スターターセットで無料"), daily:T("Free: one scan a day","無料：1日1回"),
   unlimited:T("Unlimited in Premium","Premium で無制限"), premium:T("Premium","Premium"), school:T("School License","School License"),
   prep:T("In preparation","準備中"), freeWrite:T("Writing is free","書くのは無料"), records:T("Recording is free","記録は無料"),
@@ -29,11 +29,11 @@ var PLACES=[
   desc:T("Drive the chariot while the archer shoots. When the crowd shakes the archer's mind, stop for a Timeout and offer one of three verses. The archer's mind runs on the same formula as the Arena.","射手が射るあいだ、戦車を操ります。観衆の声で射手の心が揺れたら、作戦タイムで三枚の句から一枚を差し出します。射手の心は、The Arena と同じ式で動いています。"),
   status:["free","noai","guest"],page:"starter"},
  {id:"rpd0",ch:"s",name:T("RPD · Fetching Water, Episode 0","RPD『水を汲みに』第0話"),short:T("RPD Episode 0","RPD 第0話"),
-  desc:T("Sri Krishna asks you for water, and a life begins in a village at the edge of the desert. A solo story with no game master, twenty to thirty minutes, with paper and pen.","聖クリシュナに水を頼まれ、砂漠の外れの村で一つの人生が始まります。GM のいない一人用の物語で、20〜30分。紙とペンで遊びます。"),
+  desc:T("Sri Krishna asks you for water, and a life begins in a village at the edge of the desert. A solo story with no game master, played on screen.","聖クリシュナに水を頼まれ、砂漠の外れの村で一つの人生が始まります。GM のいない一人用の物語で、画面の上で遊びます。"),
   status:["starter","noai"],page:"rpd"},
- {id:"verse",ch:"s",name:T("The verse board and Vibhakti","聖句盤と Vibhakti"),short:T("Verse Board","聖句盤"),
-  desc:T("Every verse of the Gītā and the Yoga Sūtras with the Sanskrit, a translation and a full grammatical analysis. Vibhakti, the declension game, turns the grammar into play.","ギーターとヨーガ・スートラの全句を、原文・訳・文法解析つきで読めます。格変化ゲーム『Vibhakti』で、文法が遊びになります。"),
-  status:["free","noai","guest"],page:"starter"},
+ {id:"verse",ch:"s",name:T("The verse board and the language room","聖句盤と語学教室"),short:T("Verse Board","聖句盤"),
+  desc:T("Every verse of the Gītā and the Yoga Sūtras with the Sanskrit, a translation and a full grammatical analysis. The language room turns the grammar into quizzes, and Vibhakti, a declension game, is being added.","ギーターとヨーガ・スートラの全句を、原文・訳・文法解析つきで読めます。語学教室では、文法をクイズで遊べます。格変化ゲーム『Vibhakti』も加える予定です。"),
+  status:["free","noai","read"],page:"starter"},
  {id:"prism",ch:"1",name:T("Prism","Prism"),short:T("Prism","Prism"),
   desc:T("Write a single line and the AI scans it for fragments of the structure of your mind. It is the lightest way into dialogue.","一行書くと、AI が心の構造の断片を読み取ります。対話へのいちばん軽い入口です。"),
   status:["daily","unlimited"],page:"premium"},

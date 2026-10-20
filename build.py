@@ -75,9 +75,9 @@ META = {
     },
     "starter": {
         "en": ("Starter Set | Prakrti GSA",
-               "Three free things to play first, none of them using AI: The Charioteer and the Archer, Fetching Water Episode 0, and the verse board with Vibhakti."),
+               "Three free things to play first, none of them using AI: The Charioteer and the Archer, Fetching Water Episode 0, and the verse board with the language room."),
         "ja": ("スターターセット | Prakrti GSA",
-               "最初に遊ぶ無料の三つ。どれも AI を使いません。『御者と射手』『水を汲みに 第0話』、聖句盤と Vibhakti。"),
+               "最初に遊ぶ無料の三つ。どれも AI を使いません。『御者と射手』『水を汲みに 第0話』、聖句盤と語学教室。"),
     },
     "engine": {
         "en": ("How judging works | Prakrti GSA",
@@ -93,9 +93,9 @@ META = {
     },
     "premium": {
         "en": ("Premium | Prakrti GSA",
-               "US$199 a month, tax included, one price. Premium opens everything that needs the AI."),
+               "US$199 a month, tax included, one price. Premium opens every AI feature for individual use."),
         "ja": ("Premium | Prakrti GSA",
-               "月額 199 米ドル（税込）、価格は一つ。AI を使うすべての場所が開きます。"),
+               "月額 199 米ドル（税込）、価格は一つ。個人で使う AI の機能がすべて開きます。"),
     },
     "schools": {
         "en": ("For yoga schools | Prakrti GSA",
