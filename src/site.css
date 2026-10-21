@@ -197,7 +197,12 @@ ul,ol{margin:0;padding-left:1.2em}
 .wc.sel.ch-1{fill:var(--silk-mid)}
 .wc.sel.ch-2{fill:var(--lotus-mid)}
 .wc.sel.ch-3{fill:var(--indigo-mid)}
-.wc.fog{fill:var(--fog)}
+.wc.fog,.wc.fog.sel{fill:var(--fog)}
+/* a key in hand: the places it opens are filled more deeply, so even the pale third region stands out from the fog */
+.wc.kin.ch-s{fill:var(--peacock-mid)}
+.wc.kin.ch-1{fill:var(--silk-mid)}
+.wc.kin.ch-2{fill:var(--lotus-mid)}
+.wc.kin.ch-3{fill:var(--indigo-mid)}
 .wb{stroke:var(--ink-2);stroke-width:1.3;stroke-linecap:round;opacity:.5;transition:opacity .8s;pointer-events:none}
 .wb.dim{opacity:.12}
 .road{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-dasharray:.5 7;stroke-linecap:round;transition:opacity .8s;pointer-events:none}
@@ -519,3 +524,15 @@ table.compare td:last-child{background:var(--silk-wash)}
 .rk-card h3{font-size:1.24rem}
 .rk-card p{margin:0;color:var(--ink-2)}
 @media (max-width:880px){.sutra + .tbl-wrap{margin-top:16px}}
+/* world map: the three keys */
+.map-keys{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:-2px 0 12px}
+.mk-label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+:root[data-lang="ja"] .mk-label{font-family:var(--font-body);font-size:.86rem;letter-spacing:.02em;text-transform:none}
+.map-keys button{display:inline-flex;align-items:center;gap:.45em;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.04em;padding:.5em .75em;border:1px solid var(--rule);border-radius:2px;background:transparent;color:var(--ink-2);line-height:1.2;cursor:pointer}
+:root[data-lang="ja"] .map-keys button{font-family:var(--font-body);font-size:.86rem;letter-spacing:.02em}
+.map-keys button:hover{border-color:var(--ink)}
+.map-keys button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--on-ink)}
+.kglyph{width:1.05em;height:1.05em;flex:none;color:var(--silk)}
+.map-keys button[aria-pressed="true"] .kglyph{color:var(--silk-fill)}
+.mk-note{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin:-4px 0 12px;font-size:.95rem;color:var(--ink-2);max-width:60rem}
+@media (max-width:640px){.map-keys button{min-height:36px}}

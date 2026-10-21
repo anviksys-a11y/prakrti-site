@@ -42,6 +42,9 @@ var PLACES=[
  {id:"kuru",ch:"1",name:T("Kurukshetra, the workshop","Kurukshetra（工房）"),short:T("Kurukshetra","Kurukshetra"),
   desc:T("Write and version your Sutras, build counterparts, run test runs, read the observation report, and keep private notes in the margin. Writing by hand is free. In Premium the AI drafts Sutras and counterparts from your dialogues and plays the counterpart in test runs.","Sutra を書いて版を重ね、相手役を作り、試走し、観測レポートを読み、余白に私的なメモを残します。手で書くのは無料です。Premium では、対話から AI が Sutra と相手役を下書きし、試走では AI が相手役を演じます。"),
   status:["launch","freeWrite","testruns"],page:"premium",app:"/workspace"},
+ {id:"rupaka",ch:"1",name:T("Rūpaka, the allegory play","寓話劇 Rūpaka"),short:T("Rūpaka","寓話劇 Rūpaka"),
+  desc:T("Tell the AI what you are carrying, and it becomes a game master that retells it as a play from the Gītā. You take one part; when the curtain falls, there are drafts of your Sutra and your counterpart's. It is one of the six ways to play Mahābhārata RPD: a table with an AI game master, played alone. The Two Seats, a table of the same kind, opens after launch.","いま抱えている悩みを話すと、AI が GM になって、ギーターの物語に置き換えた劇にします。あなたは一人を演じ、幕が下りると、あなたと相手役の Sutra の下書きができます。Mahābhārata RPD の六つの遊び方の一つで、AI の GM と一人で遊ぶ卓です。同じ形の卓「二人の席」は、一般公開のあとに開きます。"),
+  status:["launch","premium"],page:"rpd",app:"/rupaka"},
  {id:"trial",ch:"1",name:T("Field Trial","Field Trial"),short:T("Field Trial","Field Trial"),
   desc:T("Register in advance which version you will try and in what situation. Afterwards, record once: held, wavered, breached, or did not occur.","どの版を、どんな場面で試すかを先に登録し、あとで一度だけ記録します。持ちこたえた・揺らいだ・破られた・場面が来なかった。"),
   status:["launch","records","noai"],page:"engine"},
@@ -57,8 +60,8 @@ var PLACES=[
  {id:"ashram",ch:"3",name:T("Ashrams","Ashram"),short:T("Ashrams","Ashram"),
   desc:T("Rooms with faces, between yourself and the world. Private rooms are free to open. With a School License, trainees use the AI inside the room.","自分と世界のあいだにある、顔の見える部屋。Private な部屋は無料で開けます。School License があれば、受講生は部屋の中で AI を使えます。"),
   status:["free","school","later"],page:"schools"},
- {id:"tables",ch:"3",name:T("Classroom tables","教室の卓"),short:T("RPD Tables","教室の卓"),
-  desc:T("Play Mahābhārata RPD together. Human game masters are free in every Ashram, and an AI game master comes with a School License. Dice settle what bodies do; the Sutra engine settles what minds do.","Mahābhārata RPD を一緒に遊びます。人の GM の卓はすべての Ashram で無料、AI の GM は School License で使えます。ダイスが体の行いを、Sutra 判定が心の動きを決めます。"),
+ {id:"tables",ch:"3",name:T("Ashram tables","Ashram の卓"),short:T("Ashram Tables","Ashram の卓"),
+  desc:T("Play Mahābhārata RPD together, in any Ashram: a free Private Ashram among friends, or a school's. A human game master is free, and an AI game master comes with a School License. Dice settle what bodies do; the Sutra engine settles what minds do. All six ways to play are on the RPD page.","Mahābhārata RPD を、仲間と一緒に遊びます。卓は、どの Ashram でも開けます。友人どうしの無料の Private Ashram でも、学校の Ashram でも。人の GM は無料、AI の GM は School License で使えます。ダイスが体の行いを、Sutra 判定が心の動きを決めます。六つの遊び方は、RPD のページにまとめてあります。"),
   status:["free","school","later"],page:"rpd"},
  {id:"karuta",ch:"3",name:T("Gītā Karuta","ギーターかるた"),short:T("Gītā Karuta","ギーターかるた"),
   desc:T("Competitive karuta with Gītā verses. A verse appears one syllable at a time, and you take the card as soon as you can tell which verse it is. Play alone, or as two teams in an Ashram.","ギーターの句で遊ぶ競技かるた。句が一音節ずつ現れ、どの句か分かった瞬間に札を取ります。一人でも、Ashram で二組に分かれても遊べます。"),
@@ -73,9 +76,22 @@ var PLACES=[
 ];
 PLACES.forEach(function(p,i){p.n=i+1});
 var BY={};PLACES.forEach(function(p,i){BY[p.id]=p;p.k=i});
-var SEEDS_L={archer:[.12,.86],rpd0:[.38,.89],verse:[.64,.85],prism:[.87,.64],kuru:[.57,.62],trial:[.27,.65],hall:[.13,.40],arena:[.43,.38],exchange:[.73,.41],ashram:[.90,.15],tables:[.70,.12],karuta:[.50,.16],board:[.30,.11],shop:[.10,.17]};
-var SEEDS_P={archer:[.18,.93],rpd0:[.50,.95],verse:[.82,.91],prism:[.82,.74],kuru:[.50,.71],trial:[.18,.74],hall:[.18,.52],arena:[.50,.50],exchange:[.82,.53],ashram:[.82,.31],tables:[.50,.29],karuta:[.18,.32],board:[.30,.10],shop:[.70,.10]};
+var SEEDS_L={archer:[.12,.86],rpd0:[.38,.89],verse:[.64,.85],prism:[.87,.64],kuru:[.65,.61],rupaka:[.44,.66],trial:[.23,.62],hall:[.13,.40],arena:[.43,.38],exchange:[.73,.41],ashram:[.90,.15],tables:[.70,.12],karuta:[.50,.16],board:[.30,.11],shop:[.10,.17]};
+var SEEDS_P={archer:[.18,.93],rpd0:[.50,.95],verse:[.82,.91],prism:[.84,.76],kuru:[.60,.71],rupaka:[.38,.76],trial:[.16,.71],hall:[.18,.52],arena:[.50,.50],exchange:[.82,.53],ashram:[.82,.31],tables:[.50,.29],karuta:[.18,.32],board:[.30,.10],shop:[.70,.10]};
 var DE=[[1,0],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1]], DO=[[1,0],[1,1],[0,1],[-1,0],[0,-1],[1,-1]];
+/* the three keys: hold one up, and the places it opens light up on the map */
+var KEYS={
+ free:{name:T("Free account","無料のアカウント"),note:T("Sign up for free, and RPD Episode 0, writing and recording Sutras by hand, a Private Ashram with human game masters, and one Prism scan a day open. The verse board, published interpretations and The Charioteer and the Archer need no account.","無料で登録すると、RPD 第0話、Sutra を手で書くことと記録、Private Ashram と人の GM の卓、1日1回の Prism が開きます。聖句盤と公開された解釈、『御者と射手』は、登録しなくても使えます。"),page:"starter"},
+ premium:{name:T("Premium","Premium"),note:T("US$199 a month. Dialogues, drafts of Sutras and counterparts, test runs, Rūpaka and unlimited Prism scans: every AI feature for individual use opens. Everything free stays as it is.","月 199 米ドル。対話、Sutra と相手役の下書き、試走、寓話劇 Rūpaka、無制限の Prism。個人で使う AI の機能が、すべて開きます。無料の場所は、そのまま使えます。"),page:"premium"},
+ school:{name:T("School License","School License"),note:T("For yoga schools, from US$199 a month. Inside the school's Ashram, trainees use the AI for dialogues, drafts and Challenges with a monthly seat, and tables can have an AI game master.","ヨガの学校のための契約で、月 199 米ドルから。学校の Ashram の中で、受講生は月ごとの席を使い、対話や下書き、Challenge に AI を使えます。卓では、AI が GM を務められます。"),page:"schools"}
+};
+/* the Eighteen-Day Board has no price yet, so no key lights it */
+var KEYS_OF={verse:["free"],archer:["free"],rpd0:["free"],prism:["free","premium"],kuru:["free","premium"],rupaka:["premium"],trial:["free"],
+ hall:["free","premium"],arena:["premium"],exchange:["premium"],ashram:["free","school"],tables:["free","school"],karuta:["free"],board:[],shop:["free"]};
+var keyOn=null;
+function keyOut(p){return !!keyOn&&(KEYS_OF[p.id]||[]).indexOf(keyOn)<0}
+function shaded(p){return keyOn?keyOut(p):fogged(p)}
+var KEY_SVG='<svg class="kglyph" viewBox="0 0 16 16" aria-hidden="true"><circle cx="4.6" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.6 8H15M12.4 8v3M14.6 8v2.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
 function hsh(a,b,c){var x=Math.sin(a*127.1+b*311.7+c*74.7)*43758.5453;return x-Math.floor(x)}
 function corners(cx,cy,s){var p=[];for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);p.push([cx+s*Math.cos(a),cy+s*Math.sin(a)])}return p}
 function f1(n){return Math.round(n*10)/10}
@@ -87,7 +103,7 @@ var maps=[];
 function chipsHTML(keys){return '<div class="chips">'+keys.map(function(k){return '<span class="chip chip-'+k+'">'+esc(tr(STATUS[k]))+'</span>'}).join("")+'</div>'}
 
 function makeMap(host){
-  host.innerHTML='<div class="map-tools"><p class="eyebrow map-hint"></p><button type="button" class="btn btn-sm" data-act="fog"></button></div><div class="map-frame"><svg class="world-svg" role="img" xmlns="http://www.w3.org/2000/svg"></svg></div><div class="map-below"><div class="atlas"></div><div class="panel place-panel" aria-live="polite"></div></div>';
+  host.innerHTML='<div class="map-tools"><p class="eyebrow map-hint"></p><button type="button" class="btn btn-sm" data-act="fog"></button></div><div class="map-keys" role="group"></div><p class="mk-note" hidden></p><div class="map-frame"><svg class="world-svg" role="img" xmlns="http://www.w3.org/2000/svg"></svg></div><div class="map-below"><div class="atlas"></div><div class="panel place-panel" aria-live="polite"></div></div>';
   var frame=$(".map-frame",host), svg=$("svg",host), lastW=0, lastLang="", portrait=false;
   function build(W){
     portrait=W<620;
@@ -131,18 +147,22 @@ function makeMap(host){
   }
   function paint(){
     if(!svg.firstChild)return;
-    $$(".wc",svg).forEach(function(el){var p=BY[el.getAttribute("data-id")];el.setAttribute("class","wc ch-"+p.ch+(fogged(p)?" fog":"")+(p.id===selected?" sel":""))});
-    $$(".wb",svg).forEach(function(el){var a=BY[el.getAttribute("data-a")],b=BY[el.getAttribute("data-b")];el.setAttribute("class","wb"+(fogged(a)&&fogged(b)?" dim":""))});
-    $$(".road",svg).forEach(function(el){var a=BY[el.getAttribute("data-a")],b=BY[el.getAttribute("data-b")];el.setAttribute("class","road"+(fogged(a)||fogged(b)?" dim":""))});
-    $$(".wl",svg).forEach(function(el){var p=BY[el.getAttribute("data-id")];el.setAttribute("class","wl"+(fogged(p)?" dim":"")+(p.id===selected?" sel":""))});
+    $$(".wc",svg).forEach(function(el){var p=BY[el.getAttribute("data-id")];el.setAttribute("class","wc ch-"+p.ch+(shaded(p)?" fog":"")+(keyOn&&!keyOut(p)?" kin":"")+(p.id===selected?" sel":""))});
+    $$(".wb",svg).forEach(function(el){var a=BY[el.getAttribute("data-a")],b=BY[el.getAttribute("data-b")];el.setAttribute("class","wb"+(shaded(a)&&shaded(b)?" dim":""))});
+    $$(".road",svg).forEach(function(el){var a=BY[el.getAttribute("data-a")],b=BY[el.getAttribute("data-b")];el.setAttribute("class","road"+(shaded(a)||shaded(b)?" dim":""))});
+    $$(".wl",svg).forEach(function(el){var p=BY[el.getAttribute("data-id")];el.setAttribute("class","wl"+(shaded(p)?" dim":"")+(p.id===selected?" sel":""))});
+    var keys=$(".map-keys",host), note=$(".mk-note",host);
+    keys.setAttribute("aria-label",tr(T("Keys","鍵")));
+    keys.innerHTML='<span class="mk-label">'+esc(tr(T("Hold up a key","鍵で見る")))+'</span>'+["free","premium","school"].map(function(k){return '<button type="button" data-key="'+k+'" aria-pressed="'+(keyOn===k)+'">'+KEY_SVG+esc(tr(KEYS[k].name))+'</button>'}).join("");
+    if(keyOn){note.hidden=false;note.innerHTML='<span>'+esc(tr(T("Lit: what this key opens. ","光っているのが、この鍵で開く場所です。")))+esc(tr(KEYS[keyOn].note))+'</span><a class="link-arrow" href="'+url(KEYS[keyOn].page)+'">'+esc(tr(LINKS[KEYS[keyOn].page]))+'</a>'}else{note.hidden=true;note.innerHTML=""}
     $(".map-hint",host).textContent=tr(T("Select a place on the map or in the list","地図か一覧から場所を選んでください"));
     $("[data-act=fog]",host).textContent=fog.lifted?tr(T("Bring back the fog","霧を戻す")):tr(T("Lift the fog · for cartographers","霧を晴らす（地図好きの方へ）"));
     var groups={s:[],"1":[],"2":[],"3":[]};
     PLACES.forEach(function(p){groups[p.ch].push(p)});
     $(".atlas",host).innerHTML=["s","1","2","3"].map(function(g){
       return '<div><h4>'+esc(tr(CH[g]))+'</h4>'+groups[g].map(function(p){
-        var f=fogged(p);
-        return '<button type="button" class="place'+(f?" fogged":"")+'" data-id="'+p.id+'" aria-pressed="'+(p.id===selected)+'"><span class="n">'+p.n+'</span><span class="nm">'+esc(tr(p.name))+'</span>'+(f?'<span class="fogmark">'+esc(tr(T("in fog","霧の中")))+'</span>':'')+'</button>';
+        var f=shaded(p), mark=keyOn?"":(f?tr(T("in fog","霧の中")):"");
+        return '<button type="button" class="place'+(f?" fogged":"")+'" data-id="'+p.id+'" aria-pressed="'+(p.id===selected)+'"><span class="n">'+p.n+'</span><span class="nm">'+esc(tr(p.name))+'</span>'+(mark?'<span class="fogmark">'+esc(mark)+'</span>':'')+'</button>';
       }).join("")+'</div>';
     }).join("");
     var p=BY[selected];
@@ -155,9 +175,11 @@ function makeMap(host){
     paint();
   }
   host.addEventListener("click",function(e){
+    var kb=e.target.closest("[data-key]");
+    if(kb&&host.contains(kb)){var kv=kb.getAttribute("data-key");keyOn=keyOn===kv?null:kv;paintAll();return}
     var t=e.target.closest("[data-act],[data-id]");
     if(!t||!host.contains(t))return;
-    if(t.getAttribute("data-act")==="fog"){fog.lifted=!fog.lifted;paintAll();return}
+    if(t.getAttribute("data-act")==="fog"){fog.lifted=!fog.lifted;keyOn=null;paintAll();return}
     var id=t.getAttribute("data-id");
     if(id&&BY[id]){selected=id;fog.seen[id]=true;paintAll();
       // the description sits below the map; bring it into view when it is off screen
