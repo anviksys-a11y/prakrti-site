@@ -70,9 +70,9 @@ META = {
     },
     "world": {
         "en": ("World map | Prakrti GSA",
-               "Every part of Prakrti GSA on one map: the Starter Set, the workshop, the Arena, the Exchange, the scripture hall, classrooms and game tables."),
+               "Every part of Prakrti GSA on one map: the Starter Set, the workshop, the Arena, the Exchange, the scripture hall, Ashrams and game tables."),
         "ja": ("世界地図 | Prakrti GSA",
-               "Prakrti GSA のすべてを一枚の地図で。スターターセット、工房、The Arena、Exchange、聖典の間、教室、遊びの卓。"),
+               "Prakrti GSA のすべてを一枚の地図で。スターターセット、工房、The Arena、Exchange、聖典の間、Ashram、遊びの卓。"),
     },
     "starter": {
         "en": ("Starter Set | Prakrti GSA",
