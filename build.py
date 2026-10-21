@@ -63,10 +63,10 @@ SLUG = dict(PAGES)
 
 META = {
     "home": {
-        "en": ("Prakrti GSA | Self-inquiry with the Bhagavad Gītā",
-               "Write the shape of your mind, test it in the light of the Gītā, repair it with others and check it against your life. Begin with the free Starter Set."),
-        "ja": ("Prakrti GSA | バガヴァッド・ギーターと歩む自己探究",
-               "自分の心の型を書き、ギーターの光で試し、人と直し合い、暮らしの中で確かめる。無料のスターターセットから始められます。"),
+        "en": ("Prakrti GSA | An AI app for self-inquiry with the Bhagavad Gītā",
+               "Talk through what troubles you with an AI grounded in the Bhagavad Gītā. The conversation becomes a card of your mind's pattern, tested in the Gītā's light, repaired with others and checked against your life."),
+        "ja": ("Prakrti GSA | バガヴァッド・ギーターと歩む、自己探究の AI アプリ",
+               "バガヴァッド・ギーターに根ざした AI と、迷いを話す。話は一枚の心の型のカードになり、ギーターの光で試し、人と直し合い、暮らしの中で確かめます。"),
     },
     "world": {
         "en": ("World map | Prakrti GSA",
@@ -145,7 +145,7 @@ JA_CHARS = re.compile(r"[　-ヿ㐀-鿿＀-￯]")
 # (word-break: auto-phrase) but Safari and Firefox cannot, so the build marks the
 # phrase boundaries with <wbr> for every browser.
 JA_PARSER = budoux.load_default_japanese_parser()
-PHRASED = "h1, h2, h3, h4, .eyebrow, .lede, .btn, .link-arrow"
+PHRASED = "h1, h2, h3, h4, .eyebrow, .lede, .btn, .link-arrow, .motto, .big-verse blockquote p"
 
 
 def page_dir(lang, token):

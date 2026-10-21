@@ -359,3 +359,41 @@ img{max-width:100%}
 .invite-block{display:grid;gap:16px;max-width:36rem;align-content:start}
 .skip{position:absolute;left:-9999px;top:0}
 .skip:focus{left:max(16px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 8px);z-index:40;background:var(--surface);color:var(--ink);padding:.6em .9em;border:1px solid var(--ink)}
+
+/* home: the Gita, shown large */
+.gita-mark{display:grid;gap:.05em;margin:0}
+.gm-deva{font-family:var(--font-deva);font-size:clamp(2rem,4.6vw,3.3rem);color:var(--silk);line-height:1.15}
+.gm-latin{font-family:var(--font-display);font-weight:600;font-size:clamp(3rem,8.4vw,6.2rem);line-height:.95;letter-spacing:-.02em;color:var(--ink)}
+.hero h1{font-size:clamp(1.65rem,3.3vw,2.55rem);line-height:1.15}
+:root[data-lang="ja"] .hero h1{font-size:clamp(1.45rem,2.9vw,2.2rem);line-height:1.45}
+.motto{font-family:var(--font-display);font-size:1.18rem;font-weight:500;color:var(--silk)}
+/* home: one conversation, start to finish */
+.flow{gap:14px}
+.flow-step{display:grid;gap:8px;padding-top:12px;border-top:1px solid var(--rule)}
+.flow-k{display:flex;align-items:center;gap:.5em;font-family:var(--font-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+:root[data-lang="ja"] .flow-k{font-family:var(--font-body);font-size:.98rem;letter-spacing:.03em;text-transform:none;font-weight:600}
+.flow-k .deva{font-size:1.2rem;color:var(--silk);text-transform:none}
+.flow-k .chip{margin-left:auto}
+.talk{display:grid;gap:8px}
+.talk p{font-size:.98rem;line-height:1.5;padding:8px 12px;border-radius:var(--radius);max-width:94%}
+.talk .you{background:var(--raise);justify-self:end}
+.talk .ai{background:var(--bg);border:1px solid var(--rule);justify-self:start}
+.talk .who{display:block;font-family:var(--font-mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.mini-card{border:1px solid var(--silk-mid);border-radius:var(--radius);background:var(--bg);padding:10px 12px}
+.mc-title{font-family:var(--font-display);font-weight:600;font-size:1.02rem;margin-bottom:6px}
+.mini-card dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;margin:0;font-size:.95rem}
+.mini-card dt{color:var(--muted);font-family:var(--font-mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;padding-top:.3em}
+:root[data-lang="ja"] .mini-card dt{font-family:var(--font-body);font-size:.86rem;text-transform:none;letter-spacing:.02em;padding-top:0}
+.mini-card dd{margin:0;color:var(--ink)}
+.flow-p{font-size:.98rem;color:var(--ink-2)}
+/* home: a verse, shown large */
+.big-verse{margin:clamp(28px,4vw,48px) 0 0;padding:clamp(20px,3vw,36px);border-left:3px solid var(--silk-fill);background:var(--surface);display:grid;gap:10px;border-radius:0 var(--radius) var(--radius) 0}
+.bv-sa{font-family:"Gentium Book Plus",Georgia,serif;font-style:italic;font-size:clamp(1.15rem,2.5vw,1.6rem);color:var(--silk);overflow-wrap:anywhere}
+.big-verse blockquote{margin:0}
+.big-verse blockquote p{font-family:var(--font-display);font-size:clamp(1.45rem,3.3vw,2.35rem);line-height:1.3;font-weight:500;color:var(--ink)}
+.big-verse figcaption{font-family:var(--font-mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.model-text{display:grid;gap:20px;align-content:start}
+/* Japanese browsers on English pages */
+.langbar{display:flex;justify-content:center;align-items:center;gap:14px;padding:8px 16px;background:var(--silk-wash);font-size:.95rem}
+.langbar a{color:var(--ink)}
+.langbar button{border:0;background:transparent;font-size:1.1rem;line-height:1;cursor:pointer;color:var(--ink-2)}
