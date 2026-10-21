@@ -138,8 +138,7 @@ Cloudflare Pages などほかの静的ホスティングでも、`dist/` をそ�
 
 ## 残っている作業
 
-- **聖句の訳**：`src/site.js` の `VERSE`（2.63・2.3・3.27）を、アプリの DB の訳に差し替えます（英語は US の訳、日本語は gita_jp.json）。差し替えたら、体験版の「仮の訳です」という注（`src/site.js` の作戦タイムの注）も外します。
-- **数**：`src/site.html` の在庫目録の数（35,343、104、36、22、700、195、143）を、リポジトリの最新の値に合わせます。143 は『タットヴァ・ボーダ』と『アートマ・ボーダ』の合計（75＋68）です。
+- **数**：`src/site.html` の在庫目録の数（700、195、143、104、36、22、215,455）は、2026-10-22 にアプリの値に合わせました。出どころ：700・195・143 は本番の解析の一覧（`/api/v1/scriptures/analysis-index`、143 は TB 75＋AB 68）、104 は `Claude outputs/scripture_import/analysis/paradigms.json`＋`paradigms_extra.json`（25＋79）、36 は `frontend/src/lib/krida/archery.ts` の `VERSES`、22 は `backend/app/core/config.py` の `monthly_test_run_limit`、215,455 は `backend` で `python3 -m tests.spec_models.doors` を走らせたときの状態の数。規則や中身が増えたら、同じ方法で数え直します。
 - **表紙の動画**：御者と射手のデモから 10〜20 秒の動画を撮り、トップページの体験版の近くに置きます。
 - **連絡先**：会社のドメインのアドレスを作ったら、`site.config.json` の `contact_email` と、`src/site.html` の特商法の表のメールアドレスを替えます。
 - **法務の表記**：特商法の表記・利用規約・プライバシーポリシーは、アプリのページ（`/legal/tokushoho`・`/terms`・`/privacy`）にリンクしています。サイトの `/legal/` は、その三つへの案内です。サイトに本文の写しは置いていません（直す場所をアプリの一か所にするため）。

@@ -207,9 +207,9 @@ function renderGazetteer(){
 var KING={dharma:T("Dharma · law","法 ・ ダルマ"),artha:T("Artha · gain","利 ・ アルタ"),kama:T("Kāma · desire","欲 ・ カーマ")};
 var SEED={anger:{name:T("anger","怒り"),k:"kama"},pride:{name:T("pride","慢心"),k:"dharma"},fear:{name:T("fear","恐れ"),k:"artha"}};
 var VERSE={
- "2.63":{k:"kama",text:T("From anger comes confusion; from confusion, a lapse of memory; from that lapse, the loss of discernment; and when discernment is lost, one is lost.","怒りから迷妄が生じ、迷妄から記憶の喪失が生じる。記憶の喪失から識別の破滅が生じ、識別が破滅すると、人は滅びる。")},
- "2.3":{k:"artha",text:T("Do not give in to faintheartedness. It does not become you. Shake off this small weakness of the heart and stand up.","プリターの子よ、惰弱に身をまかせてはならない。それは汝にふさわしくない。この卑しい心の弱さを捨てて立ち上がれ、敵を焼く者よ。")},
- "3.27":{k:"dharma",text:T("All actions are carried out by the qualities of prakṛti. One confused by the ego thinks, “I am the doer.”","プラクリティのグナが、すべての行為をなす。我執に理解を惑わされた人は、「私が行為者である」と考える。")}
+ "2.63":{k:"kama",text:T("From anger comes delusion, and from delusion loss of memory. From loss of memory comes the ruin of discrimination, and from the ruin of discrimination he perishes.","怒りから迷妄が生じ、迷妄から記憶の喪失が生じる。記憶の喪失から識別の破滅が生じ、識別が破滅すると、人は滅びる。")},
+ "2.3":{k:"artha",text:T("Yield not to unmanliness, O son of Pritha! Ill does it become you. Cast off this mean faintheartedness and arise, O scorcher of your enemies!","プリターの子よ、惰弱に身をまかせてはならない。それは汝にふさわしくない。この卑しい心の弱さを捨てて立ち上がれ、敵を焼く者よ。")},
+ "3.27":{k:"dharma",text:T("The gunas of Prakriti perform all action. With the understanding deluded by egoism, man thinks, “I am the doer.”","プラクリティのグナが、すべての行為をなす。我執に理解を惑わされた人は、「私が行為者である」と考える。")}
 };
 var ROUNDS=[
  {name:T("Mockery","嘲り"),event:T("The crowd mocks a third-place finish.","三位に終わり、観衆があざ笑う。"),crowd:T("“Did the bird pay you to miss?”","「鳥に頼まれて外したのか？」"),
@@ -298,7 +298,7 @@ function renderArcher(){
     return '<button type="button" class="'+cls+'" data-v="'+v+'"'+dis+'><span class="ref">'+esc(tr(T("Gītā ","ギーター ")))+v+'</span><span>'+esc(tr(VERSE[v].text))+'</span></button>';
   }).join("")+'</div>';
   if(game.phase==="timeout"){
-    h+='<p class="note">'+esc(tr(T("The cards do not say which mind they speak to. The English renderings here are provisional; in the app, verse text comes from the scripture library.","札には、どの心に向けた句かは書いてありません。ここの訳は仮のものです。アプリでは、聖典の書庫の訳が出ます。")))+'</p>';
+    h+='<p class="note">'+esc(tr(T("The cards do not say which mind they speak to. The verse text is the same as in the app's scripture library.","札には、どの心に向けた句かは書いてありません。句の訳は、アプリの聖典の書庫と同じものです。")))+'</p>';
   }else{
     var fit=VERSE[game.pick].k===SEED[R.seed].k, sd=SEED[R.seed];
     h+='<div class="result" aria-live="polite"><p class="verdict '+(fit?"ok":"no")+'">'+esc(tr(fit?T("The verse reached the archer","句が届いた"):T("The verse did not reach","句は届かなかった")))+'</p>';
