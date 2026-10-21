@@ -36,8 +36,8 @@ var PLACES=[
   desc:T("Sri Krishna asks you for water, and a life begins in a village at the edge of the desert. A solo story with no game master, played on screen.","聖クリシュナに水を頼まれ、砂漠の外れの村で一つの人生が始まります。GM のいない一人用の物語で、画面の上で遊びます。"),
   status:["starter","noai"],page:"rpd",app:"/mahabharata/works"},
  {id:"prism",ch:"1",name:T("Prism","Prism"),short:T("Prism","Prism"),
-  desc:T("Write a single line and the AI scans it for fragments of the structure of your mind. It is the lightest way into dialogue.","一行書くと、AI が心の構造の断片を読み取ります。対話へのいちばん軽い入口です。"),
-  status:["daily","unlimited"],page:"premium"},
+  desc:T("Write a fragment of your day, up to 600 characters: a friction, a scene you cannot put down. Press Scan and the AI returns one short, sharp line with a Vital Score. With a free account you get one scan a day, and writing is unlimited. Premium scans without limit and opens a strategy dialogue from the fragment.","今日の摩擦や、頭から離れない一場面を、600 字までの断片に書きます。スキャンを押すと、AI が短く鋭い一行と、活力スコアを返します。無料のアカウントでスキャンは 1 日 1 回、書きとめるだけなら何度でも書けます。Premium ではスキャンが無制限になり、その断片から戦略対話を始められます。"),
+  status:["daily","freeWrite","unlimited"],page:"premium",app:"/observe"},
  {id:"kuru",ch:"1",name:T("Kurukshetra, the workshop","Kurukshetra（工房）"),short:T("Kurukshetra","Kurukshetra"),
   desc:T("Write and version your Sutras, build counterparts, run test runs, read the observation report, and keep private notes in the margin.","Sutra を書いて版を重ね、相手役を作り、試走し、観測レポートを読み、余白に私的なメモを残します。"),
   status:["freeWrite","testruns"],page:"engine"},
@@ -246,6 +246,7 @@ function gaugeHTML(){
 }
 function renderArcher(){
   var host=$("#archer");if(!host)return;
+  host.setAttribute("aria-label",tr(T("The Charioteer and the Archer, a playable taste","『御者と射手』の体験版")));
   var h='';
   if(game.phase==="end"){
     h+='<div class="game-top"><p class="eyebrow">'+esc(tr(T("The archer's journey","射手の旅路")))+'</p>'+gaugeHTML()+'</div>';
@@ -284,6 +285,214 @@ function renderArcher(){
   }
   host.innerHTML=h;
 }
+/* ---------- the map of three kingdoms: the app's shapes, drawn as the site's three-colour mosaic ----------
+   Same rules as the app (realmHex.ts, realmShapes.ts, mapReading.ts): sizes in five steps, kāma in the four steps of the
+   pressure gauge, capitals placed by how near the bonds pull them, roads by bond, a freeze cuts every road and spends
+   artha, joining a road loosens the alliance. The app paints only each kingdom's hexes on a dark board; the site gives
+   every hex to the nearest capital (weighted by size), so the whole board shows the three colours. */
+var REALMS=["dharma","artha","kama"];
+var KAMA_SIZE={calm:.25,rising:.5,strained:.75,breaking:1};
+var BOND_DIST={
+  dk:{apart:1,near:.78,nearing:.78,parting:.84,joined:.58,cut:1.3},
+  ak:{apart:1,near:.78,nearing:.78,parting:.84,joined:.58,cut:1.3},
+  ad:{held:.85,thick:.66,strained:.85,loosened:1.1,cut:1.3}
+};
+var ROADS=[["dk","dharma","kama"],["ak","artha","kama"],["ad","artha","dharma"]];
+var ROAD={joined:[3.2],held:[2],thick:[4.4],strained:[2,"9 3 2 3"],nearing:[1.6,"6 4"],near:[1.6,"6 4"],parting:[1.4,"3 6"],loosened:[1.6,"2 5"]};
+function realmShape(c){
+  var d={dharma:.75,artha:.75,kama:"calm",dk:"apart",ak:"apart",ad:"held",event:"none"},k;
+  for(k in c)d[k]=c[k];
+  if(d.event==="frozen")return {dharma:d.dharma,artha:0,kama:d.kama,dk:"cut",ak:"cut",ad:"cut",event:"frozen"};
+  return {dharma:d.dharma,artha:d.artha,kama:d.event==="erupted"?"breaking":d.kama,dk:d.dk,ak:d.ak,
+    ad:(d.dk==="joined"||d.ak==="joined")?"loosened":d.ad,event:d.event==="erupted"?"erupted":"none"};
+}
+function realmPositions(sh){
+  var dAK=BOND_DIST.ak[sh.ak]||1, dAD=BOND_DIST.ad[sh.ad]||.85, dDK=BOND_DIST.dk[sh.dk]||1;
+  var x=(dAD*dAD-dDK*dDK+dAK*dAK)/(2*dAK), y=-Math.sqrt(Math.max(0,dAD*dAD-x*x)), cx=(dAK+x)/3, cy=y/3;
+  return {artha:[-cx,-cy],kama:[dAK-cx,-cy],dharma:[x-cx,y-cy]};
+}
+function realmBoard(cols,rows,W){
+  var s=W/(Math.sqrt(3)*(cols+0.5)), hw=Math.sqrt(3)*s, cells=[];
+  for(var r=0;r<rows;r++)for(var c=0;c<cols;c++)cells.push({c:c,r:r,x:hw*(c+0.5*(r&1))+hw/2,y:s+1.5*s*r});
+  return {cols:cols,rows:rows,W:W,H:Math.ceil(s*(1.5*(rows-1)+2)),s:s,cells:cells};
+}
+function realmNbr(b,i,d){var cl=b.cells[i],v=((cl.r&1)?DO:DE)[d],c=cl.c+v[0],r=cl.r+v[1];return (c<0||r<0||c>=b.cols||r>=b.rows)?-1:r*b.cols+c}
+function hexPts(cx,cy,s){return corners(cx,cy,s).map(function(q){return f1(q[0])+","+f1(q[1])}).join(" ")}
+function realmLayout(b,sh){
+  var pos=realmPositions(sh), U=b.W*0.5, ky=0.82, ox=b.W/2, oy=b.H*0.55, m=b.s*1.6, caps={}, used={};
+  REALMS.forEach(function(k){
+    var px=Math.max(m,Math.min(b.W-m,ox+pos[k][0]*U)), py=Math.max(m,Math.min(b.H-m,oy+pos[k][1]*U*ky)), best=-1, bd=1e9;
+    b.cells.forEach(function(cl,i){if(used[i])return;var d=Math.hypot(cl.x-px,cl.y-py);if(d<bd){bd=d;best=i}});
+    caps[k]=best;used[best]=1;
+  });
+  var w={dharma:.4+sh.dharma,artha:.4+sh.artha,kama:.4+KAMA_SIZE[sh.kama]};
+  var owner=b.cells.map(function(cl){
+    var best="dharma",bd=1e9;
+    REALMS.forEach(function(k){var cp=b.cells[caps[k]],d=Math.hypot(cl.x-cp.x,cl.y-cp.y)/w[k];if(d<bd-1e-9){bd=d;best=k}});
+    return best;
+  });
+  REALMS.forEach(function(k){owner[caps[k]]=k});
+  return {owner:owner,caps:caps};
+}
+/* drawn above the tiles: hexes kāma spilled into, borders, roads, capitals */
+function realmOverlay(b,sh,lay){
+  var s=b.s, k=s/11.5*1.15, out="", i, d, n, cs, seen={};
+  if(sh.event==="erupted"){
+    for(i=0;i<b.cells.length;i++){if(lay.owner[i]!=="kama")continue;
+      for(d=0;d<6;d++){n=realmNbr(b,i,d);if(n<0||seen[n]||lay.owner[n]==="kama")continue;seen[n]=1;
+        out+='<polygon class="spill" points="'+hexPts(b.cells[n].x,b.cells[n].y,s*0.74)+'"/>'}}
+  }
+  if(sh.event!=="none"){
+    for(i=0;i<b.cells.length;i++){for(d=0;d<6;d++){
+      n=realmNbr(b,i,d);if(n<0||lay.owner[n]===lay.owner[i])continue;
+      if(sh.event==="frozen"?n<i:lay.owner[i]!=="kama")continue;
+      cs=corners(b.cells[i].x,b.cells[i].y,s);
+      out+='<line class="bd '+(sh.event==="frozen"?"frost":"ember")+'" x1="'+f1(cs[d][0])+'" y1="'+f1(cs[d][1])+'" x2="'+f1(cs[(d+1)%6][0])+'" y2="'+f1(cs[(d+1)%6][1])+'"/>';
+    }}
+  }
+  ROADS.forEach(function(rd){
+    var st=ROAD[sh[rd[0]]];if(!st)return;
+    var p=b.cells[lay.caps[rd[1]]], q=b.cells[lay.caps[rd[2]]];
+    out+='<line class="rd" x1="'+f1(p.x)+'" y1="'+f1(p.y)+'" x2="'+f1(q.x)+'" y2="'+f1(q.y)+'" stroke-width="'+f1(st[0]*k)+'"'+(st[1]?' stroke-dasharray="'+st[1].split(" ").map(function(v){return f1(v*k)}).join(" ")+'"':'')+'/>';
+  });
+  REALMS.forEach(function(r){var c=b.cells[lay.caps[r]];out+='<polygon class="cap k-'+r+'" points="'+hexPts(c.x,c.y,s*0.5)+'"/>'});
+  return out;
+}
+function realmSVG(b,sh,label){
+  var lay=realmLayout(b,sh);
+  return '<svg class="rmap'+(sh.event!=="none"?" ev-"+sh.event:"")+'" viewBox="0 0 '+b.W+' '+b.H+'" role="img" aria-label="'+esc(label)+'"><g class="rm-tiles">'+
+    b.cells.map(function(cl,i){return '<polygon class="hx k-'+lay.owner[i]+'" points="'+hexPts(cl.x,cl.y,b.s*0.98)+'"/>'}).join("")+
+    '</g><g class="rm-over">'+realmOverlay(b,sh,lay)+'</g></svg>';
+}
+var SIZE_W=[T("very small","ごく小さい"),T("small","小さい"),T("middling","中くらい"),T("large","大きい"),T("very large","とても大きい")];
+var KAMA_W={calm:T("calm","静か"),rising:T("swelling","ふくらんできた"),strained:T("pressing at its borders","国境にせまっている"),breaking:T("about to overflow","国境をあふれかけている")};
+function realmWords(sh){function z(v){return SIZE_W[Math.max(0,Math.min(4,Math.round(v*4)))]}return {dharma:z(sh.dharma),artha:z(sh.artha),kama:KAMA_W[sh.kama]}}
+function realmLegend(sh){var w=realmWords(sh);return '<div class="rlegend">'+REALMS.map(function(k){return '<div><span class="sw k-'+k+'"></span><span class="nm">'+esc(tr(KING[k]))+'</span><span class="state">'+esc(tr(w[k]))+'</span></div>'}).join("")+'</div>'}
+var BOND_W={
+ dk:{near:T("Dharma and Kāma stand near each other","法と欲は近いところにある"),nearing:T("Dharma and Kāma are drawing closer","法と欲が近づいている"),parting:T("Dharma and Kāma are still near, but drifting apart","法と欲はまだ近いが、離れつつある"),joined:T("Dharma and Kāma have joined","法と欲が手を結んだ")},
+ ak:{near:T("Artha and Kāma stand near each other","利と欲は近いところにある"),nearing:T("Artha and Kāma are drawing closer","利と欲が近づいている"),parting:T("Artha and Kāma are still near, but drifting apart","利と欲はまだ近いが、離れつつある"),joined:T("Artha and Kāma have joined","利と欲が手を結んだ")},
+ ad:{thick:T("The alliance of Artha and Dharma has grown thick","利と法の同盟が太くなった"),strained:T("The alliance of Artha and Dharma is strained","利と法の同盟がきしんでいる"),loosened:T("The alliance of Artha and Dharma has come loose","利と法の同盟がほどけた")}
+};
+/* the map's sentence, as the app writes it under a scene (without the bracketed notes meant for looking back on a run) */
+function realmSentence(sh){
+  var ja=L()==="ja", w=realmWords(sh);
+  var p=[ja?("法は"+w.dharma.ja+"・利は"+w.artha.ja+"・欲は"+w.kama.ja+"。"):("Dharma "+w.dharma.en+" · Artha "+w.artha.en+" · Kāma "+w.kama.en+".")];
+  if(sh.event==="frozen"){p.push(tr(T("The three kingdoms stand isolated, and every road is cut.","三つの国が孤立し、道はすべて切れた。")))}
+  else{
+    var moved=["dk","ak","ad"].filter(function(k){return BOND_W[k][sh[k]]});
+    if(!moved.length)p.push(tr(T("Artha and Dharma hold their usual alliance, and Kāma stands apart.","利と法はいつもの同盟を結び、欲は離れている。")));
+    moved.forEach(function(k){p.push(tr(BOND_W[k][sh[k]])+(ja?"。":"."))});
+  }
+  if(sh.event==="erupted")p.push(tr(T("Kāma broke over its borders.","欲が国境を越えた。")));
+  return p.join(ja?"":" ");
+}
+/* six scenes from the epic, seven maps (the app's MAP_SCENES; shapes are Prakrti GSA's reading, not the epic's own words) */
+var SCENES=[
+ {id:"dice",title:T("The dice game: Yudhiṣṭhira","骰子の賭け——ユディシュティラ"),short:T("The dice","骰子の賭け"),ref:T("Sabhā Parva","Sabhā Parva"),
+  text:T("Reasoning that a challenge must not be refused, Yudhiṣṭhira sat down to the dice. He staked his wealth, his kingdom, his brothers, himself and at last Draupadī, and lost them all.","挑まれた勝負は断らないという理屈で、ユディシュティラは骰子の賭けに乗った。財も国も兄弟も、自分自身も、ついにはドラウパディーまで賭けて、すべてを失った。"),
+  read:T("The desire to play joins hands with Artha's reckoning: riding desire's game on the reason that a challenge must not be refused. The rule, Dharma, lies near the desire as well, while the usual alliance of Artha and Dharma has come loose. As the losses mount, Artha grows small.","賭けの欲が、利の計算と手を結ぶ。断らないという理屈を付けて、欲の遊びに乗る。決まり（法）も欲の近くにあるが、利と法のいつもの同盟はほどけている。負けが重なり、利（心の体力）は小さい。"),
+  hero:T("The desire to play joins hands with Artha's reckoning, riding desire's game on the reason that a challenge must not be refused.","賭けの欲が、利の計算と手を結ぶ。断らないという理屈を付けて、欲の遊びに乗る。"),
+  maps:[{shape:realmShape({dharma:.5,artha:.25,kama:"strained",dk:"near",ak:"joined"})}]},
+ {id:"eve",title:T("The eve of war: two at Dvārakā","前夜——ドヴァーラカーの二人"),short:T("The eve","前夜"),ref:T("Ganguli, Udyoga §7","Ganguli, Udyoga §7"),
+  text:T("Before the war, Sri Krishna set two things before them: his army, and himself alone, who would not fight. Arjuna chose Sri Krishna, and when asked why, answered: “You are renowned, and I too seek fame.” Duryodhana got the army and was overjoyed, though he knew Sri Krishna was not on his side.","戦の前、聖クリシュナは二人の前に二つを置かれた。ご自身の軍勢と、戦わないご自身おひとり。アルジュナは聖クリシュナを選び、「なぜ」と問われて「あなたは名高い。私も名声を求める者です」と答えた。ドゥルヨーダナは軍勢を得て、聖クリシュナが自分の側にいないと知りながら、大いに喜んだ。"),
+  read:T("On Arjuna's side, the heart that seeks renown, Kāma, joins hands with Sri Krishna, who will not fight, on the side of Dharma. On the side that took the army, Kāma joins the reckoning of numbers and strength, Artha. On both sides, the usual alliance of Artha and Dharma has come loose.","アルジュナの側では、名声を求める心（欲）が、戦わない聖クリシュナ、つまり法の側と手を結ぶ。軍勢を取った側では、欲が、数と力の計算（利）と手を結ぶ。どちらでも、利と法のいつもの同盟はほどけている。"),
+  maps:[{label:T("Arjuna chooses Sri Krishna","アルジュナ——聖クリシュナを選ぶ"),title:T("The eve of war: Arjuna chooses Sri Krishna","前夜——聖クリシュナを選ぶアルジュナ"),short:T("The eve: Arjuna","前夜：アルジュナ"),hero:T("The heart that seeks renown, Kāma, joins hands with Sri Krishna, who will not fight: the side of Dharma.","名声を求める心（欲）が、戦わない聖クリシュナ、つまり法の側と手を結ぶ。"),shape:realmShape({dharma:.75,artha:.5,kama:"strained",dk:"joined"})},
+        {label:T("Duryodhana takes the army","ドゥルヨーダナ——軍勢を取る"),title:T("The eve of war: Duryodhana takes the army","前夜——軍勢を取るドゥルヨーダナ"),short:T("The eve: Duryodhana","前夜：ドゥルヨーダナ"),hero:T("Kāma joins hands with the reckoning of numbers and strength, Artha.","欲が、数と力の計算（利）と手を結ぶ。"),shape:realmShape({dharma:.25,artha:.75,kama:"strained",ak:"joined"})}]},
+ {id:"gita-open",title:T("The opening of the Gītā: Arjuna","ギーターの始め——アルジュナ"),short:T("Gītā, opening","ギーターの始め"),ref:T("Gītā 1.28–47, 2.9","ギーター 1.28–47、2.9"),
+  text:T("Unable to raise his bow against his own, Arjuna cast it down, sat in the chariot, said “I will not fight” and fell silent.","身内に弓を向けられず、アルジュナは弓を捨てて戦車に座り込み、「戦わない」と言って黙った。"),
+  read:T("The strength runs out and the hands stop. The three kingdoms stand isolated and every road is cut: a freeze. Dharma, his dread of the sin of killing his own, stays large, while Artha, the inner reserve, is spent.","力が尽きて、手が止まる。三つの国は孤立し、どの道も切れる。凍結です。身内を討つ罪を恐れる心（法）は大きいまま、利（心の体力）は尽きている。"),
+  hero:T("The strength runs out and the hands stop. The three kingdoms stand isolated, and every road is cut: a freeze.","力が尽きて、手が止まる。三つの国は孤立し、どの道も切れる。凍結です。"),
+  maps:[{shape:realmShape({dharma:.75,kama:"strained",event:"frozen"})}]},
+ {id:"gita-end",title:T("The end of the Gītā: Arjuna","ギーターの終わり——アルジュナ"),short:T("Gītā, end","ギーターの終わり"),ref:T("Gītā 18.73","ギーター 18.73"),
+  text:T("His confusion gone, Arjuna stood up and said to Sri Krishna, who held the reins: “I will do as you say.”","迷いが晴れたアルジュナは、手綱を取る聖クリシュナに「あなたの言葉のとおりにします」と言って立った。"),
+  read:T("With the confusion gone, he stands. The alliance of Artha and Dharma grows thick, and Kāma is calm, lying near Dharma. This too is one shape among the others.","迷いが晴れて、立つ。利と法の同盟が太くなり、欲は静かで、法の近いところにある。これも、ほかの場面と並ぶ一つの形です。"),
+  hero:T("With the confusion gone, he stands. The alliance of Artha and Dharma grows thick, and Kāma is calm, near Dharma.","迷いが晴れて、立つ。利と法の同盟が太くなり、欲は静かで、法の近くにある。"),
+  maps:[{shape:realmShape({dharma:1,artha:.75,kama:"calm",dk:"near",ad:"thick"})}]},
+ {id:"vow",title:T("After Abhimanyu's death: Arjuna's vow","アビマニユの死のあと——アルジュナの誓い"),short:T("The vow","誓い"),ref:T("Ganguli, Droṇa §73","Ganguli, Droṇa §73"),
+  text:T("Learning of his son Abhimanyu's death, Arjuna vowed to slay Jayadratha before the next sunset, or else enter the fire.","息子アビマニユの死を知ったアルジュナは、「翌日の日没までにジャヤドラタを討つ。討てなければ火に入る」と誓った。"),
+  read:T("The desire to strike joins hands with the vow, Dharma. Kāma is about to overflow its borders: desire can also run under the name of what is right.","討ちたいという欲が、誓い（法）と手を結ぶ。欲は国境をあふれかけている。正しさの名のもとに、欲が走ることもある。"),
+  hero:T("The desire to strike joins hands with the vow, Dharma. Desire can also run under the name of what is right.","討ちたいという欲が、誓い（法）と手を結ぶ。正しさの名のもとに、欲が走ることもある。"),
+  maps:[{shape:realmShape({dharma:1,artha:.5,kama:"breaking",dk:"joined"})}]},
+ {id:"raid",title:T("Aśvatthāman's night raid","アシュヴァッターマンの夜襲"),short:T("The night raid","夜襲"),ref:T("Sauptika Parva","Sauptika Parva"),
+  text:T("Taking his rage at his father Droṇa's death by deceit for justice, Aśvatthāman fell on the sleeping camp at night.","父ドローナを欺きで討たれた怒りを正しさと名乗り、アシュヴァッターマンは眠る陣を夜に襲った。"),
+  read:T("Rage, Kāma, joins hands with Dharma, speaking in the name of what is right, and breaks over its borders: an eruption. The kingdom of Dharma itself is small.","怒り（欲）が正しさ（法）を名乗って手を結び、国境を越える。暴発です。法の国そのものは小さい。"),
+  hero:T("Rage, Kāma, joins hands with Dharma, speaking in the name of what is right, and breaks over its borders: an eruption.","怒り（欲）が正しさ（法）を名乗って手を結び、国境を越える。暴発です。"),
+  maps:[{shape:realmShape({dharma:.25,artha:.25,kama:"breaking",dk:"joined",event:"erupted"})}]}
+];
+var SCENE_BY={};SCENES.forEach(function(sc){SCENE_BY[sc.id]=sc});
+var READING=T("Prakrti GSA's reading","Prakrti GSA の読み");
+function frameLabel(sc,m){return tr(m.title||sc.title)}
+
+/* the large map on the first page: the scenes play in turn; pause, choose, or hold still for reduced motion */
+function realmHero(host){
+  var frames=[];SCENES.forEach(function(sc){sc.maps.forEach(function(m){frames.push({sc:sc,m:m})})});
+  var b=realmBoard(16,11,320), cur=0, still=false, held=false, seen=true, timer=null;
+  frames.forEach(function(f,i){if(f.sc.id==="gita-end")cur=i});
+  try{still=window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+  var lay=realmLayout(b,frames[cur].m.shape);
+  var h='<div class="rp-top"><p class="eyebrow">'+esc(tr(T("Three kingdoms · scenes from the epic","三国の地図 ・ 叙事詩の場面")))+'</p><button type="button" class="btn btn-sm rp-play"></button></div>';
+  h+='<div class="rp-map"><svg class="rmap" viewBox="0 0 '+b.W+' '+b.H+'" role="img"><g class="rm-tiles">'+b.cells.map(function(cl,i){return '<polygon class="hx k-'+lay.owner[i]+'" points="'+hexPts(cl.x,cl.y,b.s*0.98)+'"/>'}).join("")+'</g><g class="rm-over"></g></svg></div>';
+  // each frame's words sit stacked in one cell, so the panel keeps the height of the longest and nothing below it jumps
+  h+='<div class="rp-frames rp-legends" aria-hidden="true">'+frames.map(function(f,i){return '<div class="rp-frame" data-i="'+i+'">'+realmLegend(f.m.shape)+'</div>'}).join("")+'</div>';
+  h+='<div class="rp-scenes" role="group" aria-label="'+esc(tr(T("Scenes","場面")))+'">'+frames.map(function(f,i){return '<button type="button" data-rf="'+i+'">'+esc(tr(f.m.short||f.sc.short))+'</button>'}).join("")+'</div>';
+  h+='<div class="rp-frames rp-caps">'+frames.map(function(f,i){
+    return '<div class="rp-frame" data-i="'+i+'"><p class="rp-title">'+esc(frameLabel(f.sc,f.m))+' <span class="rp-ref">'+esc(tr(f.sc.ref))+'</span></p><p class="rp-read">'+esc(tr(f.m.hero||f.sc.hero))+'</p></div>';
+  }).join("")+'</div>';
+  h+='<p class="rp-note">'+esc(tr(T("The shapes are Prakrti GSA's reading of the scenes. No shape is a failure.","形は、Prakrti GSA による場面の読みです。どの形も、失敗ではありません。")))+' <a class="link-arrow" href="'+url("engine")+'#scenes">'+esc(tr(T("How to read the map","地図の読み方")))+'</a></p>';
+  host.innerHTML=h;
+  host.setAttribute("role","region");
+  host.setAttribute("aria-label",tr(T("The map of three kingdoms","三国の地図")));
+  var svg=$("svg",host), tiles=$$(".hx",svg), over=$(".rm-over",svg), btn=$(".rp-play",host), box=$(".rp-caps",host);
+  function show(i,byHand){
+    cur=i;var f=frames[i], sh=f.m.shape, ly=realmLayout(b,sh);
+    tiles.forEach(function(el,j){el.setAttribute("class","hx k-"+ly.owner[j])});
+    svg.setAttribute("class","rmap"+(sh.event!=="none"?" ev-"+sh.event:""));
+    svg.setAttribute("aria-label",frameLabel(f.sc,f.m)+". "+realmSentence(sh));
+    over.innerHTML=realmOverlay(b,sh,ly);
+    $$(".rp-frame",host).forEach(function(el){el.classList.toggle("on",+el.getAttribute("data-i")===i)});
+    $$("[data-rf]",host).forEach(function(el){el.setAttribute("aria-pressed",String(+el.getAttribute("data-rf")===i))});
+    box.setAttribute("aria-live",byHand?"polite":"off");
+  }
+  function label(){btn.textContent=still?tr(T("Play","再生")):tr(T("Pause","一時停止"));btn.setAttribute("aria-label",still?tr(T("Play the scenes","場面を順に流す")):tr(T("Pause the scenes","場面を止める")))}
+  function tick(){if(!still&&!held&&seen&&!document.hidden)show((cur+1)%frames.length,false)}
+  host.addEventListener("click",function(e){
+    var t=e.target.closest("[data-rf]");
+    if(t){still=true;label();show(+t.getAttribute("data-rf"),true);return}
+    if(e.target.closest(".rp-play")){still=!still;label();if(!still)tick()}
+  });
+  host.addEventListener("mouseenter",function(){held=true});
+  host.addEventListener("mouseleave",function(){held=false});
+  host.addEventListener("focusin",function(){held=true});
+  host.addEventListener("focusout",function(e){if(!host.contains(e.relatedTarget))held=false});
+  if(window.IntersectionObserver){new IntersectionObserver(function(es){seen=es[0].isIntersecting}).observe(host)}
+  label();show(cur,false);
+  timer=setInterval(tick,6500);
+}
+
+/* the scenes, all seven maps, for the page on judging */
+function realmGallery(host){
+  var b=realmBoard(16,11,320);
+  host.innerHTML=SCENES.map(function(sc){
+    return '<article class="rcard'+(sc.maps.length>1?" wide":"")+'"><p class="eyebrow">'+esc(tr(sc.ref))+'</p><h3>'+esc(tr(sc.title))+'</h3><p class="rc-text">'+esc(tr(sc.text))+'</p><div class="rc-maps">'+
+      sc.maps.map(function(m){return '<figure>'+(m.label?'<figcaption class="rc-label">'+esc(tr(m.label))+'</figcaption>':'')+realmSVG(b,m.shape,frameLabel(sc,m)+". "+realmSentence(m.shape))+'<p class="rc-sent">'+esc(realmSentence(m.shape))+'</p></figure>'}).join("")+
+      '</div><p class="rc-read"><span class="rc-k">'+esc(tr(READING))+'</span>'+esc(tr(sc.read))+'</p></article>';
+  }).join("")+'<article class="rcard wide rc-close"><p>'+esc(tr(T("The same Arjuna freezes at the opening of the Gītā, stands with the reins in Sri Krishna's hands at its end, and after Abhimanyu's death finds Dharma and Kāma joined. A shape is not a kind of person but a picture of how the mind moved at that moment. No shape is a failure.","同じアルジュナが、ギーターの始めでは凍り、終わりでは手綱を預けて立ち、アビマニユの死のあとでは法と欲が手を結ぶ。形は人の種類ではなく、その時の心の動きの写しです。どの形も、失敗ではありません。")))+'</p></article>';
+}
+/* one still map: of a scene (<div data-realm-map="gita-end" data-frame="0">, for the share images)
+   or of a shape written out (<div data-realm-shape='{"kama":"strained","dk":"nearing"}'>, for an example) */
+function realmStill(host){
+  var sh, label;
+  if(host.hasAttribute("data-realm-shape")){
+    try{sh=realmShape(JSON.parse(host.getAttribute("data-realm-shape")))}catch(e){return}
+    label=tr(T("Map of three kingdoms","三国の地図"))+". "+realmSentence(sh);
+  }else{
+    var sc=SCENE_BY[host.getAttribute("data-realm-map")];if(!sc)return;
+    var m=sc.maps[+(host.getAttribute("data-frame")||0)]||sc.maps[0];
+    sh=m.shape;label=frameLabel(sc,m)+". "+realmSentence(sh);
+  }
+  host.innerHTML=realmSVG(realmBoard(16,11,320),sh,label)+(host.hasAttribute("data-legend")?realmLegend(sh):"");
+}
+
 document.addEventListener("click",function(e){
   var host=$("#archer");if(!host||!host.contains(e.target))return;
   var v=e.target.closest("[data-v]");if(v&&!v.disabled){pickVerse(v.getAttribute("data-v"));return}
@@ -364,6 +573,9 @@ document.addEventListener("click",function(e){
 $$("[data-map]").forEach(function(h){makeMap(h)});
 renderGazetteer();
 if($("#archer")){newGame();renderArcher()}
+$$("[data-realm-hero]").forEach(realmHero);
+$$("[data-realm-gallery]").forEach(realmGallery);
+$$("[data-realm-map],[data-realm-shape]").forEach(realmStill);
 if($("#vib")){renderVib()}
 maps.forEach(function(m){m.layout(false)});
 /* Japanese browsers that land on an English page: offer the Japanese page once */

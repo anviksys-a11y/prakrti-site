@@ -9,6 +9,7 @@
   --lotus:#A23C55; --lotus-fill:#C65F79; --lotus-mid:#E2A6B5; --lotus-wash:#F1DBE1;
   --indigo-mid:#AEB7D6; --indigo-wash:#DADFEE;
   --fog:#DCDFE7;
+  --frost:#3E74C2; --ember:#D2652A;
   --on-ink:#F5F3EE; --on-fill:#1B1405; --on-strong:#FFFFFF;
   --font-display:"Eczar","Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",Georgia,serif;
   --font-body:"Gentium Book Plus","Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",Georgia,serif;
@@ -25,6 +26,7 @@
     --lotus:#EC8EA3; --lotus-fill:#B9566F; --lotus-mid:#63324A; --lotus-wash:#3C2131;
     --indigo-mid:#38436B; --indigo-wash:#252E4B;
     --fog:#1C2440;
+    --frost:#8DB6F0; --ember:#F29A62;
     --on-ink:#0F1528; --on-fill:#1B1405; --on-strong:#FFFFFF;
     color-scheme:dark;
   }
@@ -37,6 +39,7 @@
   --lotus:#EC8EA3; --lotus-fill:#B9566F; --lotus-mid:#63324A; --lotus-wash:#3C2131;
   --indigo-mid:#38436B; --indigo-wash:#252E4B;
   --fog:#1C2440;
+  --frost:#8DB6F0; --ember:#F29A62;
   --on-ink:#0F1528; --on-fill:#1B1405; --on-strong:#FFFFFF;
   color-scheme:dark;
 }
@@ -120,7 +123,7 @@ ul,ol{margin:0;padding-left:1.2em}
 @media (max-width:880px){.sutra{grid-template-columns:minmax(0,1fr)}}
 
 /* buttons and links */
-.cta-row{display:flex;flex-wrap:wrap;gap:12px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;font-family:var(--font-mono);font-size:.8rem;font-weight:500;letter-spacing:.07em;text-transform:uppercase;line-height:1.2;padding:.95em 1.3em;border-radius:2px;border:1px solid var(--ink);background:transparent;color:var(--ink);text-decoration:none;cursor:pointer;transition:background-color .2s,color .2s,border-color .2s}
 :root[data-lang="ja"] .btn{font-family:var(--font-body);font-size:.95rem;letter-spacing:.04em;font-weight:600;text-transform:none}
 .btn:hover{background:var(--raise)}
@@ -411,3 +414,98 @@ img{max-width:100%}
 .hero .hero-text{gap:16px;padding-top:0}
 .hero .lede{font-size:1.12rem;line-height:1.55;max-width:46ch}
 .hero .fullname{padding-bottom:.4em;margin-bottom:.1em}
+
+/* the map of three kingdoms (hero, judging page, share images) */
+.rmap{width:100%;height:auto;display:block}
+.rmap .hx{transition:fill .7s ease,fill-opacity .7s ease}
+.rmap.ev-frozen .hx{fill-opacity:.48}
+.rmap .cap{stroke:var(--surface);stroke-width:1.3}
+.rmap .cap.k-dharma{fill:var(--silk)}
+.rmap .cap.k-artha{fill:var(--peacock)}
+.rmap .cap.k-kama{fill:var(--lotus)}
+.rmap .rd{stroke:var(--ink);stroke-opacity:.82;stroke-linecap:round;fill:none}
+.rmap .bd{stroke-width:2.2;stroke-linecap:round}
+.rmap .bd.frost{stroke:var(--frost)}
+.rmap .bd.ember{stroke:var(--ember);stroke-dasharray:4 3}
+.rmap .spill{fill:var(--lotus-fill);fill-opacity:.42;stroke:var(--ember);stroke-width:1.1;stroke-dasharray:3 2.5}
+.rm-over>*{animation:rm-in .6s ease}
+@keyframes rm-in{from{opacity:0}to{opacity:1}}
+.rlegend{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 14px;font-size:.92rem;line-height:1.35}
+.rlegend div{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 7px;align-items:center}
+.rlegend .state{grid-column:2;color:var(--muted);font-size:.84rem}
+@media (max-width:520px){
+  .rlegend{grid-template-columns:minmax(0,1fr);gap:3px}
+  .rlegend div{grid-template-columns:auto auto minmax(0,1fr)}
+  .rlegend .state{grid-column:auto;justify-self:end;text-align:right}
+}
+.realm-panel{gap:12px}
+.rp-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.rp-map{margin-inline:-4px}
+.rp-frames{display:grid}
+.rp-frame{grid-area:1/1;display:grid;gap:8px;align-content:start;visibility:hidden;opacity:0;transition:opacity .5s ease,visibility .5s}
+.rp-frame.on{visibility:visible;opacity:1}
+.rp-title{font-family:var(--font-display);font-weight:600;font-size:1.14rem;line-height:1.3;margin:6px 0 0;color:var(--ink)}
+:root[data-lang="ja"] .rp-title{font-size:1.02rem;line-height:1.6}
+.rp-ref{font-family:var(--font-mono);font-weight:400;font-size:.68rem;letter-spacing:.06em;color:var(--silk);white-space:nowrap}
+.rp-read{margin:0;font-size:.98rem;line-height:1.55;color:var(--ink-2)}
+:root[data-lang="ja"] .rp-read{font-size:.94rem;line-height:1.85}
+.rp-scenes{display:flex;flex-wrap:wrap;gap:4px}
+.rp-scenes button{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.04em;padding:.5em .65em;border:1px solid var(--rule);border-radius:2px;background:transparent;color:var(--ink-2);line-height:1.2;cursor:pointer}
+:root[data-lang="ja"] .rp-scenes button{font-family:var(--font-body);font-size:.8rem;letter-spacing:.02em}
+.rp-scenes button:hover{border-color:var(--ink)}
+.rp-scenes button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--on-ink)}
+.rp-note{font-size:.88rem;color:var(--muted);margin:0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+@media (max-width:640px){.rp-scenes button{min-height:36px}}
+/* the map's parts and the scenes, on the page on judging */
+.rparts{display:grid;gap:0;max-width:52rem}
+.rparts>div{display:grid;grid-template-columns:5.4rem minmax(0,1fr);gap:18px;align-items:center;padding-block:12px;border-top:1px solid var(--rule)}
+.rparts p{margin:0;color:var(--ink-2);font-size:1rem}
+.rparts b{color:var(--ink);margin-right:.4em}
+.rglyph{width:5.4rem}
+.rgal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-flow:dense;gap:20px}
+@media (max-width:1000px){.rgal{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.rgal{grid-template-columns:minmax(0,1fr)}}
+.rcard{display:grid;gap:10px;align-content:start;padding:18px;border:1px solid var(--rule);border-radius:var(--radius);background:var(--surface)}
+.rcard.wide{grid-column:span 2}
+@media (max-width:640px){.rcard.wide{grid-column:auto}}
+.rcard h3{font-size:1.14rem}
+.rc-text{margin:0;font-size:.96rem;color:var(--ink-2)}
+.rc-maps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px}
+.rc-maps figure{margin:0;display:grid;gap:8px;align-content:start}
+.rc-label{font-family:var(--font-display);font-weight:600;font-size:1rem;color:var(--ink)}
+.rc-sent{margin:0;font-size:.9rem;line-height:1.55;color:var(--muted)}
+.rc-read{margin:0;font-size:.98rem;color:var(--ink);border-top:1px solid var(--rule);padding-top:10px}
+.rc-k{display:block;font-family:var(--font-mono);font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;color:var(--silk);margin-bottom:4px}
+:root[data-lang="ja"] .rc-k{font-family:var(--font-body);font-size:.8rem;letter-spacing:.03em;text-transform:none}
+.rc-close{align-content:center;background:transparent;border-style:dashed}
+.rc-close p{margin:0;font-family:var(--font-display);font-size:1.12rem;line-height:1.5;color:var(--ink)}
+:root[data-lang="ja"] .rc-close p{font-size:1.02rem;line-height:1.9}
+/* home: Prism */
+.cta-note{font-size:.92rem;color:var(--ink-2);margin:-4px 0 0;max-width:34rem}
+.cta-note a{white-space:nowrap}
+.prism-demo{gap:12px;align-content:start}
+.pd-facet{border:1px solid var(--rule);border-radius:var(--radius);background:var(--bg);padding:12px 14px;display:grid;gap:6px}
+.pd-label{margin:0;font-family:var(--font-mono);font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.pd-text{margin:0;font-size:1rem;line-height:1.6;color:var(--ink)}
+.pd-scan{margin:0;justify-self:start;font-family:var(--font-mono);font-size:.78rem;letter-spacing:.05em;padding:.6em .9em;border:1px solid var(--ink);border-radius:2px;color:var(--ink)}
+.pd-result{display:grid;gap:10px;padding:14px;border-left:3px solid var(--silk-fill);background:var(--bg);border-radius:0 var(--radius) var(--radius) 0}
+.pd-vital{display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted)}
+:root[data-lang="ja"] .pd-vl{font-family:var(--font-body);font-size:.86rem;letter-spacing:.02em}
+.pd-bars{display:inline-flex;gap:3px}
+.pd-bars i{width:18px;height:6px;border-radius:1px;background:var(--rule)}
+.pd-bars i.on{background:var(--ink-2)}
+.pd-line{margin:0;font-family:var(--font-display);font-size:1.2rem;line-height:1.4;font-weight:500;color:var(--ink)}
+:root[data-lang="ja"] .pd-line{font-size:1.08rem;line-height:1.75;font-weight:700}
+/* home: the four verbs beside the example */
+.flow-grid{margin-top:8px}
+.verbs-2{grid-template-columns:repeat(2,minmax(0,1fr));align-content:start}
+@media (max-width:560px){.verbs-2{grid-template-columns:minmax(0,1fr)}}
+.flow-map{display:grid;grid-template-columns:minmax(0,9.5rem) minmax(0,1fr);gap:14px;align-items:center}
+.flow-map .flow-p{font-size:.92rem;color:var(--muted)}
+/* phones and tablets: the hero's commentary moves below the map, so the map comes sooner */
+@media (max-width:1000px){
+  .hero .hero-grid{gap:16px}
+  .hero .hero-text{display:contents}
+  .hero .realm-panel{order:1;margin-top:16px}
+  .hero .hero-text>.tika{order:2;margin-top:8px}
+}

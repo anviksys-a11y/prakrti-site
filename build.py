@@ -123,10 +123,10 @@ META = {
                "Prakrti GSA を運営する株式会社Anviksiki Simulation Systems（東京）。"),
     },
     "legal": {
-        "en": ("Specified Commercial Transactions Act notice | Prakrti GSA",
-               "Seller details, price, payment, cancellation and refund terms for Prakrti GSA."),
-        "ja": ("特定商取引法に基づく表記 | Prakrti GSA",
-               "Prakrti GSA の販売事業者、価格、支払い、解約と返金についての表記。"),
+        "en": ("Legal notices | Prakrti GSA",
+               "Where to find the Specified Commercial Transactions Act notice, the Terms of Service and the Privacy Policy for Prakrti GSA."),
+        "ja": ("法務の表記 | Prakrti GSA",
+               "Prakrti GSA の特定商取引法に基づく表記、利用規約、プライバシーポリシーの掲載先。"),
     },
 }
 
@@ -150,7 +150,7 @@ JA_CHARS = re.compile(r"[　-ヿ㐀-鿿＀-￯]")
 # (word-break: auto-phrase) but Safari and Firefox cannot, so the build marks the
 # phrase boundaries with <wbr> for every browser.
 JA_PARSER = budoux.load_default_japanese_parser()
-PHRASED = "h1, h2, h3, h4, .eyebrow, .lede, .btn, .link-arrow, .motto, .big-verse blockquote p"
+PHRASED = "h1, h2, h3, h4, .eyebrow, .lede, .btn, .link-arrow, .motto, .big-verse blockquote p, .cta-note, .pd-line"
 
 
 def page_dir(lang, token):
@@ -227,6 +227,9 @@ def phrase_breaks(soup, root):
             s = str(n)
             end = start + len(s)
             local = [c - start for c in cuts if start <= c < end]
+            # a link inside the text (not the text itself) stays in one piece: Chrome breaks at <wbr> even in nowrap
+            if local and any(p.name == "a" for p in n.parents if p is not el and el in p.parents):
+                local = []
             if local:
                 pieces, prev = [], 0
                 for c in local:
@@ -253,8 +256,9 @@ def build_page(raw, lang, token):
     for part in (header, section, footer):
         for a in part.find_all("a", href=True):
             h = a["href"]
-            if h.startswith("#") and h[1:] in SLUG:
-                a["href"] = rel(cur, page_dir(lang, h[1:]))
+            tok, _, frag = h[1:].partition("#")
+            if h.startswith("#") and tok in SLUG:   # "#engine" or "#engine#scenes"
+                a["href"] = rel(cur, page_dir(lang, tok)) + ("#" + frag if frag else "")
             elif h == "#app" or h.startswith("#app:"):
                 a["href"] = APP_URL + (h[5:] if h.startswith("#app:") else "/")
     for a in header.select("[data-nav]"):
@@ -486,6 +490,10 @@ def check(pages):
             if ref and loads and re.match(r"^(https?:)?//", ref):
                 problems.append(f"{path}: loads from another host: {ref}")
                 continue
+            if ref and ref.startswith("#") and len(ref) > 1:   # a place on this page
+                if not re.search(r'(?<![\w-])id="%s"' % re.escape(ref[1:]), markup):
+                    problems.append(f"{path}: no place {ref} on this page")
+                continue
             if not ref or re.match(r"^(https?:|mailto:|tel:|#|data:)", ref):
                 continue
             target = posixpath.normpath(posixpath.join(here, ref.split("#")[0]))
@@ -494,6 +502,10 @@ def check(pages):
                 full = os.path.join(full, "index.html")
             if not os.path.exists(full):
                 problems.append(f"{path}: broken link {ref}")
+            elif "#" in ref and ref.split("#", 1)[1]:   # a place on another page
+                with open(full, encoding="utf-8") as f:
+                    if not re.search(r'(?<![\w-])id="%s"' % re.escape(ref.split("#", 1)[1]), f.read()):
+                        problems.append(f"{path}: no place {ref}")
     return problems
 
 
