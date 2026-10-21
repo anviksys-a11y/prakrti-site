@@ -229,7 +229,8 @@ ul,ol{margin:0;padding-left:1.2em}
 :root[data-lang="ja"] .chip{font-family:var(--font-body);font-size:.8rem;letter-spacing:.02em}
 .chip-premium{border-color:var(--silk);color:var(--silk)}
 .chip-school{border-color:var(--peacock);color:var(--peacock)}
-.chip-prep{border-style:dashed;color:var(--muted)}
+.chip-prep,.chip-later{border-style:dashed;color:var(--muted)}
+.chip-launch{border-color:var(--peacock);color:var(--peacock);background:var(--peacock-wash)}
 
 /* home blocks */
 .verbs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px}
@@ -509,3 +510,12 @@ img{max-width:100%}
   .hero .realm-panel{order:1;margin-top:16px}
   .hero .hero-text>.tika{order:2;margin-top:8px}
 }
+/* home: the Sutra workshop, by hand and with the AI */
+table.compare td:first-child{font-family:var(--font-display);font-weight:600;color:var(--ink);white-space:nowrap;width:7.5rem}
+table.compare th.ai{color:var(--silk)}
+table.compare td:last-child{background:var(--silk-wash)}
+@media (max-width:640px){table.compare td:last-child{background:transparent;border-left:3px solid var(--silk-fill);padding-left:.7em!important}}
+.rk-card{display:grid;gap:10px;margin-top:24px;padding:clamp(18px,3vw,28px);border:1px solid var(--rule);border-left:3px solid var(--lotus-fill);border-radius:var(--radius);background:var(--bg);max-width:52rem}
+.rk-card h3{font-size:1.24rem}
+.rk-card p{margin:0;color:var(--ink-2)}
+@media (max-width:880px){.sutra + .tbl-wrap{margin-top:16px}}
