@@ -72,6 +72,23 @@ python3 -m http.server 8000 -d dist
 
 ブラウザで http://localhost:8000/ を開きます。日本語は http://localhost:8000/ja/ です。
 
+### 公開の前に、全部のページを確かめる
+
+```
+python3 build.py
+python3 tools/check_site.py
+```
+
+`tools/check_site.py` は、`dist/` を Firebase と同じ形（きれいな URL、セキュリティの見出し）で手元に出し、22 ページを PC の幅（1280）とスマホの幅（390）で本物のブラウザで開きます。見つけるもの：スクリプトのエラー、読み込めないファイル、セキュリティの見出しで止められた読み込み、画面より横に広いページ、サイトの中の切れたリンクと、行き先に無い `#id`（世界地図など、`site.js` が描くリンクも含みます）。問題があれば一覧を出して止まります。
+
+公開のあとは、本番を同じように確かめます（`<sha>` は commit の番号。ブラウザの古い控えを避けるためです）。
+
+```
+python3 tools/check_site.py --base https://prakrti-site.web.app --v <sha>
+```
+
+初回だけ `pip install playwright && playwright install chromium` が要ります。手元で見るだけなら `python3 tools/serve_like_firebase.py` で http://127.0.0.1:8765/ に出ます。
+
 ## 直して公開する流れ（GitHub）
 
 このフォルダは GitHub の `anviksys-a11y/prakrti-site` に置いてあり、公開は自動です。
@@ -100,7 +117,7 @@ Cloudflare Pages などほかの静的ホスティングでも、`dist/` をそ�
 ## 世界地図の場所と鍵
 
 - **場所は十五です**（`src/site.js` の `PLACES`）。寓話劇 Rūpaka は、2026-10-21 に第一章の場所（Kurukshetra と Field Trial のあいだ）として加えました。Mahābhārata RPD の六つの遊び方は、地図にはすべて置かず、第0話（スターターセット）・寓話劇 Rūpaka・Ashram の卓の三か所から RPD のページへつなぎます。場所を足すときは、`SEEDS_L`（横長）と `SEEDS_P`（縦長）にも位置を足します。道は `PLACES` の順に結ばれます。
-- **鍵で見る**：地図の上の「無料のアカウント」「Premium」「School License」を押すと、その鍵で開く場所だけが濃く光り、ほかは暗くなります（もう一度押すと戻ります）。どの場所がどの鍵で開くかは `KEYS_OF`、鍵の説明とリンク先は `KEYS` にあります。Premium の段ごとの表（Premium のページ）と同じ中身にしてあります。十八日の盤は値段が決まっていないので、どの鍵でも光りません。値段や段が変わったら、表と `KEYS_OF` の両方を直します。
+- **鍵で見る**：地図の上の「無料のアカウント」「Premium」「School License」を押すと、その鍵で開く場所だけが濃く光り、ほかは暗くなります（もう一度押すと戻ります）。どの場所がどの鍵で開くかは `KEYS_OF`、鍵の説明とリンク先は `KEYS` にあります。Premium の段ごとの表（Premium のページ）と同じ中身にしてあります。十八日の盤は AI を使わないので、無料のアカウントで光ります（2026-10-22 の社長の決定。Premium の段ごとの表にも行があります）。値段や段が変わったら、表と `KEYS_OF` の両方を直します。
 
 ## 言葉の決まり（サイトの文）
 

@@ -85,9 +85,9 @@ var KEYS={
  premium:{name:T("Premium","Premium"),note:T("US$199 a month. Dialogues, drafts of Sutras and counterparts, test runs, Rūpaka and unlimited Prism scans: every AI feature for individual use opens. Everything free stays as it is.","月 199 米ドル。対話、Sutra と相手役の下書き、試走、寓話劇 Rūpaka、無制限の Prism。個人で使う AI の機能が、すべて開きます。無料の場所は、そのまま使えます。"),page:"premium"},
  school:{name:T("School License","School License"),note:T("For yoga schools, from US$199 a month. Inside the school's Ashram, trainees use the AI for dialogues, drafts and Challenges with a monthly seat, and tables can have an AI game master.","ヨガの学校のための契約で、月 199 米ドルから。学校の Ashram の中で、受講生は月ごとの席を使い、対話や下書き、Challenge に AI を使えます。卓では、AI が GM を務められます。"),page:"schools"}
 };
-/* the Eighteen-Day Board has no price yet, so no key lights it */
+/* the Eighteen-Day Board runs without AI, so it is free with an account (2026-10-22) */
 var KEYS_OF={verse:["free"],archer:["free"],rpd0:["free"],prism:["free","premium"],kuru:["free","premium"],rupaka:["premium"],trial:["free"],
- hall:["free","premium"],arena:["premium"],exchange:["premium"],ashram:["free","school"],tables:["free","school"],karuta:["free"],board:[],shop:["free"]};
+ hall:["free","premium"],arena:["premium"],exchange:["premium"],ashram:["free","school"],tables:["free","school"],karuta:["free"],board:["free"],shop:["free"]};
 var keyOn=null;
 function keyOut(p){return !!keyOn&&(KEYS_OF[p.id]||[]).indexOf(keyOn)<0}
 function shaded(p){return keyOn?keyOut(p):fogged(p)}
@@ -298,7 +298,7 @@ function renderArcher(){
     return '<button type="button" class="'+cls+'" data-v="'+v+'"'+dis+'><span class="ref">'+esc(tr(T("Gītā ","ギーター ")))+v+'</span><span>'+esc(tr(VERSE[v].text))+'</span></button>';
   }).join("")+'</div>';
   if(game.phase==="timeout"){
-    h+='<p class="note">'+esc(tr(T("The cards do not say which mind they speak to. The English renderings here are provisional; in the app, verse text comes from the scripture library.","札には、どの心に向けた句かは書いてありません。句の訳は、アプリの聖典の書庫と同じものです。")))+'</p>';
+    h+='<p class="note">'+esc(tr(T("The cards do not say which mind they speak to. The English renderings here are provisional; in the app, verse text comes from the scripture library.","札には、どの心に向けた句かは書いてありません。ここの訳は仮のものです。アプリでは、聖典の書庫の訳が出ます。")))+'</p>';
   }else{
     var fit=VERSE[game.pick].k===SEED[R.seed].k, sd=SEED[R.seed];
     h+='<div class="result" aria-live="polite"><p class="verdict '+(fit?"ok":"no")+'">'+esc(tr(fit?T("The verse reached the archer","句が届いた"):T("The verse did not reach","句は届かなかった")))+'</p>';
