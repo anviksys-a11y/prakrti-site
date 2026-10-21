@@ -362,8 +362,8 @@ img{max-width:100%}
 
 /* home: the Gita, shown large */
 .gita-mark{display:grid;gap:.05em;margin:0}
-.gm-deva{font-family:var(--font-deva);font-size:clamp(2rem,4.6vw,3.3rem);color:var(--silk);line-height:1.15}
-.gm-latin{font-family:var(--font-display);font-weight:600;font-size:clamp(3rem,8.4vw,6.2rem);line-height:.95;letter-spacing:-.02em;color:var(--ink)}
+.gm-deva{font-family:var(--font-deva);font-size:clamp(1.8rem,3.4vw,2.6rem);color:var(--silk);line-height:1.15}
+.gm-latin{font-family:var(--font-display);font-weight:600;font-size:clamp(2.5rem,5.2vw,4.6rem);line-height:1;letter-spacing:-.02em;color:var(--ink);white-space:nowrap}
 .hero h1{font-size:clamp(1.65rem,3.3vw,2.55rem);line-height:1.15}
 :root[data-lang="ja"] .hero h1{font-size:clamp(1.45rem,2.9vw,2.2rem);line-height:1.45}
 .motto{font-family:var(--font-display);font-size:1.18rem;font-weight:500;color:var(--silk)}
@@ -397,3 +397,17 @@ img{max-width:100%}
 .langbar{display:flex;justify-content:center;align-items:center;gap:14px;padding:8px 16px;background:var(--silk-wash);font-size:.95rem}
 .langbar a{color:var(--ink)}
 .langbar button{border:0;background:transparent;font-size:1.1rem;line-height:1;cursor:pointer;color:var(--ink-2)}
+
+/* home: what $199 gives you */
+.can{list-style:none;margin:0 0 4px;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 28px;max-width:58rem}
+.can li{position:relative;padding-left:1.4em;color:var(--ink);font-size:1.04rem}
+.can li::before{content:"";position:absolute;left:0;top:.55em;width:.55em;height:.55em;border:1.5px solid var(--silk);transform:rotate(45deg)}
+@media (max-width:700px){.can{grid-template-columns:minmax(0,1fr)}}
+/* phones: comfortable tap targets for the language switch */
+@media (max-width:640px){.lang a{min-height:36px;display:inline-flex;align-items:center;padding-inline:.8em}}
+:root[data-lang="ja"] .verdict, :root[data-lang="ja"] .journey b{word-break:keep-all}
+/* home hero: keep the buttons above the fold on laptops */
+.hero{padding-top:clamp(24px,3.6vw,52px)}
+.hero .hero-text{gap:16px;padding-top:0}
+.hero .lede{font-size:1.12rem;line-height:1.55;max-width:46ch}
+.hero .fullname{padding-bottom:.4em;margin-bottom:.1em}

@@ -130,6 +130,11 @@ META = {
     },
 }
 
+OG_ALT = {
+    "en": "Prakrti GSA. Bhagavad Gītā. Read your own mind with the Gītā and AI.",
+    "ja": "Prakrti GSA。バガヴァッド・ギーター。ギーターと AI で、自分の心を読み解く。",
+}
+
 COPYRIGHT = {
     "en": "© 2026 Anviksiki Simulation Systems Inc.",
     "ja": "© 2026 株式会社Anviksiki Simulation Systems",
@@ -342,7 +347,11 @@ def build_page(raw, lang, token):
 <meta property="og:description" content="{html.escape(desc)}">
 <meta property="og:url" content="{canonical}">
 <meta property="og:locale" content="{'en_US' if lang == 'en' else 'ja_JP'}">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="{BASE}/og-{lang}.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{html.escape(OG_ALT[lang])}">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#F0F2F6" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0F1528" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml">
@@ -519,6 +528,8 @@ def main():
     with open(os.path.join(DIST, "assets", "site.css"), "w", encoding="utf-8") as f:
         f.write("/* fonts: SIL Open Font License 1.1, see fonts/LICENSE-*.txt */\n" + "\n".join(rules) + "\n" + css)
     font_bytes = sum(os.path.getsize(os.path.join(DIST, "assets", "fonts", n)) for n in files)
+    for name in ("og-en.png", "og-ja.png"):   # share images (made from the site's own fonts)
+        shutil.copy(os.path.join(SRC, "og", name), os.path.join(DIST, name))
     with open(os.path.join(DIST, "favicon.svg"), "w", encoding="utf-8") as f:
         f.write(FAVICON)
     with open(os.path.join(DIST, "sitemap.xml"), "w", encoding="utf-8") as f:

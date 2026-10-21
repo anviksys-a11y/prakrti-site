@@ -26,15 +26,15 @@ var STATUS={
 var CH={s:T("Starter Set · lit","スターターセット ・ 明るい場所"),"1":T("Chapter १ · Your own archer","第一章 ・ 自分の射手"),"2":T("Chapter २ · Into the world","第二章 ・ 世界へ"),"3":T("Chapter ३ · With companions","第三章 ・ 仲間と")};
 var LINKS={starter:T("Open the Starter Set","スターターセットへ"),rpd:T("About Mahābhārata RPD","Mahābhārata RPD について"),engine:T("How judging works","判定のしくみへ"),premium:T("What Premium opens","Premium で開くもの"),schools:T("For yoga schools","ヨガの学校へ")};
 var PLACES=[
+ {id:"verse",ch:"s",name:T("The verse board and the language room","聖句盤と語学教室"),short:T("Verse Board","聖句盤"),
+  desc:T("Every verse of the Gītā and the Yoga Sūtras with the Sanskrit, a translation and a full grammatical analysis. The language room turns the grammar into quizzes, and Vibhakti, a declension game, is being added.","ギーターとヨーガ・スートラの全句を、原文・訳・文法解析つきで読めます。語学教室では、文法をクイズで遊べます。格変化ゲーム『Vibhakti』も加える予定です。"),
+  status:["free","noai","read"],page:"starter",app:"/scripture"},
  {id:"archer",ch:"s",name:T("The Charioteer and the Archer","御者と射手"),short:T("Charioteer & Archer","御者と射手"),
   desc:T("Drive the chariot while the archer shoots. When the crowd shakes the archer's mind, stop for a Timeout and offer one of three verses. The archer's mind runs on the same formula as the Arena.","射手が射るあいだ、戦車を操ります。観衆の声で射手の心が揺れたら、作戦タイムで三枚の句から一枚を差し出します。射手の心は、The Arena と同じ式で動いています。"),
   status:["free","noai","guest"],page:"starter",app:"/mahabharata/krida"},
  {id:"rpd0",ch:"s",name:T("RPD · Fetching Water, Episode 0","RPD『水を汲みに』第0話"),short:T("RPD Episode 0","RPD 第0話"),
   desc:T("Sri Krishna asks you for water, and a life begins in a village at the edge of the desert. A solo story with no game master, played on screen.","聖クリシュナに水を頼まれ、砂漠の外れの村で一つの人生が始まります。GM のいない一人用の物語で、画面の上で遊びます。"),
   status:["starter","noai"],page:"rpd",app:"/mahabharata/works"},
- {id:"verse",ch:"s",name:T("The verse board and the language room","聖句盤と語学教室"),short:T("Verse Board","聖句盤"),
-  desc:T("Every verse of the Gītā and the Yoga Sūtras with the Sanskrit, a translation and a full grammatical analysis. The language room turns the grammar into quizzes, and Vibhakti, a declension game, is being added.","ギーターとヨーガ・スートラの全句を、原文・訳・文法解析つきで読めます。語学教室では、文法をクイズで遊べます。格変化ゲーム『Vibhakti』も加える予定です。"),
-  status:["free","noai","read"],page:"starter",app:"/scripture"},
  {id:"prism",ch:"1",name:T("Prism","Prism"),short:T("Prism","Prism"),
   desc:T("Write a single line and the AI scans it for fragments of the structure of your mind. It is the lightest way into dialogue.","一行書くと、AI が心の構造の断片を読み取ります。対話へのいちばん軽い入口です。"),
   status:["daily","unlimited"],page:"premium"},
@@ -79,7 +79,7 @@ function hsh(a,b,c){var x=Math.sin(a*127.1+b*311.7+c*74.7)*43758.5453;return x-M
 function corners(cx,cy,s){var p=[];for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);p.push([cx+s*Math.cos(a),cy+s*Math.sin(a)])}return p}
 function f1(n){return Math.round(n*10)/10}
 var fog={lifted:false,seen:{}};
-var selected="archer";
+var selected="verse";
 function fogged(p){return p.ch!=="s"&&!fog.lifted&&!fog.seen[p.id]}
 var maps=[];
 
@@ -158,7 +158,10 @@ function makeMap(host){
     if(!t||!host.contains(t))return;
     if(t.getAttribute("data-act")==="fog"){fog.lifted=!fog.lifted;paintAll();return}
     var id=t.getAttribute("data-id");
-    if(id&&BY[id]){selected=id;fog.seen[id]=true;paintAll()}
+    if(id&&BY[id]){selected=id;fog.seen[id]=true;paintAll();
+      // the description sits below the map; bring it into view when it is off screen
+      var pn=$(".place-panel",host);
+      if(pn){var r=pn.getBoundingClientRect();if(r.top>window.innerHeight-80||r.bottom<0){pn.scrollIntoView({behavior:"smooth",block:"nearest"})}}}
   });
   if(window.ResizeObserver){new ResizeObserver(function(){layout(false)}).observe(frame)}
   else{window.addEventListener("resize",function(){layout(false)})}
@@ -257,7 +260,7 @@ function renderArcher(){
     host.innerHTML=h;return;
   }
   var R=ROUNDS[game.r];
-  h+='<div class="game-top"><p class="eyebrow">'+esc(tr(T("A playable taste · no AI","ここで遊べる体験版 ・ AI なし")))+'</p>'+gaugeHTML()+'</div>';
+  h+='<div class="game-top"><p class="eyebrow">'+esc(tr(T("A simplified taste · no AI","簡易版の体験 ・ AI なし")))+'</p>'+gaugeHTML()+'</div>';
   h+='<div class="scene"><p class="eyebrow">'+esc(L()==="ja"?("大会 ・ 第"+(game.r+1)+"回（全3回）"):("Tournament · round "+(game.r+1)+" of 3"))+'</p>';
   h+='<p class="say"><span class="who">'+esc(tr(T("Scene","場面")))+'</span>'+esc(tr(R.event))+'</p>';
   h+='<p class="say"><span class="who">'+esc(tr(T("Crowd","観衆")))+'</span>'+esc(tr(R.crowd))+'</p>';
