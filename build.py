@@ -3,7 +3,7 @@
 
 src/site.html  bilingual content (elements marked class="en" / class="ja")
 src/site.css   styles
-src/site.js    interactive parts (world map, archer taste, Vibhakti taste)
+src/site.js    interactive parts (world map, archer taste, small Gita lens, language quizzes, app-style map)
 src/fonts/     the six site fonts (SIL Open Font License), served from this site
 site.config.json  base URL, contact address, invitation form URL
 

@@ -109,7 +109,8 @@
           <p class="eyebrow"><span class="en">Why the Bhagavad Gītā</span><span class="ja">なぜ、バガヴァッド・ギーターか</span></p>
           <h2><span class="en">A conversation on a battlefield, at the moment a capable man loses his nerve.</span><span class="ja">戦場で、力のある者が立ちすくんだ。その瞬間の対話です。</span></h2>
           <div class="prose"><p><span class="en">The Gītā is not a book of answers. It is seven hundred verses of dialogue that bring a frozen person back to action. Prakrti GSA takes the same shape: you bring the moment where you freeze, and the verses meet it there.</span><span class="ja">ギーターは、答えの本ではありません。立ちすくんだ人を、もう一度行為へ連れ戻す、七百句の対話です。Prakrti GSA も同じ形をしています。あなたが立ちすくむ場面を持ち寄り、そこに句が届きます。</span></p>
-          <p><span class="en">Every verse is quoted word for word from the library, with the Sanskrit, a translation and a full grammatical analysis. The AI never speaks as Sri Krishna.</span><span class="ja">句はすべて、聖典の書庫から一字一句そのまま引きます。原文・訳・文法解析つきです。AI が聖クリシュナを名乗って語ることは、ありません。</span></p></div>
+          <p><span class="en">Every verse is quoted word for word from the library, with the Sanskrit, a translation and a full grammatical analysis. The AI never speaks as Sri Krishna.</span><span class="ja">句はすべて、聖典の書庫から一字一句そのまま引きます。原文・訳・文法解析つきです。AI が聖クリシュナを名乗って語ることは、ありません。</span></p>
+          <p><span class="en">Seven hundred verses are a lot to carry. On the verse board you can pick only the ones you need now and keep them as a lens: your own small Gītā, read in order, free with an account.</span><span class="ja">七百句は、持ち歩くには多いかもしれません。聖句盤では、いまの自分に必要な句だけを選んで、レンズとして残せます。順に読める、あなただけの小さなギーターです。無料のアカウントで作れます。</span> <a href="#starter#small-gita"><span class="en">Make your small Gītā</span><span class="ja">小さなギーターを作る</span></a></p></div>
         </div>
         <aside class="tika">
           <span class="tika-label"><span class="deva" lang="sa">टीका</span><span class="en">Commentary</span><span class="ja">注釈</span></span>
@@ -207,8 +208,11 @@
         </div>
         <div class="flow-step">
           <p class="flow-k"><span class="deva" lang="sa">३</span><span class="en">Test it</span><span class="ja">試す</span><span class="chip chip-premium">Premium</span></p>
-          <p class="flow-p"><span class="en">A counterpart, “the owner”, presses. On the third move, “You're the only one I can ask”, the pressure gauge jumps two steps. A fixed formula judges; the AI only reads.</span><span class="ja">相手役の「オーナー」が攻めます。三手目の「あなたしかいないの」で、圧のゲージが二段跳ねました。判定は決まった数式で、AI は読むだけです。</span></p>
-          <div class="flow-map"><div data-realm-shape='{"dharma":0.75,"artha":0.5,"kama":"strained","dk":"nearing"}'></div><p class="flow-p"><span class="en">The map after the third move: Dharma and Kāma are drawing closer, the direction in which desire starts to speak in the name of what is right.</span><span class="ja">三手目のあとの地図。法と欲が近づいています。欲が、正しさを名乗りはじめる方向です。</span></p></div>
+          <p class="flow-p"><span class="en">A counterpart, “the owner”, presses. On the third move, “You're the only one I can ask”, the pressure gauge jumps two steps. You answer each move with a card, and note in the inner memo how hard it landed. A fixed formula judges; the AI only reads.</span><span class="ja">相手役の「オーナー」が攻めます。三手目の「あなたしかいないの」で、圧のゲージが二段跳ねました。一手ごとに札で守り、刺さり方を本音メモに書きとめます。判定は決まった数式で、AI は読むだけです。</span></p>
+          <figure class="app-fig">
+            <div class="app-screen" data-app-map="felt"></div>
+            <figcaption class="flow-p"><span class="en">The map after the run, drawn the way the app draws it. Filled hexes are the AI's reading; the dotted borders are the map as you felt it, the same formula run on your inner memo. Here you felt kāma calmer, and your reserve larger, than the reading. The gap is not a score; it is there to compare.</span><span class="ja">走のあとの地図（アプリと同じ描き方）。塗ったマスは AI の読み、点線の国境は、本音メモの申告で同じ数式を回した、あなたが感じた地図です。この走では、AI の読みより、欲を穏やかに、心の体力（利）を多めに感じていました。このずれは点数ではなく、見比べるためのものです。</span></figcaption>
+          </figure>
         </div>
         <div class="flow-step">
           <p class="flow-k"><span class="deva" lang="sa">४</span><span class="en">Repair and check</span><span class="ja">直して、確かめる</span></p>
@@ -471,7 +475,7 @@
       </div>
     </article>
 
-    <article class="box-item">
+    <article class="box-item" id="verse-board">
       <div class="box-no" lang="sa" aria-hidden="true">१</div>
       <div class="box-body">
         <div class="sutra">
@@ -480,17 +484,45 @@
             <div class="chips"><span class="chip"><span class="en">Free</span><span class="ja">無料</span></span><span class="chip"><span class="en">No AI</span><span class="ja">AI なし</span></span></div>
             <div class="prose">
               <p><span class="en">The verse board lays out every verse of the Gītā (700) and the Yoga Sūtras (195) as a grid of squares. Open any verse for the Sanskrit, one translation, and a full grammatical analysis: sandhi, roots, forms, compounds and a structure diagram. Reading needs no account.</span><span class="ja">聖句盤には、ギーター（700 句）とヨーガ・スートラ（195 句）のすべての句が、正方形のマス目に並びます。どの句を開いても、原文、訳、そして文法解析（連声・語根・語形・複合語・構造図）が読めます。読むだけなら登録は要りません。</span></p>
-              <p><span class="en">The language room has quizzes on paradigms and sandhi, drawn from the same verses. Vibhakti, a declension game, is being added to it: a word from the text appears and you name its case. Below is a taste: eight words from the Gītā, one for each case.</span><span class="ja">語学教室には、同じ句から作った変化表と連声のクイズがあります。そこに、格変化のゲーム『Vibhakti』を加える準備をしています。本文の語が出たら、その格を当てる遊びです。下は体験版で、ギーターから選んだ八つの語で、八つの格を一つずつ試します。</span></p>
             </div>
-            <div class="cta-row"><a class="link-arrow" href="#app:/scripture"><span class="en">Open the verse board in the app</span><span class="ja">アプリで聖句盤を開く</span></a><a class="link-arrow" href="#app:/scripture/lang"><span class="en">Open the language room</span><span class="ja">語学教室を開く</span></a></div>
+            <div class="cta-row"><a class="link-arrow" href="#app:/scripture"><span class="en">Open the verse board in the app</span><span class="ja">アプリで聖句盤を開く</span></a></div>
           </div>
           <aside class="tika">
             <span class="tika-label"><span class="deva" lang="sa">टीका</span><span class="en">Commentary</span><span class="ja">注釈</span></span>
-            <span class="en">Eight cases and three numbers make twenty-four forms per noun. A tax return has more boxes.</span>
-            <span class="ja">格が八つ、数が三つで、名詞一つにつき二十四の形。確定申告の欄よりは少なめです。</span>
+            <span class="en">The full Gītā has seven hundred verses. Yours may begin with one.</span>
+            <span class="ja">ギーターは七百句。あなたのギーターは、一句から始められます。</span>
           </aside>
         </div>
-        <div id="vib" class="panel" role="region" aria-label="Vibhakti"></div>
+
+        <div class="sub-block" id="small-gita">
+          <p class="eyebrow"><span class="en">A lens · free with an account</span><span class="ja">レンズ ・ 無料のアカウントで</span></p>
+          <h3 class="sub-h" id="small-gita-h"><span class="en">Your own small Gītā</span><span class="ja">あなたの小さなギーター</span></h3>
+          <div class="prose">
+            <p><span class="en">Seven hundred verses are a lot to carry. On the board, pick only the verses you need now, and they become a lens: your own small Gītā. The verses you pick stay bright and the rest sink. Give it a name and a line on why you picked them; a lens holds up to 100 verses. “Play the lens” reads them in order, one at a time, and the board can read each translation aloud in your browser's voice. If you write your own translation of a verse, your small Gītā reads in your words.</span><span class="ja">七百句は、持ち歩くには多いかもしれません。盤の上で、いまの自分に必要な句だけを選ぶと、それが「レンズ」になります。あなただけの、小さなギーターです。選んだ句は明るいまま、残りは沈みます。名前と「なぜこの句か」の一文を付けて保存でき、一つのレンズに 100 句まで入ります。「レンズを順に読む」で句を一つずつ順に読めて、訳文はブラウザの声で読み上げることもできます。句の訳を自分で書けば、あなたの言葉で読む、小さなギーターになります。</span></p>
+            <p><span class="en">The same lens can be the range of your study in the language room, and of Gītā Karuta, now in preparation. You can fork a lens someone has published into your own, and the host of an Ashram can set a lens on everyone's board.</span><span class="ja">同じレンズは、語学教室で学ぶ範囲にも、準備中のギーターかるたの範囲にもなります。ほかの人が公開したレンズを fork して自分のレンズにすることもでき、Ashram の主宰は、メンバー全員の盤にレンズを掛けられます。</span></p>
+          </div>
+          <div class="panel lens-demo" data-lens-demo role="region" aria-labelledby="small-gita-h"></div>
+          <div class="cta-row"><a class="link-arrow" href="#app:/scripture"><span class="en">Make a lens on the board in the app</span><span class="ja">アプリの聖句盤でレンズを作る</span></a></div>
+        </div>
+
+        <div class="sub-block" id="language-room">
+          <div class="sutra">
+            <div class="stack">
+              <p class="eyebrow"><span class="en">The language room · free · no AI</span><span class="ja">語学教室 ・ 無料 ・ AI なし</span></p>
+              <h3 class="sub-h" id="language-room-h"><span class="en">Games made of the same verses</span><span class="ja">同じ句でできた遊び</span></h3>
+              <div class="prose">
+                <p><span class="en">The language room turns the same verses into games. Open any analyzed word, and its inflection table comes with three quizzes: recall the form in the highlighted cell, rearrange a shuffled table, and place the word in its cells. The sandhi tables lay out how sounds join where words meet, 11 × 11 for the vowels alone, with quizzes to flip the cells, pick the right join from the text, or find the cell. “Do this now” gives you one question at a time and tells you how much of the text you can already read. There is no AI and no scoreboard. Below are two of the quizzes, played the way the app plays them.</span><span class="ja">語学教室は、同じ句を遊びに変えます。解析したどの語を開いても、変化表に三つのクイズが付いています。光るマスの形を思い出す、混ぜた表を並べ替えて元に戻す、語が入るマスを当てる。連声の表は、語と語の継ぎ目で音がどうつながるかをマス目に並べたもので、母音だけで 11×11 あります。めくる、本文の継ぎ目から選ぶ、マスを当てる、のクイズがあります。「今やること」は一問ずつ出し、本文の何割が読めるようになったかを示します。AI は使わず、順位表もありません。下は、そのうち二つのクイズを、アプリと同じ遊び方で試せる体験版です。</span></p>
+              </div>
+            </div>
+            <aside class="tika">
+              <span class="tika-label"><span class="deva" lang="sa">टीका</span><span class="en">Commentary</span><span class="ja">注釈</span></span>
+              <span class="en">Eight cases and three numbers make twenty-four forms per noun. A tax return has more boxes.</span>
+              <span class="ja">格が八つ、数が三つで、名詞一つにつき二十四の形。確定申告の欄よりは少なめです。</span>
+            </aside>
+          </div>
+          <div class="panel lq-demo" data-langq-demo role="region" aria-labelledby="language-room-h"></div>
+          <div class="cta-row"><a class="link-arrow" href="#app:/scripture/lang"><span class="en">Open the language room</span><span class="ja">語学教室を開く</span></a></div>
+        </div>
       </div>
     </article>
 
@@ -667,6 +699,10 @@
         </tbody>
       </table></div>
       <div class="prose"><p><span class="en">The kingdom of dharma can lend its strength to either of the other two. Which side it joins is the root of the war. In the epic, Sri Krishna gives his army to Duryodhana, on the side of kāma, and goes himself, unarmed, as Arjuna's charioteer. On the map this is the moment dharma's power is divided between two kingdoms. Sri Krishna in his true nature stands beyond all three kingdoms; the map shows only the part he plays in the war.</span><span class="ja">法の国は、残る二つの国のどちらにも力を貸せます。どちらにつくかが、この戦争の根にあります。叙事詩の中で、聖クリシュナはご自身の軍を欲の側のドゥルヨーダナに与え、ご自身は武器を持たずにアルジュナの御者になりました。地図の上では、法の力が二つの国に分かれた瞬間です。聖クリシュナの本体は、三つの国のすべてを超えています。地図が描くのは、この戦争の中での聖クリシュナのはたらきだけです。</span></p><p><span class="en">Gītā 7.11 speaks of desire that does not oppose dharma. The formula has the same shape: your reserve recovers only when the want and the ideal are met together.</span><span class="ja">ギーター 7.11 は「ダルマに背かない欲」を語ります。数式も同じ形をしています。心の体力は、欲と理想が同時に満たされたときにだけ戻ります。</span></p><p><span class="en">How you defend matters too. When a Sutra is written, the system sorts its guarding habits into one of eight patterns, such as wrapping the matter in theory, holding up rightness as a shield, or acting as if nothing happened. The pattern decides which kinds of attack your card handles well and which slip past it.</span><span class="ja">守り方にも癖があります。Sutra を書くと、システムはその守りの癖を八つの型のどれかに分けます。たとえば「理屈で包む」「正しさを盾にする」「なかったことにする」のような型です。型によって、そのカードが受け止めやすい攻めと、すり抜けられやすい攻めが決まります。</span></p></div>
+      <figure class="app-fig app-fig-wide">
+        <div class="app-screen" data-app-map="felt"></div>
+        <figcaption><span class="en">The map as the app draws it after a run, the same one as in the example on the first page. Each kingdom's hexes are counted out on an open board, and roads join the capitals.</span><span class="ja">走のあとに、アプリが描く地図です（トップページの例と同じもの）。国ごとのマスを空いた盤の上に数えて描き、都と都を道で結びます。</span></figcaption>
+      </figure>
       <p class="eyebrow" style="margin-top:8px"><span class="en">How to read the map</span><span class="ja">地図の読み方</span></p>
       <div class="rparts">
         <div><svg class="rmap rglyph" viewBox="0 0 56 24" aria-hidden="true"><polygon class="hx k-dharma" points="18.1,7.1 18.1,16.9 9.7,21.8 1.2,16.9 1.2,7.1 9.7,2.2"/><polygon class="hx k-artha" points="35.5,7.1 35.5,16.9 27.0,21.8 18.5,16.9 18.5,7.1 27.0,2.2"/><polygon class="hx k-kama" points="52.8,7.1 52.8,16.9 44.3,21.8 35.8,16.9 35.8,7.1 44.3,2.2"/></svg><p><b><span class="en">Kingdoms and their size.</span><span class="ja">国と、その広さ。</span></b><span class="en">The three colours are the three kingdoms. Dharma grows with how far the defense has kept to its ideal, artha with the inner reserve, and kāma with the pressure, in the four steps of the gauge. A large kingdom is no better than a small one.</span><span class="ja">三つの色が、三つの国です。法は理想に沿えた度合い、利は心の体力、欲は圧（ゲージと同じ四つの段）で広がります。広い国が良く、狭い国が悪い、ということはありません。</span></p></div>
@@ -674,6 +710,7 @@
         <div><svg class="rmap rglyph" viewBox="0 0 56 24" aria-hidden="true"><line class="rd" x1="4" y1="4" x2="52" y2="4" stroke-width="4.4"/><line class="rd" x1="4" y1="12" x2="52" y2="12" stroke-width="2"/><line class="rd" x1="4" y1="20" x2="52" y2="20" stroke-width="1.8" stroke-dasharray="6 4"/></svg><p><b><span class="en">Roads.</span><span class="ja">道。</span></b><span class="en">A road between capitals is a bond. Thick: joined, or an alliance grown thick. Plain: the usual alliance of artha and dharma. Dashed: near, drawing closer, drifting apart, or come loose. No road: apart.</span><span class="ja">都と都を結ぶ線が、結びです。太い線は、手を結んだか、太くなった同盟。ふつうの線は、利と法のいつもの同盟。破線は、近い・近づく・離れつつある・ほどけた。線が無いのは、離れていることです。</span></p></div>
         <div><svg class="rmap rglyph ev-frozen" viewBox="0 0 56 24" aria-hidden="true"><polygon class="hx k-dharma" points="27.8,7.1 27.8,16.9 19.3,21.8 10.9,16.9 10.9,7.1 19.3,2.2"/><polygon class="hx k-kama" points="45.1,7.1 45.1,16.9 36.7,21.8 28.2,16.9 28.2,7.1 36.7,2.2"/><line class="bd frost" x1="28.0" y1="7.0" x2="28.0" y2="17.0"/></svg><p><b><span class="en">Freeze.</span><span class="ja">凍結。</span></b><span class="en">When the strength runs out and the hands stop, every road is cut, the borders turn blue, and artha is spent.</span><span class="ja">力が尽きて手が止まると、道はすべて切れ、国境は青くなり、利は尽きます。</span></p></div>
         <div><svg class="rmap rglyph" viewBox="0 0 56 24" aria-hidden="true"><polygon class="hx k-kama" points="27.8,7.1 27.8,16.9 19.3,21.8 10.9,16.9 10.9,7.1 19.3,2.2"/><polygon class="hx k-artha" points="45.1,7.1 45.1,16.9 36.7,21.8 28.2,16.9 28.2,7.1 36.7,2.2"/><polygon class="spill" points="43.1,8.3 43.1,15.7 36.7,19.4 30.3,15.7 30.3,8.3 36.7,4.6"/><line class="bd ember" x1="28.0" y1="7.0" x2="28.0" y2="17.0"/></svg><p><b><span class="en">Eruption.</span><span class="ja">暴発。</span></b><span class="en">When kāma breaks over its borders, its border turns to an orange dashed line, and the hexes it spilled into are marked.</span><span class="ja">欲が国境を越えると、欲の国境は橙の破線になり、あふれ出たマスに印が付きます。</span></p></div>
+        <div><svg class="rmap rglyph" viewBox="0 0 56 24" aria-hidden="true"><polygon class="hx k-dharma" points="18.1,7.1 18.1,16.9 9.7,21.8 1.2,16.9 1.2,7.1 9.7,2.2"/><polygon class="felt" points="35.5,7.1 35.5,16.9 27.0,21.8 18.5,16.9 18.5,7.1 27.0,2.2"/></svg><p><b><span class="en">Dotted borders.</span><span class="ja">点線の国境。</span></b><span class="en">When you wrote an inner memo in a defense run, the same formula is run on your own answers and laid over as dotted borders. Filled hexes are the AI's reading; the dotted lines are the map as you felt it. The gap does not measure you; it is there to compare.</span><span class="ja">守りの走で本音メモを書いたときは、同じ数式をあなたの申告で回した地図を、点線の国境で重ねます。塗ったマスは AI の読み、点線はあなたが感じた地図です。二つのずれは、あなたを測るものではなく、見比べるためのものです。</span></p></div>
       </div>
       <div class="cta-row"><a class="link-arrow" href="#app:/mahabharata/three-realms"><span class="en">Read the map in the app, with a sandbox</span><span class="ja">アプリで地図の読み方を見る（砂場つき）</span></a><a class="link-arrow" href="#app:/mahabharata/sutra-judgement"><span class="en">The guide to Sutra judging in the app</span><span class="ja">アプリの Sutra 判定の手引き</span></a></div>
       <a class="link-arrow" href="#readings"><span class="en">Two ways to read the battle within</span><span class="ja">心の戦いの、二つの読み方</span></a>
@@ -683,7 +720,7 @@
       <p class="eyebrow">§ 6</p>
       <h2><span class="en">Scenes from the epic, drawn as maps</span><span class="ja">叙事詩の場面を、三国の地図で読む</span></h2>
       <div class="prose"><p><span class="en">Six scenes from the epic, drawn as maps of the three kingdoms. Under each map is the map's own sentence, the same words the app uses. The shapes are Prakrti GSA's reading, one way to read these scenes; the epic itself does not speak of three kingdoms.</span><span class="ja">叙事詩の六つの場面を、三つの国の地図で描きました。地図の下の一文は、アプリの地図と同じ言葉です。場面の形は Prakrti GSA の読み（一つの読み方）で、原典が三つの国を語っているのではありません。</span></p>
-      <p class="muted"><span class="en">The maps on this site have the same shapes as the app's, drawn in this site's style: here every hex goes to the nearest kingdom, while the app counts out each kingdom's hexes on an open board.</span><span class="ja">このサイトの地図は、アプリと同じ形を、このサイトの絵柄で描いたものです。ここでは、すべてのマスをいちばん近い国に塗り分けています。アプリでは、空いた盤の上に、国ごとのマスの数を描きます。</span></p></div>
+      <p class="muted"><span class="en">These maps have the same shapes as the app's, drawn in this site's style: here every hex goes to the nearest kingdom, while the app counts out each kingdom's hexes on an open board, as in the map in § 5.</span><span class="ja">この節の地図は、アプリと同じ形を、このサイトの絵柄で描いたものです。ここでは、すべてのマスをいちばん近い国に塗り分けています。アプリでは、§ 5 の地図のように、空いた盤の上に国ごとのマスの数を描きます。</span></p></div>
       <div class="rgal" data-realm-gallery></div>
     </div>
 

@@ -31,7 +31,7 @@ var PLACES=[
   desc:T("Where the road begins. A card game that takes you once round the whole of Prakrti GSA, on copies of the real screens: Prism, dialogue and the allegory play, the Sutra, a test run, a Field Trial and Chariot. You choose cards and press buttons; nothing has to be written. Prakrti answers from a script, and the judging runs on the real formula.","道の始まり。本物の画面の写しの上で、Prakrti GSA 全体をひと回りするカードゲームです。Prism、対話と寓話劇、Sutra、守りの走、Field Trial、Chariot。札を選び、ボタンを押すだけで、文章は書かなくてかまいません。Prakrti は台本で答え、判定は本物の式で動きます。"),
   status:["launch","free","noai","guest"],page:"starter",app:"/yatra"},
  {id:"verse",ch:"s",name:T("The verse board and the language room","聖句盤と語学教室"),short:T("Verse Board","聖句盤"),
-  desc:T("Every verse of the Gītā and the Yoga Sūtras with the Sanskrit, a translation and a full grammatical analysis. The language room turns the grammar into quizzes, and Vibhakti, a declension game, is being added.","ギーターとヨーガ・スートラの全句を、原文・訳・文法解析つきで読めます。語学教室では、文法をクイズで遊べます。格変化ゲーム『Vibhakti』も加える予定です。"),
+  desc:T("Every verse of the Gītā and the Yoga Sūtras with the Sanskrit, a translation and a full grammatical analysis. Pick only the verses you need now, and they become a lens: your own small Gītā. The language room turns the grammar into quizzes on inflection tables and sandhi.","ギーターとヨーガ・スートラの全句を、原文・訳・文法解析つきで読めます。いま必要な句だけを選ぶと、それが「レンズ」になります。あなただけの、小さなギーターです。語学教室では、変化表と連声をクイズで遊べます。"),
   status:["launch","free","noai","read"],page:"starter",app:"/scripture"},
  {id:"archer",ch:"s",name:T("The Charioteer and the Archer","御者と射手"),short:T("Charioteer & Archer","御者と射手"),
   desc:T("Drive the chariot while the archer shoots. When the crowd shakes the archer's mind, stop for a Timeout and offer one of three verses. The archer's mind runs on the same formula as the Arena.","射手が射るあいだ、戦車を操ります。観衆の声で射手の心が揺れたら、作戦タイムで三枚の句から一枚を差し出します。射手の心は、The Arena と同じ式で動いています。"),
@@ -528,61 +528,332 @@ document.addEventListener("click",function(e){
   else if(a==="again"){newGame();renderArcher()}
 });
 
-/* ---------- Vibhakti, the declension game ---------- */
-var CASES=[
- {id:"nom",en:"Nominative",ja:"主格",sa:"prathamā"},{id:"acc",en:"Accusative",ja:"対格",sa:"dvitīyā"},
- {id:"ins",en:"Instrumental",ja:"具格",sa:"tṛtīyā"},{id:"dat",en:"Dative",ja:"与格",sa:"caturthī"},
- {id:"abl",en:"Ablative",ja:"奪格",sa:"pañcamī"},{id:"gen",en:"Genitive",ja:"属格",sa:"ṣaṣṭhī"},
- {id:"loc",en:"Locative",ja:"処格",sa:"saptamī"},{id:"voc",en:"Vocative",ja:"呼格",sa:"sambodhana"}
-];
-var CASE_BY={};CASES.forEach(function(c){CASE_BY[c.id]=c});
-var WORDS=[
- {deva:"कुरुक्षेत्रे",iast:"kurukṣetre",ref:"1.1",ans:"loc",num:T("singular","単数"),gloss:T("“in Kurukṣetra”","「クルクシェートラにおいて」"),note:T("The Gītā's first two words are both locatives. Before anyone speaks, it tells you where you are.","ギーターの最初の二語は、どちらも処格です。誰かが口を開く前に、どこにいるかを告げています。")},
- {deva:"सञ्जय",iast:"sañjaya",ref:"1.1",ans:"voc",num:T("singular","単数"),gloss:T("“O Sañjaya”","「サンジャヤよ」"),note:T("The blind king is calling his narrator. Everything after this, technically, is the answer.","盲目の王が、語り手を呼んでいます。このあとのギーター全体が、じつはその答えです。")},
- {deva:"युयुत्सवः",iast:"yuyutsavaḥ",ref:"1.1",ans:"nom",num:T("plural","複数"),gloss:T("“those eager to fight”","「戦いを望む者たち」"),note:T("Many subjects, one wish. The grammar is calmer than the armies.","主語はたくさん、望みは一つ。文法のほうが、軍勢より落ち着いています。")},
- {deva:"आत्मानम्",iast:"ātmānam",ref:"6.5",ans:"acc",num:T("singular","単数"),gloss:T("“the self”, the one being lifted","「自己を」（引き上げられる側）"),note:T("“Lift the self by the self.” Here, grammatically, you are the luggage.","「自己を自己によって引き上げよ」。ここでのあなたは、文法上、荷物の側です。")},
- {deva:"आत्मना",iast:"ātmanā",ref:"6.5",ans:"ins",num:T("singular","単数"),gloss:T("“by the self”","「自己によって」"),note:T("Same verse, same self. Now you are also the crane.","同じ句、同じ自己。今度は、持ち上げるクレーンの側です。")},
- {deva:"परित्राणाय",iast:"paritrāṇāya",ref:"4.8",ans:"dat",num:T("singular","単数"),gloss:T("“for the protection”","「守るために」"),note:T("A dative of purpose. Sanskrit gives the reason with the case for “to” and “for”.","目的の与格。サンスクリットは「〜のために」の格で、理由を語ります。")},
- {deva:"कामात्",iast:"kāmāt",ref:"2.62",ans:"abl",num:T("singular","単数"),gloss:T("“from desire”","「欲から」"),note:T("The case of origins. In this verse, the origin of trouble.","起源の格。この句では、厄介ごとの起源です。")},
- {deva:"साधूनाम्",iast:"sādhūnām",ref:"4.8",ans:"gen",num:T("plural","複数"),gloss:T("“of the good”","「善き人々の」"),note:T("Possession and relation. The good, at least, come in the plural.","所有と関係の格。善き人は、少なくとも複数形でいてくれます。")}
-];
-var vib={i:0,correct:0,answer:null};
-function caseName(c){return L()==="ja"?c.ja:c.en}
-function renderVib(){
-  var host=$("#vib");if(!host)return;
-  var h="";
-  if(vib.i>=WORDS.length){
-    h+='<p class="eyebrow">Vibhakti</p><h3>'+esc(L()==="ja"?("八つのうち "+vib.correct+" つを当てました。"):("You named "+vib.correct+" of 8 cases."))+'</h3>';
-    h+='<p>'+esc(tr(T("No leaderboard will hear about it. In the app, the game draws on the paradigm tables behind every analyzed verse.","この数は、どの順位表にも載りません。アプリの本編では、解析済みの全句の変化表から出題します。")))+'</p>';
-    h+='<button type="button" class="btn btn-sm" data-vb="again" style="justify-self:start">'+esc(tr(T("Play again","もう一度遊ぶ")))+'</button>';
-    host.innerHTML=h;return;
+/* ---------- the language room: two of the app's own quizzes ----------
+   Copied from the app (2026-10-23): Quiz 3 of an inflection table (place the word) and Quiz 3 of the vowel sandhi table
+   (find the cell). The table of pāṇḍava, its examples, the sandhi grid, its counts in the Gītā, the rules and the examples
+   are the app's data; the prompts and button words are the app's own. */
+var PDG={word:"pāṇḍava",gloss:T("the Pāṇḍavas","パーンダヴァたち"),title:T("a-stem masculine noun","a 語幹・男性名詞"),
+ cols:[T("sg.","単数"),T("du.","双数"),T("pl.","複数")],
+ rows:[
+  {l:T("nom.","主格"),f:["pāṇḍavaḥ","pāṇḍavau","pāṇḍavāḥ"]},
+  {l:T("acc.","対格"),f:["pāṇḍavam","pāṇḍavau","pāṇḍavān"]},
+  {l:T("ins.","具格"),f:["pāṇḍavena","pāṇḍavābhyām","pāṇḍavaiḥ"]},
+  {l:T("dat.","与格"),f:["pāṇḍavāya","pāṇḍavābhyām","pāṇḍavebhyaḥ"]},
+  {l:T("abl.","奪格"),f:["pāṇḍavāt","pāṇḍavābhyām","pāṇḍavebhyaḥ"]},
+  {l:T("gen.","属格"),f:["pāṇḍavasya","pāṇḍavayoḥ","pāṇḍavānām"]},
+  {l:T("loc.","処格"),f:["pāṇḍave","pāṇḍavayoḥ","pāṇḍaveṣu"]},
+  {l:T("voc.","呼格"),f:["pāṇḍava","pāṇḍavau","pāṇḍavāḥ"]}],
+ ex:[
+  {sa:"sa mām eti pāṇḍava",tr:T("he comes to me, O Pāṇḍava.","パーンダヴァよ、その者は私のうちに入る。"),ref:"11.55"},
+  {sa:"pāṇḍavānāṃ dhanaṃjayaḥ",tr:T("among the Pāṇḍavas, Dhanañjaya;","パーンダヴァのうちではダナンジャヤ、"),ref:"10.37"},
+  {sa:"yogaṃ taṃ viddhi pāṇḍava",tr:T("know that to be yoga, O son of Pāṇḍu;","パーンダヴァよ、それこそ行為への献身であると知れ。"),ref:"6.2"}]};
+var SDH={v:["a","ā","i","ī","u","ū","ṛ","e","o","ai","au"],
+ g:[["ā","ā","e","e","o","o","ar","ai","au","ai","au"],["ā","ā","e","e","o","o","ar","ai","au","ai","au"],
+    ["ya","yā","ī","ī","yu","yū","yṛ","ye","yo","yai","yau"],["ya","yā","ī","ī","yu","yū","yṛ","ye","yo","yai","yau"],
+    ["va","vā","vi","vī","ū","ū","vṛ","ve","vo","vai","vau"],["va","vā","vi","vī","ū","ū","vṛ","ve","vo","vai","vau"],
+    ["ra","rā","ri","rī","ru","rū","ṝ","re","ro","rai","rau"],
+    ["e ’","a ā","a i","a ī","a u","a ū","a ṛ","a e","a o","a ai","a au"],["o ’","a ā","a i","a ī","a u","a ū","a ṛ","a e","a o","a ai","a au"],
+    ["ā a","ā ā","ā i","ā ī","ā u","ā ū","ā ṛ","ā e","ā o","ā ai","ā au"],
+    ["āva","āvā","āvi","āvī","āvu","āvū","āvṛ","āve","āvo","āvai","āvau"]],
+ n:[[320,133,47,18,53,2,10,102,2,2,1],[56,30,13,5,13,0,4,29,0,0,0],[106,32,23,1,22,0,0,33,0,0,0],[0,0,1,0,0,0,0,0,0,0,0],
+    [26,3,6,0,4,1,0,4,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[55,0,11,0,1,0,0,5,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[6,0,1,0,1,0,0,0,0,0,0]],
+ t:[{r:"o",ex:["tyaktvā","uttiṣṭha","tyaktvottiṣṭha","2.3"]},{r:"ai",ex:["ca","eva","caiva","1.1"]},{r:"e",ex:["na","ime","neme","2.12"]},
+    {r:"ī",ex:["bhramati","iva","bhramatīva","1.30"]},{r:"ya",ex:["śaknomi","avasthātum","śaknomy avasthātum","1.30"]},
+    {r:"yo",ex:null},{r:"e ’",ex:["me","acyuta","me ’cyuta","1.21"]},{r:"ar",ex:["mahā","ṛṣi","maharṣi","10.2"]}]};
+var LQW={
+ tabP:T("Inflection table · Quiz 3 (place the word)","変化表 · クイズ 3（マスを当てる）"),
+ tabS:T("Sandhi · Quiz 3: find the cell","連声 · クイズ 3：マスを当てる"),
+ auto:T("auto (from type)","自動（型から）"),
+ hintP:T("Tap the cell(s) where this form belongs, then “Check”.","この語が入るマスを押す(複数あることも)。押し終えたら「答え合わせ」。"),
+ hintS:T("Tap the cell(s) that give this join.","この継ぎ目の音になるマスを押してください（複数あれば全部）。"),
+ rowsS:T("Rows: the vowel that ends the first word. Columns: the vowel that begins the next word.","縦が前の語の終わりの母音、横が次の語の始まりの母音。"),
+ vowels:T("Vowels","母音"), corner:T("first \\ next","前＼次"),
+ checked:T("Checked: green = right, amber = missed, red = wrong cell. Go to the next word.","答え合わせ: 緑=正解、琥珀=見落とし、赤=違うマス。次の語へ。"),
+ checkedS:T("Checked: green = right, amber = missed, red = wrong cell.","答え合わせ: 緑=正解、琥珀=見落とし、赤=違うマス。"),
+ check:T("Check","答え合わせ"), next:T("Next word","次の語"), nextS:T("Next","次へ"), result:T("Show result","結果を見る"), again:T("Again","もう一度"),
+ examples:T("Examples with this word","この語を使った例文"), noEx:T("No example in the text (rule only).","本文に例はありません（規則だけ）。")
+};
+function lqParaNew(){var forms=[];PDG.rows.forEach(function(r){r.f.forEach(function(f){if(forms.indexOf(f)<0)forms.push(f)})});
+  return {order:shuffle(forms),i:0,sel:{},checked:false,answered:0,ok:0,seen:0,wrong:0,done:false}}
+function lqSandhiNew(){return {order:shuffle(SDH.t.map(function(t,i){return i})),i:0,sel:{},checked:false,answered:0,ok:0,seen:0,wrong:0,done:false}}
+var LQ={tab:"p",p:lqParaNew(),s:lqSandhiNew()};
+function lqAnswer(tab,q){
+  var a={};
+  if(tab==="p"){var form=q.order[q.i];PDG.rows.forEach(function(r,ri){r.f.forEach(function(f,ci){if(f===form)a[ri+","+ci]=1})})}
+  else{var t=SDH.t[q.order[q.i]];SDH.g.forEach(function(r,ri){r.forEach(function(f,ci){if(f===t.r)a[ri+","+ci]=1})})}
+  return a;
+}
+function lqMark(tab,q,key){
+  if(!q.checked)return q.sel[key]?"sel":"";
+  var a=lqAnswer(tab,q), s=!!q.sel[key];
+  return a[key]?(s?"ok":"miss"):(s?"bad":"");
+}
+function lqDone(q,ja,unit){
+  return ja?("完成: 答えた "+q.answered+" "+unit.ja+"のうち "+q.ok+" 正解、見ただけ "+q.seen+" "+unit.ja+"。赤=違うマスを押した、琥珀=見落とし(合計 "+q.wrong+")。")
+    :("Done: "+q.ok+" of "+q.answered+" answered right, "+q.seen+" only shown. Red = wrong cell tapped, amber = missed (total "+q.wrong+").");
+}
+function lqCtl(q,total,tab){
+  var last=q.i>=total-1;
+  return '<div class="lq-ctl"><button type="button" class="btn btn-primary btn-sm" data-lq="check"'+(q.checked?' disabled':'')+'>'+esc(tr(LQW.check))+'</button>'+
+    '<button type="button" class="btn btn-sm" data-lq="next">'+esc(tr(last?LQW.result:(tab==="p"?LQW.next:LQW.nextS)))+'</button></div>';
+}
+function renderLangQuiz(host){
+  var ja=L()==="ja", h="";
+  h+='<div class="lq-tabs" role="group">'+[["p",LQW.tabP],["s",LQW.tabS]].map(function(t){return '<button type="button" data-lq-tab="'+t[0]+'" aria-pressed="'+(LQ.tab===t[0])+'">'+esc(tr(t[1]))+'</button>'}).join("")+'</div>';
+  if(LQ.tab==="p"){
+    var q=LQ.p, total=q.order.length;
+    h+='<div class="lq-word"><b lang="sa-Latn">'+PDG.word+'</b><span>'+esc(tr(PDG.gloss))+'</span><span class="chip">'+esc(tr(PDG.title))+'</span><span class="chip lq-auto">'+esc(tr(LQW.auto))+'</span></div>';
+    if(q.done){
+      h+='<p class="lq-msg">'+esc(lqDone(q,ja,{ja:"語"}))+'</p><button type="button" class="btn btn-sm" data-lq="again" style="justify-self:start">'+esc(tr(LQW.again))+'</button>';
+    }else{
+      h+='<p class="lq-hint">'+esc(tr(LQW.hintP))+'</p>';
+      h+='<div class="lq-target"><span class="lq-form" lang="sa-Latn">'+esc(q.order[q.i])+'</span><span class="lq-count">'+esc(ja?((q.i+1)+" / "+total+" 語"):((q.i+1)+" / "+total+" words"))+'</span></div>';
+      h+='<div class="lq-tw"><table class="lq-table slim"><thead><tr><th></th>'+PDG.cols.map(function(c){return '<th scope="col">'+esc(tr(c))+'</th>'}).join("")+'</tr></thead><tbody>'+
+        PDG.rows.map(function(r,ri){return '<tr><th scope="row">'+esc(tr(r.l))+'</th>'+r.f.map(function(f,ci){
+          var k=ri+","+ci, m=lqMark("p",q,k), show=q.checked&&(m==="ok"||m==="miss");
+          return '<td><button type="button" class="lq-cell'+(m?" "+m:"")+'" data-cell="'+k+'" aria-pressed="'+(!!q.sel[k])+'" aria-label="'+esc(tr(r.l)+" · "+tr(PDG.cols[ci]))+'"'+(q.checked?' disabled':'')+'><span lang="sa-Latn">'+(show?esc(f):"")+'</span></button></td>'}).join("")+'</tr>'}).join("")+
+        '</tbody></table></div>';
+      h+=lqCtl(q,total,"p");
+      h+='<p class="lq-msg" aria-live="polite">'+(q.checked?esc(tr(LQW.checked)):"")+'</p>';
+    }
+    h+='<p class="eyebrow">'+esc(tr(LQW.examples))+'</p><ul class="lq-ex">'+PDG.ex.map(function(e){return '<li><span class="lq-sa" lang="sa-Latn">'+esc(e.sa)+'</span><span>'+esc(tr(e.tr))+'</span><span class="lq-ref">'+esc((ja?"ギーター ":"Gītā ")+e.ref)+'</span></li>'}).join("")+'</ul>';
+  }else{
+    var s=LQ.s, tot=s.order.length;
+    h+='<div class="lq-word"><span class="chip">'+esc(tr(LQW.vowels))+'</span><span class="lq-rows">'+esc(tr(LQW.rowsS))+'</span></div>';
+    if(s.done){
+      h+='<p class="lq-msg">'+esc(lqDone(s,ja,{ja:"問"}))+'</p><button type="button" class="btn btn-sm" data-lq="again" style="justify-self:start">'+esc(tr(LQW.again))+'</button>';
+    }else{
+      var t=SDH.t[s.order[s.i]];
+      h+='<p class="lq-hint">'+esc(tr(LQW.hintS))+'</p>';
+      h+='<div class="lq-target"><span class="lq-form" lang="sa-Latn">'+esc(t.r)+'</span><span class="lq-count">'+(s.i+1)+' / '+tot+'</span></div>';
+      h+='<div class="lq-sw"><table class="lq-sgrid slim"><thead><tr><th class="lq-corner">'+esc(tr(LQW.corner))+'</th>'+SDH.v.map(function(v){return '<th scope="col" lang="sa-Latn">'+v+'</th>'}).join("")+'</tr></thead><tbody>'+
+        SDH.g.map(function(row,ri){return '<tr><th scope="row" lang="sa-Latn">'+SDH.v[ri]+'</th>'+row.map(function(f,ci){
+          var k=ri+","+ci, m=lqMark("s",s,k), show=s.checked&&(m==="ok"||m==="miss"), n=SDH.n[ri][ci];
+          return '<td><button type="button" class="lq-cell'+(m?" "+m:"")+'" data-cell="'+k+'" aria-pressed="'+(!!s.sel[k])+'" aria-label="'+esc(SDH.v[ri]+" + "+SDH.v[ci])+'"'+(s.checked?' disabled':'')+'><span lang="sa-Latn">'+(show?esc(f):"")+'</span>'+(show&&n?'<sup>'+n+'</sup>':'')+'</button></td>'}).join("")+'</tr>'}).join("")+
+        '</tbody></table></div>';
+      h+=lqCtl(s,tot,"s");
+      if(s.checked){
+        var a=lqAnswer("s",s), cells=Object.keys(a), plus=ja?" ＋ ":" + ", sum=0;
+        var rules=cells.map(function(k){var p=k.split(",");sum+=SDH.n[+p[0]][+p[1]];return SDH.v[+p[0]]+plus+SDH.v[+p[1]]+" → "+t.r}).join(ja?"・":" · ");
+        h+='<div class="lq-rule" aria-live="polite"><p class="lq-msg">'+esc(tr(LQW.checkedS))+'</p><p lang="sa-Latn">'+esc(rules)+'</p>';
+        h+=t.ex?'<p>'+esc(ja?"本文の実例：":"From the text: ")+'<span lang="sa-Latn">'+esc(t.ex[0]+plus+t.ex[1]+" → "+t.ex[2])+'</span>'+esc(ja?("（ギーター "+t.ex[3]+"）・本文の実例 "+sum+" か所"):(" (Gītā "+t.ex[3]+") · "+sum+" places in the text"))+'</p>'
+               :'<p>'+esc(tr(LQW.noEx))+'</p>';
+        h+='</div>';
+      }
+    }
   }
-  var w=WORDS[vib.i];
-  h+='<div class="game-top"><p class="eyebrow">Vibhakti · '+esc(L()==="ja"?(WORDS.length+"語のうち "+(vib.i+1)+" 語目 ・ 正解 "+vib.correct):("word "+(vib.i+1)+" of "+WORDS.length+" · "+vib.correct+" correct"))+'</p><p class="eyebrow">'+esc(tr(T("Gītā ","ギーター ")))+w.ref+'</p></div>';
-  h+='<div class="vib-word"><span class="deva" lang="sa">'+w.deva+'</span><span class="iast" lang="sa-Latn">'+w.iast+'</span></div>';
-  h+='<p class="eyebrow">'+esc(tr(T("Which case is it?","この語の格は？")))+'</p>';
-  h+='<div class="cases">'+CASES.map(function(c){
-    var cls="case", dis="";
-    if(vib.answer){dis=" disabled";if(c.id===w.ans)cls+=" right";else if(c.id===vib.answer)cls+=" wrong"}
-    return '<button type="button" class="'+cls+'" data-case="'+c.id+'"'+dis+'><span>'+esc(caseName(c))+'</span><small>'+c.sa+'</small></button>';
-  }).join("")+'</div>';
-  if(vib.answer){
-    var ok=vib.answer===w.ans, c=CASE_BY[w.ans];
-    h+='<div class="result" aria-live="polite"><p class="verdict '+(ok?"ok":"no")+'">'+esc(tr(ok?T("Correct","正解"):T("Not quite","おしい")))+'</p>';
-    h+='<p>'+esc(caseName(c)+(L()==="ja"?"・":", ")+tr(w.num)+(L()==="ja"?"　":": ")+tr(w.gloss))+'</p>';
-    h+=tikaInline(w.note);
-    h+='<button type="button" class="btn btn-primary btn-sm" data-vb="next" style="justify-self:start">'+esc(tr(vib.i<WORDS.length-1?T("Next word","次の語へ"):T("See the result","結果を見る")))+'</button></div>';
-  }
+  h+='<p class="note">'+esc(tr(T("A taste of two quizzes, played the way the app plays them. In the app, every analyzed word has its table with three quizzes, and the sandhi tables also cover visarga and consonants.","アプリの二つのクイズを、同じ遊び方で試せる体験版です。アプリでは、解析したすべての語の変化表に三つのクイズが付き、連声の表は visarga と子音にもあります。")))+'</p>';
   host.innerHTML=h;
 }
 document.addEventListener("click",function(e){
-  var host=$("#vib");if(!host||!host.contains(e.target))return;
-  var c=e.target.closest("[data-case]");
-  if(c&&!c.disabled&&!vib.answer){vib.answer=c.getAttribute("data-case");if(vib.answer===WORDS[vib.i].ans)vib.correct++;renderVib();return}
-  var b=e.target.closest("[data-vb]");if(!b)return;
-  if(b.getAttribute("data-vb")==="next"){vib.i++;vib.answer=null}else{vib={i:0,correct:0,answer:null}}
-  renderVib();
+  var host=e.target.closest("[data-langq-demo]");if(!host)return;
+  var tb=e.target.closest("[data-lq-tab]");
+  if(tb){LQ.tab=tb.getAttribute("data-lq-tab");renderLangQuiz(host);return}
+  var q=LQ.tab==="p"?LQ.p:LQ.s, total=q.order.length;
+  var c=e.target.closest("[data-cell]");
+  if(c&&!q.checked&&!q.done){var k=c.getAttribute("data-cell");if(q.sel[k])delete q.sel[k];else q.sel[k]=1;renderLangQuiz(host);return}
+  var b=e.target.closest("[data-lq]");if(!b)return;
+  var act=b.getAttribute("data-lq");
+  if(act==="check"&&!q.checked){
+    var a=lqAnswer(LQ.tab,q), red=0, amber=0, k2;
+    for(k2 in q.sel){if(!a[k2])red++}
+    for(k2 in a){if(!q.sel[k2])amber++}
+    q.checked=true;q.answered++;if(!red&&!amber)q.ok++;q.wrong+=red+amber;
+  }else if(act==="next"){
+    if(!q.checked)q.seen++;
+    if(q.i>=total-1){q.done=true}else{q.i++;q.sel={};q.checked=false}
+  }else if(act==="again"){
+    if(LQ.tab==="p")LQ.p=lqParaNew();else LQ.s=lqSandhiNew();
+  }
+  renderLangQuiz(host);
+  var t=$(".lq-target",host)||$(".lq-msg",host);if(t&&act!=="check"){try{t.scrollIntoView({block:"nearest"})}catch(err){}}
 });
+
+/* ---------- your own small Gītā: a lens on the verse board ----------
+   The board is the app's: 18 chapter blocks, as many squares as verses (701 on the app's board), columns = √n rounded up.
+   The example lenses carry the app's verse texts (the Sanskrit, the English a visitor sees, and the Japanese translation). */
+var GITA_CH=[47,72,43,42,29,47,30,28,34,42,55,20,35,27,20,24,28,78];
+var LENSES=[
+ {name:T("When I freeze","迷った朝に"),why:T("Ten verses for standing up again when I freeze.","立ちすくんだときに、もう一度立つための十句。"),
+  v:["2.3","2.7","2.14","2.38","2.47","3.8","3.35","6.5","18.63","18.73"]},
+ {name:T("When anger comes","怒りが来たら"),why:T("Nine verses for the moment the chain of anger begins.","怒りの鎖が始まるところで、思い出す九句。"),
+  v:["2.56","2.62","2.63","3.37","5.23","5.26","6.7","12.15","16.21"]},
+ {name:T("Sixteen for the course","養成講座の十六句"),why:T("The verses the teacher-training course asks about, learned with their numbers.","指導者養成講座で問われる句を、番号ごと覚える。"),
+  v:["2.47","2.48","2.50","2.56","2.70","3.19","3.27","4.7","4.8","5.18","6.5","6.17","6.35","12.13","12.15","18.66"]}
+];
+var GV={
+ "2.3":["klaibyaṃ mā sma gamaḥ pārtha naitattvayyupapadyate\nkṣudraṃ hṛdayadaurbalyaṃ tyaktvottiṣṭha parantapa","Yield not to unmanliness, O son of Pritha! Ill does it become you. Cast off this mean faintheartedness and arise, O scorcher of your enemies!","プリターの子よ、惰弱に身をまかせてはならない。それは汝にふさわしくない。この卑しい心の弱さを捨てて立ち上がれ、敵を焼く者よ。"],
+ "2.7":["kārpaṇyadoṣopahatasvabhāvaḥ pṛcchāmi tvāṃ dharmasammūḍhacetāḥ\nyacchreyaḥ syānniścitaṃ brūhi tanme śiṣyaste'haṃ śādhi māṃ tvāṃ prapannam","With my nature overpowered by weak commiseration, with a mind in confusion about duty, I supplicate You. Say decided what is good for me. I am Your disciple. Instruct me who have taken refuge in You.","弱々しい憐れみに本性を打ち負かされ、義務について心が混乱したまま、私はあなたに願い求める。何が私にとって善であるかを、確かに告げてほしい。私はあなたの弟子である。あなたに帰依した私を教え導いてほしい。"],
+ "2.14":["mātrāsparśāstu kaunteya śītoṣṇasukhaduḥkhadāḥ\nāgamāpāyino'nityāstāṃstitikṣasva bhārata","Notions of heat and cold, of pain and pleasure, are born, O son of Kunti, only of the contact of the senses with their objects. They have a beginning and an end. They are impermanent in their nature. Bear them patiently, O descendant of Bharata.","クンティーの子よ、寒さと暑さ、苦と楽の思いは、感官がその対象に触れることからのみ生じる。それらは来ては去り、無常である。バーラタよ、それらに耐えよ。"],
+ "2.38":["sukhaduḥkhe same kṛtvā lābhālābhau jayājayau\ntato yuddhāya yujyasva naivaṃ pāpamavāpsyasi","Having made pain and pleasure, gain and loss, conquest and defeat, the same, engage then in battle. So shall you incur no sin.","苦と楽、得と失、勝利と敗北を等しいものとして、戦いに臨め。そうすれば汝は罪を負わない。"],
+ "2.47":["karmaṇyevādhikāraste mā phaleṣu kadācana\nmā karmaphalaheturbhūrmā te saṅgo'stvakarmaṇi","Your right is to work only; but never to the fruits thereof. Be not the producer of the fruits of [your] actions; neither let your attachment be towards inaction.","汝の権利は行為にのみあり、決してその果実にはない。行為の果実を動機とする者となるな。また、行為しないことに執着してもならない。"],
+ "2.48":["yogasthaḥ kuru karmāṇi saṅgaṃ tyaktvā dhanaṃjaya\nsiddhyasiddhyoḥ samo bhūtvā samatvaṃ yoga ucyate","Being steadfast in yoga, O Dhananjaya, perform actions, abandoning attachment, remaining unconcerned as regards success and failure. This evenness of mind [in regard to success and failure] is known as yoga.","ダナンジャヤよ、ヨーガに堅く立ち、執着を捨て、成功と失敗に動じることなく、行為をなせ。この〔成功と失敗に対する〕心の平静が、ヨーガと呼ばれる。"],
+ "2.50":["buddhiyukto jahātīha ubhe sukṛtaduṣkṛte\ntasmādyogāya yujyasva yogaḥ karmasu kauśalam","Endued with this evenness of mind, one frees oneself in this life, alike from vice and virtue. Devote yourself, therefore, to this yoga. Yoga is the very dexterity of work.","この心の平静を備えた者は、この世において悪徳からも美徳からも等しく自由になる。それゆえ、このヨーガに身を捧げよ。ヨーガとは、まさに行為における巧みさである。"],
+ "2.56":["duḥkheṣvanudvignamanāḥ sukheṣu vigataspṛhaḥ\nvītarāgabhayakrodhaḥ sthitadhīrmunirucyate","He whose mind is not shaken by adversity, who does not hanker after happiness, who has become free from affection, fear, and wrath, is indeed the muni of steady wisdom.","逆境に心を乱されず、幸福を渇望せず、愛着と恐れと怒りから離れた者こそ、確固たる智慧の聖者（ムニ）である。"],
+ "2.62":["dhyāyato viṣayānpuṃsaḥ saṅgasteṣūpajāyate\nsaṅgātsaṃjāyate kāmaḥ kāmātkrodho'bhijāyate","Thinking of objects, attachment to them is formed in a man. From attachment longing, and from longing anger grows.","人が対象を思い続けると、それらへの執着が生じる。執着から渇望が生まれ、渇望から怒りが生まれる。"],
+ "2.63":["krodhādbhavati saṃmohaḥ saṃmohātsmṛtivibhramaḥ\nsmṛtibhraṃśādbuddhināśo buddhināśātpraṇaśyati","From anger comes delusion, and from delusion loss of memory. From loss of memory comes the ruin of discrimination, and from the ruin of discrimination he perishes.","怒りから迷妄が生じ、迷妄から記憶の喪失が生じる。記憶の喪失から識別の破滅が生じ、識別が破滅すると、人は滅びる。"],
+ "2.70":["āpūryamāṇamacalapratiṣṭhaṃ samudramāpaḥ praviśanti yadvat\ntadvatkāmā yaṃ praviśanti sarve sa śāntimāpnoti na kāmakāmī","As into the ocean–brimful, and still–flow the waters, even so the muni into whom enter all desires, he, and not the desirer of desires, attains to peace.","満ちあふれて静まる大海に水が流れ込むように、あらゆる欲望が流れ込む聖者（ムニ）、その人こそが平安に達する。欲望を追い求める者は平安に達しない。"],
+ "3.8":["niyataṃ kuru karma tvaṃ karma jyāyo hyakarmaṇaḥ\nśarīrayātrāpi ca te na prasiddhyedakarmaṇaḥ","Do you perform obligatory action; for action is superior to inaction; and even the bare maintenance of your body would not be possible if you are inactive.","汝は義務としての行為をなせ。行為は無行為にまさるからである。また、行為しなければ、汝の身体を保つことさえできないであろう。"],
+ "3.19":["tasmādasaktaḥ satataṃ kāryaṃ karma samācara\nasakto hyācarankarma paramāpnoti pūruṣaḥ","Therefore, do you always perform actions which are obligatory, without attachment; by performing action without attachment, one attains to the highest.","それゆえ、執着なく、常になすべき行為をなせ。執着なく行為することによって、人は最高のものに達する。"],
+ "3.27":["prakṛteḥ kriyamāṇāni guṇaiḥ karmāṇi sarvaśaḥ\nahaṃkāravimūḍhātmā kartāhamiti manyate","The gunas of Prakriti perform all action. With the understanding deluded by egoism, man thinks, “I am the doer.”","プラクリティのグナが、すべての行為をなす。我執に理解を惑わされた人は、「私が行為者である」と考える。"],
+ "3.35":["śreyānsvadharmo viguṇaḥ paradharmātsvanuṣṭhitāt\nsvadharme nidhanaṃ śreyaḥ paradharmo bhayāvahaḥ","Better is one’s own dharma, [though] imperfect, than the dharma of another well-performed. Better is death in one’s own dharma: the dharma of another is fraught with fear.","他者のダルマをよく行うよりも、不完全〔であっても〕自らのダルマのほうがすぐれている。自らのダルマにおける死のほうがよい。他者のダルマは恐れに満ちている。"],
+ "3.37":["kāma eṣa krodha eṣa rajoguṇasamudbhavaḥ\nmahāśano mahāpāpmā viddhyenamiha vairiṇam","The Blessed Lord said: it is desire–it is anger, born of the Rajo-guna: of great craving, and of great sin; know this as the foe here [in this world].","聖なる主は言われた。それは欲望である。それは怒りである。ラジャスのグナから生まれ、貪欲きわまりなく、大いなる罪をもつ。これこそが、ここ〔この世〕における敵であると知れ。"],
+ "4.7":["yadā yadā hi dharmasya glānirbhavati bhārata\nabhyutthānamadharmasya tadātmānaṃ sṛjāmyaham","Whenever, O descendant of Bharata, there is decline of dharma, and rise of Adharma, then I body Myself forth.","バーラタよ、ダルマが衰え、アダルマがはびこるときはいつでも、私は自らを身体として現す。"],
+ "4.8":["paritrāṇāya sādhūnāṃ vināśāya ca duṣkṛtām\ndharmasaṃsthāpanārthāya sambhavāmi yuge yuge","For the protection of the good, for the destruction of the wicked, and for the establishment of dharma, I come into being.","善き人々を守るため、悪しき者たちを滅ぼすため、そしてダルマを確立するために、私は生まれ出る。"],
+ "5.18":["vidyāvinayasaṃpanne brāhmaṇe gavi hastini\nśuni caiva śvapāke ca paṇḍitāḥ samadarśinaḥ","The knowers of the self look with an equal eye on a Brahmana endowed with learning and humility, a cow, an elephant, a dog, and a pariah.","自己を知る者たちは、学識と謙虚さを備えたバラモンにも、牛にも、象にも、犬にも、賤民にも、等しい眼を向ける。"],
+ "5.23":["śaknotīhaiva yaḥ soḍhuṃ prākśarīravimokṣaṇāt\nkāmakrodhodbhavaṃ vegaṃ sa yuktaḥ sa sukhī naraḥ","He who can withstand in this world, before the liberation from the body, the impulse arising from lust and anger, he is steadfast (in yoga), he is a happy man.","この世において、身体から解き放たれる前に、欲望と怒りから生じる衝動に耐えることのできる者、その人は（ヨーガに）堅く立つ者であり、幸福な人である。"],
+ "5.26":["kāmakrodhaviyuktānāṃ yatīnāṃ yatacetasām\nabhito brahmanirvāṇaṃ vartate viditātmanām","Released from lust and anger, the heart controlled, the self realized, absolute freedom is for such Sannyasins, both here and hereafter.","欲望と怒りから解き放たれ、心を制御し、自己を悟った放擲者（サンニャーシン）たちには、この世においてもあの世においても、絶対の自由がある。"],
+ "6.5":["uddharedātmanātmānaṃ nātmānamavasādayet\nātmaiva hyātmano bandhurātmaiva ripurātmanaḥ","A man should uplift himself by his own self, so let him not weaken this self. For this self is the friend of oneself, and this self is the enemy of oneself.","人は自己によって自らを高めるべきである。この自己を弱めてはならない。この自己こそが自らの友であり、この自己こそが自らの敵だからである。"],
+ "6.7":["jitātmanaḥ praśāntasya paramātmā samāhitaḥ\nśītoṣṇasukhaduḥkheṣu tathā mānāpamānayoḥ","To the self-controlled and serene, the Supreme Self is the object of constant realization, in cold and heat, pleasure and pain, as well as in honour and dishonour.","自己を制し、心の静まった者にとって、至高の真我（アートマン）は、寒さと暑さ、楽と苦、また名誉と不名誉のうちにあっても、つねに悟られるものである。"],
+ "6.17":["yuktāhāravihārasya yuktaceṣṭasya karmasu\nyuktasvapnāvabodhasya yogo bhavati duḥkhahā","To him who is temperate in eating and recreation, in his effort for work, and in sleep and wakefulness, yoga becomes the destroyer of misery.","食事と娯楽に節度があり、仕事への努力に節度があり、眠りと目覚めに節度のある者にとって、ヨーガは苦しみを滅ぼすものとなる。"],
+ "6.35":["asaṃśayaṃ mahābāho mano durnigrahaṃ calam\nabhyāsena tu kaunteya vairāgyeṇa ca gṛhyate","The Blessed Lord said: Without doubt, O mighty-armed, the mind is restless, and difficult to control; but through practice and renunciation, O son of Kunti, it may be governed.","聖なる主は言われた。勇士よ、疑いなく心は落ち着きなく、制しがたい。しかしクンティーの子よ、修練と離欲によって、心は制御されうる。"],
+ "12.13":["adveṣṭā sarvabhūtānāṃ maitraḥ karuṇa eva ca\nnirmamo nirahaṃkāraḥ samaduḥkhasukhaḥ kṣamī","He who hates no creature, and is friendly and compassionate towards all, who is free from the feelings of “I” and “mine,” even-minded in pain and pleasure, forbearing, ever content, steady in meditation, self-controlled, and possessed of firm conviction, with mind and intellect fixed on Me–he who is thus devoted to Me, is dear to Me.","いかなる生きものも憎まず、すべてのものに友愛と慈悲をもち、「私」と「私のもの」という思いを離れ、苦にも楽にも平等で、忍耐強い者――〔その者は私にとって愛しい〕。"],
+ "12.15":["yasmānnodvijate loko lokānnodvijate ca yaḥ\nharṣāmarṣabhayodvegairmukto yaḥ sa ca me priyaḥ","He by whom the world is not agitated and who cannot be agitated by the world, who is freed from joy, envy, fear, and anxiety–he is dear to Me.","世界がその者によって乱されず、その者も世界によって乱されることがなく、喜び、ねたみ、恐れ、不安から解放された者――その者は私にとって愛しい。"],
+ "16.21":["trividhaṃ narakasyedaṃ dvāraṃ nāśanamātmanaḥ\nkāmaḥ krodhastathā lobhastasmādetattrayaṃ tyajet","Triple is this gate of hell, destructive of the self–lust, anger and greed; therefore one should forsake these three.","自己を滅ぼす地獄の門は三つある。情欲、怒り、貪欲である。それゆえ、この三つを捨てるべきである。"],
+ "18.63":["iti te jñānamākhyātaṃ guhyād‌guhyataraṃ mayā\nvimṛśyaitadaśeṣeṇa yathecchasi tathā kuru","Thus has wisdom, more profound than all profundities, been declared to you by Me; reflecting over it fully, act as you like.","このように、あらゆる深遠なものよりもさらに深遠な英知を、私は汝に説き明かした。この英知を余すところなく熟考し、汝の望むように行え。"],
+ "18.66":["sarvadharmānparityajya māmekaṃ śaraṇaṃ vraja\nahaṃ tvāṃ sarvapāpebhyo mokṣayiṣyāmi mā śucaḥ","Relinquishing all dharmas take refuge in Me alone; I will liberate you from all sins; grieve not.","一切のダルマを捨てて、ただ私ひとりに帰依せよ。私は汝をすべての罪から解き放とう。嘆くな。"],
+ "18.73":["naṣṭo mohaḥ smṛtirlabdhā tvatprasādānmayācyuta\nsthito'smi gatasandehaḥ kariṣye vacanaṃ tava","Arjuna said: Destroyed is my delusion, and I have gained my memory through Your grace, O Achyuta. I am firm; my doubts are gone. I will do Your word.","アルジュナは言った。アチュタよ、あなたの恩寵によって私の迷妄は消え、私は記憶を取り戻した。私は確固として立ち、疑いは去った。あなたの言葉のとおりに行おう。"]
+};
+var LD={preset:0,sel:LENSES[0].v.slice(),cur:-1,play:false,timer:null,msg:""};
+function refCmp(a,b){var x=a.split("."),y=b.split(".");return (+x[0]-+y[0])||(+x[1]-+y[1])}
+function ldSorted(){return LD.sel.slice().sort(refCmp)}
+function ldStop(){LD.play=false;if(LD.timer){clearTimeout(LD.timer);LD.timer=null}}
+function ldTick(host){
+  if(!LD.play)return;
+  LD.timer=setTimeout(function(){if(!LD.play)return;var n=LD.sel.length;if(!n){ldStop();renderLens(host);return}LD.cur=(LD.cur+1)%n;renderLens(host,true);ldTick(host)},6000);
+}
+function renderLens(host,keepBoard){
+  var ja=L()==="ja", list=ldSorted(), cur=LD.cur>=0&&LD.cur<list.length?list[LD.cur]:null, on={};
+  list.forEach(function(r){on[r]=1});
+  var lens=LD.preset>=0?LENSES[LD.preset]:null;
+  var h='';
+  if(!keepBoard||!$(".ld-board",host)){
+    h+='<div class="ld-top"><p class="eyebrow">'+esc(tr(T("My verses · a lens","My verses ・ レンズ")))+'</p><div class="ld-presets" role="group" aria-label="'+esc(tr(T("Example lenses","例のレンズ")))+'">'+
+      LENSES.map(function(l,i){return '<button type="button" data-lp="'+i+'" aria-pressed="'+(LD.preset===i)+'">'+esc(tr(l.name))+'</button>'}).join("")+
+      '<button type="button" data-lp="blank" aria-pressed="'+(LD.preset===-2)+'">'+esc(tr(T("Start blank","白紙から")))+'</button></div></div>';
+    h+='<div class="ld-body"><div class="ld-board"><p class="ld-title">BHAGAVAD GĪTĀ</p><div class="ld-chs">'+GITA_CH.map(function(n,ci){
+      var c=ci+1, cols=Math.ceil(Math.sqrt(n)), rows=Math.ceil(n/cols), k=0, cells="";
+      for(var v=1;v<=n;v++){var r=c+"."+v;if(on[r])k++;cells+='<i data-r="'+r+'" class="'+(on[r]?"on":"")+(r===cur?" cur":"")+'" title="'+esc((ja?"ギーター ":"Gītā ")+r)+'"></i>'}
+      return '<div class="ld-ch"><span class="ld-chl">CH '+c+(k?' · '+k:'')+'</span><div class="ld-cells" style="grid-template-columns:repeat('+cols+',1fr);grid-template-rows:repeat('+rows+',1fr)">'+cells+'</div></div>';
+    }).join("")+'</div></div><div class="ld-card" aria-live="polite"></div></div>';
+    h+='<p class="note">'+esc(tr(T("On this site, the texts come with the example lenses only. In the app, every verse has its Sanskrit, translation and grammar, a lens holds up to 100 verses, and the board can read the translation aloud.","このサイトで本文が読めるのは、例のレンズの句だけです。アプリでは、すべての句に原文・訳・文法解析があり、一つのレンズに 100 句まで入り、盤は訳文を読み上げます。")))+'</p>';
+    host.innerHTML=h;
+  }else{
+    $$(".ld-cells i",host).forEach(function(el){var r=el.getAttribute("data-r");el.className=(on[r]?"on":"")+(r===cur?" cur":"")});
+    $$(".ld-ch",host).forEach(function(ch,ci){var k=0;for(var v=1;v<=GITA_CH[ci];v++){if(on[(ci+1)+"."+v])k++}$(".ld-chl",ch).textContent="CH "+(ci+1)+(k?" · "+k:"")});
+    $$(".ld-presets button",host).forEach(function(b){var p=b.getAttribute("data-lp");b.setAttribute("aria-pressed",String(p==="blank"?LD.preset===-2:+p===LD.preset))});
+  }
+  /* the card: the lens, the reader, the list */
+  var card=$(".ld-card",host), c='';
+  c+='<p class="ld-name">'+esc(lens?tr(lens.name):tr(T("My lens","私のレンズ")))+'<span>'+esc(ja?(list.length+" 句"):(list.length+(list.length===1?" verse":" verses")))+'</span></p>';
+  if(lens)c+='<p class="ld-why">'+esc(tr(lens.why))+'</p>';
+  if(cur){
+    var t=GV[cur];
+    c+='<div class="ld-verse"><p class="ld-ref">'+esc((ja?"ギーター ":"Gītā ")+cur)+'</p>';
+    if(t){c+='<p class="ld-sa" lang="sa-Latn">'+esc(t[0]).replace(/\n/g,"<br>")+'</p><p class="ld-tr">'+esc(ja?t[2]:t[1])+'</p>'}
+    else{c+='<p class="ld-tr muted">'+esc(tr(T("On this site, only the example lenses carry their texts. In the app, this verse opens with its Sanskrit, translation and grammar.","このサイトで本文が読めるのは、例のレンズの句だけです。アプリでは、この句も原文・訳・文法解析つきで開きます。")))+'</p><a class="link-arrow" href="'+esc(APP+"/scripture")+'">'+esc(tr(T("Open the verse board in the app","アプリで聖句盤を開く")))+'</a>'}
+    c+='</div>';
+  }else if(!list.length){
+    c+='<p class="ld-tr muted">'+esc(tr(T("Tap the verses you need now on the board. The verses you pick stay bright, and the rest sink.","いま必要な句を、盤のマスを押して選んでください。選んだ句は明るいまま、残りは沈みます。")))+'</p>';
+  }else{
+    c+='<p class="ld-tr muted">'+esc(tr(T("Press “Play the lens” to read the verses in order, or pick one below.","「レンズを順に読む」で句を順に読めます。下の番号から一つ選ぶこともできます。")))+'</p>';
+  }
+  if(LD.msg)c+='<p class="ld-msg">'+esc(LD.msg)+'</p>';
+  c+='<div class="ld-ctl"><button type="button" class="btn btn-sm" data-ld="prev" aria-label="'+esc(tr(T("Previous verse","前の句")))+'"'+(list.length?'':' disabled')+'>←</button>'+
+    '<button type="button" class="btn btn-primary btn-sm" data-ld="play"'+(list.length?'':' disabled')+'>'+esc(LD.play?tr(T("■ Stop","■ 止める")):tr(T("▶ Play the lens","▶ レンズを順に読む")))+'</button>'+
+    '<button type="button" class="btn btn-sm" data-ld="next" aria-label="'+esc(tr(T("Next verse","次の句")))+'"'+(list.length?'':' disabled')+'>→</button></div>';
+  if(list.length)c+='<div class="ld-list">'+list.map(function(r,i){return '<button type="button" data-ld-go="'+i+'" aria-current="'+(r===cur)+'">'+r+'</button>'}).join("")+'</div>';
+  c+='<form class="ld-add" data-ld-add><label><span>'+esc(tr(T("Add or remove by number","番号で足す・外す")))+'</span><input type="text" inputmode="decimal" placeholder="2.47" aria-label="'+esc(tr(T("Verse number, such as 2.47","句の番号（例 2.47）")))+'"></label><button type="submit" class="btn btn-sm">'+esc(tr(T("Add / remove","足す／外す")))+'</button></form>';
+  card.innerHTML=c;
+}
+function ldToggle(host,r){
+  var i=LD.sel.indexOf(r);
+  LD.msg="";
+  if(i>=0){LD.sel.splice(i,1)}
+  else{if(LD.sel.length>=100){LD.msg=tr(T("A lens holds up to 100 verses.","レンズに保存できるのは100句までです。"));renderLens(host,true);return}LD.sel.push(r)}
+  LD.preset=-1;ldStop();
+  var list=ldSorted();LD.cur=i>=0?-1:list.indexOf(r);
+  renderLens(host,true);
+}
+document.addEventListener("click",function(e){
+  var host=e.target.closest("[data-lens-demo]");if(!host)return;
+  var cell=e.target.closest(".ld-cells i");
+  if(cell){ldToggle(host,cell.getAttribute("data-r"));return}
+  var p=e.target.closest("[data-lp]");
+  if(p){ldStop();LD.msg="";var v=p.getAttribute("data-lp");if(v==="blank"){LD.preset=-2;LD.sel=[]}else{LD.preset=+v;LD.sel=LENSES[+v].v.slice()}LD.cur=-1;renderLens(host,true);return}
+  var g=e.target.closest("[data-ld-go]");
+  if(g){ldStop();LD.cur=+g.getAttribute("data-ld-go");renderLens(host,true);return}
+  var b=e.target.closest("[data-ld]");if(!b)return;
+  var n=LD.sel.length, a=b.getAttribute("data-ld");if(!n)return;
+  if(a==="play"){if(LD.play){ldStop()}else{LD.play=true;if(LD.cur<0)LD.cur=0;ldTick(host)}}
+  else if(a==="next"){ldStop();LD.cur=(LD.cur+1)%n}
+  else if(a==="prev"){ldStop();LD.cur=LD.cur<=0?n-1:LD.cur-1}
+  renderLens(host,true);
+});
+document.addEventListener("submit",function(e){
+  var f=e.target.closest("[data-ld-add]");if(!f)return;
+  e.preventDefault();
+  var host=f.closest("[data-lens-demo]"), inp=$("input",f), m=(inp.value||"").trim().match(/^(\d{1,2})\s*[.．:]\s*(\d{1,2})$/);
+  if(!m||+m[1]<1||+m[1]>18||+m[2]<1||+m[2]>GITA_CH[+m[1]-1]){LD.msg=tr(T("Write a verse number such as 2.47.","2.47 のように、句の番号を書いてください。"));renderLens(host,true);return}
+  inp.value="";ldToggle(host,(+m[1])+"."+(+m[2]));
+});
+
+/* ---------- the map of three kingdoms as the app draws it ----------
+   For the Sutra pages: the practical map, not the site's mosaic. Copied from the app's own page on reading the map
+   (2026-10-23, the "dotted borders" example): flat-top hexes of side 11.5 on a 19 × 13 board (viewBox -170 -150 340 270),
+   each kingdom's hexes counted out on an open board, roads between capitals, and the map as you felt it (from the inner memo)
+   laid over as dotted borders. The app's colours are kept, so it reads as the app's screen in both themes of this site. */
+var AH=11.5, AQ=Math.sqrt(3)*AH;
+var ACOL={dharma:"#C5A880",artha:"#8FB8A8",kama:"#D4917E"};
+var AKING={dharma:T("Dharma","ダルマ(法)"),artha:T("Artha","アルタ(利)"),kama:T("Kāma","カーマ(欲)")};
+function f2(n){return Math.round(n*100)/100}
+function fhexPts(x,y,s){var p=[];for(var i=0;i<6;i++){var a=Math.PI/3*i;p.push(f2(x+s*Math.cos(a))+","+f2(y+s*Math.sin(a)))}return p.join(" ")}
+function akey(x,y){return Math.round(x/(AH*0.75))+":"+Math.round(y/(AQ/2))}
+function aEdges(cells){
+  var set={},out="";cells.forEach(function(p){set[akey(p[0],p[1])]=1});
+  cells.forEach(function(p){for(var k=0;k<6;k++){
+    var a=Math.PI/3*k+Math.PI/6;if(set[akey(p[0]+AQ*Math.cos(a),p[1]+AQ*Math.sin(a))])continue;
+    var a1=Math.PI/3*k,a2=Math.PI/3*(k+1);
+    out+='<line x1="'+f2(p[0]+AH*Math.cos(a1))+'" y1="'+f2(p[1]+AH*Math.sin(a1))+'" x2="'+f2(p[0]+AH*Math.cos(a2))+'" y2="'+f2(p[1]+AH*Math.sin(a2))+'"/>';
+  }});
+  return out;
+}
+function aRing(c,n){
+  /* the app's own order: the capital, its six neighbours, then the five nearest of the next ring (all but the one straight to the east) */
+  var x=c[0],y=c[1],out=[[x,y]],d=AQ,i;
+  for(i=0;i<6;i++){var a=Math.PI/3*i+Math.PI/6;out.push([f2(x+d*Math.cos(a)),f2(y+d*Math.sin(a))])}
+  if(n>7){[[-34.5,0],[-17.25,-29.88],[-17.25,29.88],[17.25,-29.88],[17.25,29.88]].forEach(function(o){out.push([f2(x+o[0]),f2(y+o[1])])})}
+  return out.slice(0,n);
+}
+var APP_MAPS={
+ felt:{
+  cells:{dharma:aRing([0,-59.76],12),artha:aRing([-69,19.92],7),kama:aRing([51.75,29.88],12)},
+  caps:{dharma:[0,-59.76],artha:[-69,19.92],kama:[51.75,29.88]},
+  roads:[{p:[[0,-59.76],[0,-39.84],[17.25,-29.88],[34.5,-19.92],[34.5,0],[51.75,9.96],[51.75,29.88]],w:1.4,d:"3 6",o:.6},
+         {p:[[-69,19.92],[-51.75,9.96],[-51.75,-9.96],[-34.5,-19.92],[-17.25,-29.88],[-17.25,-49.8],[0,-59.76]],w:2,o:.7}],
+  felt:{dharma:aRing([0,-59.76],7),artha:aRing([-51.75,29.88],12),kama:aRing([69,39.84],7)},
+  labels:{dharma:[0,-115.54],artha:[-69,81.14],kama:[51.75,113.66]},
+  sentence:T("Dharma large · Artha middling · Kāma pressing at its borders. Dharma and Kāma are still near, but drifting apart again. Dotted (the map as you felt it): Dharma middling · Artha large · Kāma swelling. Artha and Dharma hold their usual alliance, and Kāma stands apart.",
+             "法は大きい・利は中くらい・欲は国境にせまっている。 法と欲はまだ近いが、離れつつある。 点線（あなたが感じた地図）: 法は中くらい・利は大きい・欲はふくらんできた。 利と法はいつもの同盟を結び、欲は離れている。")
+ }
+};
+function appMapSVG(m){
+  var o='<svg class="amap" viewBox="-170 -150 340 270" role="img" aria-label="'+esc(tr(m.sentence))+'"><g class="am-board">';
+  for(var c=0;c<19;c++)for(var r=0;r<13;r++){o+='<polygon points="'+fhexPts((c-9)*1.5*AH,((c%2===0)?(r-6.5):(r-7))*AQ,AH)+'"/>'}
+  o+='</g>';
+  REALMS.forEach(function(k){o+='<g class="am-cells" fill="'+ACOL[k]+'" stroke="'+ACOL[k]+'">'+m.cells[k].map(function(p){return '<polygon points="'+fhexPts(p[0],p[1],10.9)+'"/>'}).join("")+'</g>'});
+  REALMS.forEach(function(k){o+='<g class="am-border" stroke="'+ACOL[k]+'">'+aEdges(m.cells[k])+'</g>'});
+  m.roads.forEach(function(rd){o+='<polyline class="am-road" points="'+rd.p.map(function(q){return q.join(",")}).join(" ")+'" stroke-width="'+rd.w+'" stroke-opacity="'+rd.o+'"'+(rd.d?' stroke-dasharray="'+rd.d+'"':'')+'/>'});
+  if(m.felt)o+='<g class="am-felt">'+REALMS.map(function(k){return aEdges(m.felt[k])}).join("")+'</g>';
+  REALMS.forEach(function(k){var p=m.caps[k];o+='<polygon class="am-cap" fill="'+ACOL[k]+'" stroke="'+ACOL[k]+'" points="'+fhexPts(p[0],p[1],5.17)+'"/>'});
+  REALMS.forEach(function(k){var p=m.labels[k];o+='<text class="am-label" x="'+p[0]+'" y="'+p[1]+'">'+esc(tr(AKING[k]))+'</text>'});
+  return o+'</svg>';
+}
+function renderAppMap(host){
+  var m=APP_MAPS[host.getAttribute("data-app-map")];if(!m)return;
+  host.innerHTML=appMapSVG(m)+'<div class="am-text"><p class="am-k">'+esc(tr(T("The map's sentence","地図の文")))+'</p><p>'+esc(tr(m.sentence))+'</p></div>';
+}
 
 /* ---------- menu, copy buttons, start ---------- */
 /* ---------- Yātrā: a taste of chapter 1 (one card, one scripted reply, one fragment) ---------- */
@@ -625,7 +896,9 @@ if($("#archer")){newGame();renderArcher()}
 $$("[data-realm-hero]").forEach(realmHero);
 $$("[data-realm-gallery]").forEach(realmGallery);
 $$("[data-realm-map],[data-realm-shape]").forEach(realmStill);
-if($("#vib")){renderVib()}
+$$("[data-langq-demo]").forEach(function(h){renderLangQuiz(h)});
+$$("[data-lens-demo]").forEach(function(h){renderLens(h)});
+$$("[data-app-map]").forEach(function(h){renderAppMap(h)});
 $$("[data-yatra-demo]").forEach(yatraDemo);
 maps.forEach(function(m){m.layout(false)});
 /* Japanese browsers that land on an English page: offer the Japanese page once */

@@ -297,19 +297,6 @@ td.c{font-family:var(--font-mono);font-size:.84rem;white-space:nowrap}
 :root[data-lang="ja"] .box-body .sub{font-family:var(--font-body);font-size:.9rem}
 @media (max-width:640px){.box-item{grid-template-columns:minmax(0,1fr)}}
 
-/* vibhakti */
-.vib-word{display:grid;gap:4px;justify-items:start}
-.vib-word .deva{font-size:clamp(2.1rem,5vw,2.9rem);line-height:1.25;color:var(--ink)}
-.vib-word .iast{font-size:1.35rem;color:var(--ink-2)}
-.cases{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-@media (max-width:640px){.cases{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.case{display:grid;gap:2px;padding:10px 12px;border:1px solid var(--rule);border-radius:var(--radius);background:var(--bg);color:var(--ink);font:inherit;font-size:.98rem;line-height:1.3;text-align:left;cursor:pointer}
-.case small{font-family:"Gentium Book Plus",Georgia,serif;font-style:italic;color:var(--muted);font-size:.84rem}
-.case:hover:not([disabled]){border-color:var(--ink)}
-.case[disabled]{cursor:default;opacity:.5}
-.case.right{opacity:1;border-color:var(--peacock);background:var(--peacock-wash)}
-.case.wrong{opacity:1;border-color:var(--lotus);background:var(--lotus-wash)}
-
 /* forms */
 .form{display:grid;gap:16px;max-width:36rem}
 .field{display:grid;gap:6px}
@@ -506,8 +493,6 @@ img{max-width:100%}
 .flow-grid{margin-top:8px}
 .verbs-2{grid-template-columns:repeat(2,minmax(0,1fr));align-content:start}
 @media (max-width:560px){.verbs-2{grid-template-columns:minmax(0,1fr)}}
-.flow-map{display:grid;grid-template-columns:minmax(0,9.5rem) minmax(0,1fr);gap:14px;align-items:center}
-.flow-map .flow-p{font-size:.92rem;color:var(--muted)}
 /* phones and tablets: the hero's commentary moves below the map, so the map comes sooner */
 @media (max-width:1000px){
   .hero .hero-grid{gap:16px}
@@ -565,3 +550,119 @@ table.compare td:last-child{background:var(--silk-wash)}
 .yd-ft{font-family:var(--font-display);font-size:1.08rem;color:var(--ink)}
 .yd-next{margin:0;font-size:.95rem;color:var(--ink-2)}
 @media (prefers-reduced-motion:reduce){.yd-card{transition:none}.yd-card:hover,.yd-card.picked{transform:none}}
+
+/* ---------- the verse board item: sub-blocks ---------- */
+.sub-block{display:grid;gap:14px;margin-top:clamp(28px,4vw,40px);padding-top:clamp(20px,3vw,28px);border-top:1px dashed var(--rule)}
+.sub-h{font-family:var(--font-display);font-weight:600;font-size:clamp(1.3rem,2.4vw,1.6rem);line-height:1.25;margin:0}
+:root[data-lang="ja"] .sub-h{font-size:clamp(1.15rem,2.2vw,1.38rem);line-height:1.55}
+.sub-block .prose{max-width:46rem}
+
+/* ---------- your own small Gītā (lens) ---------- */
+.lens-demo{gap:14px}
+.ld-top{display:grid;gap:8px}
+.ld-presets{display:flex;flex-wrap:wrap;gap:6px}
+.ld-presets button,.lq-tabs button,.ld-list button{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.04em;padding:.55em .75em;border:1px solid var(--rule);border-radius:2px;background:transparent;color:var(--ink-2);line-height:1.25;cursor:pointer}
+:root[data-lang="ja"] .ld-presets button,:root[data-lang="ja"] .lq-tabs button{font-family:var(--font-body);font-size:.84rem;letter-spacing:.02em}
+.ld-presets button:hover,.lq-tabs button:hover,.ld-list button:hover{border-color:var(--ink)}
+.ld-presets button[aria-pressed="true"],.lq-tabs button[aria-pressed="true"],.ld-list button[aria-current="true"]{background:var(--ink);border-color:var(--ink);color:var(--on-ink)}
+.ld-body{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.ld-body{grid-template-columns:minmax(0,1fr)}}
+.ld-board{border:1px solid var(--silk-mid);border-radius:var(--radius);padding:10px 10px 12px;background:var(--bg)}
+.ld-title{margin:0 0 8px;text-align:center;font-family:var(--font-display);font-weight:600;font-size:.82rem;letter-spacing:.32em;color:var(--silk)}
+.ld-chs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+@media (max-width:560px){.ld-chs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.ld-ch{display:grid;gap:3px;align-content:start}
+.ld-chl{font-family:var(--font-mono);font-size:.56rem;letter-spacing:.04em;color:var(--muted);white-space:nowrap;text-align:center}
+.ld-cells{display:grid;gap:1px;aspect-ratio:1;padding:2px;border:1px solid var(--rule);background:var(--surface)}
+.ld-cells i{display:block;background:var(--fog);border-radius:1px;cursor:pointer;transition:background-color .2s}
+.ld-cells i:hover{background:var(--silk-mid)}
+.ld-cells i.on{background:var(--silk-fill)}
+.ld-cells i.cur{outline:2px solid var(--ink);outline-offset:0;position:relative;z-index:1}
+.ld-card{display:grid;gap:10px;align-content:start;min-width:0}
+.ld-name{margin:0;font-family:var(--font-display);font-weight:600;font-size:1.12rem;line-height:1.35;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.ld-name span{font-family:var(--font-mono);font-weight:400;font-size:.7rem;letter-spacing:.06em;color:var(--silk)}
+:root[data-lang="ja"] .ld-name{font-size:1.02rem}
+.ld-why{margin:0;font-size:.95rem;color:var(--ink-2);font-style:italic}
+:root[data-lang="ja"] .ld-why{font-style:normal}
+.ld-verse{display:grid;gap:6px;padding:12px 14px;border:1px solid var(--rule);border-left:3px solid var(--silk-fill);border-radius:var(--radius);background:var(--bg)}
+.ld-ref{margin:0;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.08em;color:var(--silk)}
+.ld-sa{margin:0;font-size:.98rem;line-height:1.5;color:var(--ink);overflow-wrap:anywhere}
+.ld-tr{margin:0;font-size:.98rem;line-height:1.6;color:var(--ink-2)}
+:root[data-lang="ja"] .ld-tr{font-size:.95rem;line-height:1.85}
+.ld-msg{margin:0;font-size:.9rem;color:var(--lotus)}
+.ld-ctl{display:flex;flex-wrap:wrap;gap:6px}
+.ld-list{display:flex;flex-wrap:wrap;gap:4px}
+.ld-list button{padding:.4em .55em;font-size:.68rem}
+.ld-add{display:flex;flex-wrap:wrap;gap:6px;align-items:end}
+.ld-add label{display:grid;gap:3px;font-size:.82rem;color:var(--muted)}
+.ld-add input{font:inherit;font-size:.95rem;width:6.5em;padding:.4em .55em;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink)}
+.ld-add input:focus{outline:2px solid var(--silk-fill);outline-offset:1px}
+@media (prefers-reduced-motion:reduce){.ld-cells i{transition:none}}
+
+/* ---------- the language room quizzes ---------- */
+.lq-demo{gap:12px}
+.lq-tabs{display:flex;flex-wrap:wrap;gap:6px}
+.lq-word{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}
+.lq-word b{font-family:var(--font-display);font-size:1.25rem;color:var(--silk)}
+.lq-auto{border-style:dashed}
+.lq-rows{font-size:.92rem;color:var(--ink-2)}
+.lq-hint{margin:0;font-size:.92rem;color:var(--muted)}
+.lq-target{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;padding:6px 2px}
+.lq-form{font-family:var(--font-display);font-size:clamp(1.6rem,4vw,2.1rem);font-weight:600;color:var(--silk);line-height:1.2}
+.lq-count{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted)}
+.lq-tw{max-width:34rem}
+.lq-table,.lq-sgrid{border-collapse:separate;border-spacing:3px;width:100%}
+.lq-table th,.lq-sgrid th{font-weight:400;font-size:.82rem;color:var(--muted);text-align:center;padding:2px 4px;white-space:nowrap}
+.lq-table th[scope="row"]{text-align:right;padding-right:8px}
+.lq-table td,.lq-sgrid td{padding:0}
+.lq-cell{display:grid;place-items:center;width:100%;min-height:36px;padding:4px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink);font:inherit;font-size:.95rem;line-height:1.2;cursor:pointer;position:relative;transition:background-color .15s,border-color .15s}
+.lq-cell:hover:not([disabled]){border-color:var(--ink)}
+.lq-cell[disabled]{cursor:default}
+.lq-cell.sel{background:var(--indigo-wash);border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.lq-cell.ok{background:var(--peacock-wash);border-color:var(--peacock);color:var(--ink)}
+.lq-cell.miss{background:var(--silk-wash);border-color:var(--silk-fill);border-style:dashed}
+.lq-cell.bad{background:var(--lotus-wash);border-color:var(--lotus)}
+.lq-cell sup{position:absolute;top:2px;right:4px;font-family:var(--font-mono);font-size:.56rem;color:var(--muted)}
+.lq-sw{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.lq-sgrid .lq-cell{min-height:34px;font-size:.86rem}
+.lq-sgrid th[scope="row"],.lq-corner{position:sticky;left:0;background:var(--surface);z-index:1}
+.lq-corner{font-size:.62rem!important;line-height:1.15;white-space:normal!important;overflow-wrap:anywhere}
+.lq-ctl{display:flex;flex-wrap:wrap;gap:6px}
+.lq-msg{margin:0;font-size:.92rem;color:var(--ink-2)}
+.lq-rule{display:grid;gap:4px}
+.lq-rule p{margin:0;font-size:.95rem}
+.lq-ex{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.lq-ex li{display:grid;gap:2px;padding-left:12px;border-left:2px solid var(--silk-mid)}
+.lq-sa{font-family:var(--font-display);font-size:1.02rem;color:var(--ink)}
+.lq-ref{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.06em;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.lq-cell{transition:none}}
+
+/* ---------- the map of three kingdoms as the app draws it (the app's dark screen, in both themes) ---------- */
+.app-fig{margin:4px 0 0;display:grid;gap:8px}
+.app-fig-wide{max-width:30rem}
+.app-screen{background:#0b0b0e;border:1px solid #27272a;border-radius:6px;padding:10px 8px 12px;display:grid;gap:8px;color:#e4e4e7}
+.amap{width:100%;height:auto;display:block}
+.amap .am-board polygon{fill:none;stroke:#52525b;stroke-width:.6;opacity:.4}
+.amap .am-cells polygon{opacity:.26;stroke-width:.6}
+.amap .am-border line{stroke-width:1.6;stroke-linecap:round}
+.amap .am-road{fill:none;stroke:#e4e4e7;stroke-linecap:round;stroke-linejoin:round}
+.amap .am-felt line{stroke:#fafafa;stroke-width:1.2;opacity:.85;stroke-dasharray:1.5 3;stroke-linecap:round}
+.amap .am-cap{opacity:.95;stroke-width:1}
+.amap .am-label{font:13px system-ui,-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;fill:#e4e4e7;stroke:#09090b;stroke-width:3;paint-order:stroke;text-anchor:middle;opacity:.85}
+.am-text{padding:0 6px;display:grid;gap:2px}
+.am-text p{margin:0;font-family:system-ui,-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;font-size:.86rem;line-height:1.6;color:#e4e4e7}
+.am-text .am-k{font-size:.72rem;color:#C5A880}
+.app-fig figcaption{font-size:.92rem;color:var(--ink-2)}
+.rglyph .felt{fill:none;stroke:var(--ink);stroke-width:1.2;stroke-dasharray:1.5 2.5;stroke-linecap:round}
+
+/* quiz tables: not the site's data tables (no stacking on phones, fixed columns from the start as in the app) */
+.lq-table,.lq-sgrid{table-layout:fixed;min-width:0;font-size:inherit;line-height:1.3}
+.lq-table :is(th,td),.lq-sgrid :is(th,td){border-bottom:0;padding:0;vertical-align:middle}
+.lq-table thead th,.lq-sgrid thead th{font-family:var(--font-body);font-weight:400;font-size:.84rem;letter-spacing:0;text-transform:none;color:var(--muted);text-align:center;padding:0 0 4px}
+.lq-table thead th:first-child{width:3.4em}
+.lq-sgrid thead th:first-child{width:3.4em;font-size:.7rem}
+.lq-table th[scope="row"]{font-size:.84rem;color:var(--ink-2);text-align:right;padding-right:8px}
+.lq-sgrid th[scope="row"]{font-size:.9rem;color:var(--ink-2);text-align:center}
+.lq-cell{overflow-wrap:anywhere}
+@media (max-width:640px){.lq-cell{font-size:.84rem;min-height:34px;padding:3px}}
+.ld-add input::placeholder{color:var(--muted);opacity:.7}
