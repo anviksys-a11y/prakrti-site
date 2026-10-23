@@ -68,6 +68,7 @@ PAGES = [
     ("principles", "principles"),
     ("readings", "readings"),
     ("join", "join"),
+    ("support", "classroom-support"),   # 2026-10-24: free help for yoga classrooms
     ("company", "company"),
     ("legal", "legal"),
     ("official-terms", "official-table-terms"),   # 2026-10-24: linked from nowhere until official tables go on sale
@@ -134,6 +135,12 @@ META = {
                "We are looking for yoga teachers and game masters to open Mahābhārata RPD tables with us, online, in their own Ashrams. Any fee is the host's; we take no commission."),
         "ja": ("仲間を募る：Mahābhārata RPD の卓を一緒に開く人 | Prakrti GSA",
                "Mahābhārata RPD の卓を一緒に開く、ヨガの先生と、卓を進める人（GM）を探しています。オンラインの卓を、ご自身の Ashram で。参加費は卓を開く人のもの。手数料はいただきません。"),
+    },
+    "support": {
+        "en": ("Classroom support | Prakrti GSA",
+               "Free help for yoga teachers and studios: the verse board, Sanskrit in the language room, writing Sutras, the games, running Mahābhārata RPD tables, and marketing to grow your classroom."),
+        "ja": ("教室の支援 | Prakrti GSA",
+               "ヨガの先生とスタジオへの無償の支援。聖句盤、語学教室のサンスクリット、Sutra の書き方、遊び方、Mahābhārata RPD の卓の進め方、そして教室を大きくする集客まで。"),
     },
     "company": {
         "en": ("Company | Prakrti GSA",

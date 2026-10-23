@@ -181,7 +181,7 @@ Cloudflare Pages などほかの静的ホスティングでも、`dist/` をそ�
 
 - **数**：`src/site.html` の在庫目録の数（700、195、143、104、36、22、215,455）は、2026-10-22 にアプリの値に合わせました。出どころ：700・195・143 は本番の解析の一覧（`/api/v1/scriptures/analysis-index`、143 は TB 75＋AB 68）、104 は `Claude outputs/scripture_import/analysis/paradigms.json`＋`paradigms_extra.json`（25＋79）、36 は `frontend/src/lib/krida/archery.ts` の `VERSES`、22 は `backend/app/core/config.py` の `monthly_test_run_limit`、215,455 は `backend` で `python3 -m tests.spec_models.doors` を走らせたときの状態の数。規則や中身が増えたら、同じ方法で数え直します。
 - **表紙の動画**：御者と射手のデモから 10〜20 秒の動画を撮り、トップページの体験版の近くに置きます。
-- **連絡先**：会社のドメインのアドレスを作ったら、`site.config.json` の `contact_email` と、`src/site.html` の特商法の表のメールアドレスを替えます。
+- **連絡先**：会社のドメインのアドレスを作ったら、`site.config.json` の `contact_email` と、`src/site.html` の特商法の表と、仲間を募る頁・教室の支援の頁の連絡先のメールアドレスを替えます。
 - **法務の表記**：特商法の表記・利用規約・プライバシーポリシーは、アプリのページ（`/legal/tokushoho`・`/terms`・`/privacy`）にリンクしています。サイトの `/legal/` は、その三つへの案内です。サイトに本文の写しは置いていません（直す場所をアプリの一か所にするため）。
   ただし**公式の卓の参加規約**（`/official-table-terms/`・2026-10-24）は、アプリの規約の写しではなく公式の卓のための文書なので、公式の卓を売るこのサイトに本文を置いています。原本は Claude Docs「公式の卓 参加規約（案）」。公式の卓を売り始めるまでは、どの頁からもリンクしません（そのとき、法務の頁の「この紹介サイトは、販売を行いません」の一文も直す）。
 - **書いたものの扱い**（原則のページの `#writing`）：アプリのプライバシーポリシーの要約です。AI は Google の Gemini（有料の API）と書いています。アプリのポリシーを直したら、ここも合わせます。招待フォームを Google フォームにしたら、その点も書き添えます。
