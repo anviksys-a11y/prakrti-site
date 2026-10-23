@@ -536,3 +536,32 @@ table.compare td:last-child{background:var(--silk-wash)}
 .map-keys button[aria-pressed="true"] .kglyph{color:var(--silk-fill)}
 .mk-note{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin:-4px 0 12px;font-size:.95rem;color:var(--ink-2);max-width:60rem}
 @media (max-width:640px){.map-keys button{min-height:36px}}
+
+/* ---------- Yātrā (the journey of cards) ---------- */
+.yatra-courses{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:0;max-width:40rem;border-top:1px solid var(--rule)}
+.yatra-courses li{display:grid;grid-template-columns:minmax(0,13.5rem) minmax(0,1fr);gap:4px 20px;padding:12px 0;border-bottom:1px solid var(--rule)}
+.yatra-courses b{font-family:var(--font-display);font-weight:600;color:var(--silk)}
+.yatra-courses li>span{color:var(--ink-2)}
+@media (max-width:640px){.yatra-courses li{grid-template-columns:minmax(0,1fr)}}
+.yatra-grid .sec-head{margin-bottom:0}
+.yatra-grid .cta-row{margin-top:4px}
+.yd-road{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;counter-reset:yd}
+.yd-road li{counter-increment:yd;display:grid;justify-items:center;gap:6px;text-align:center;font-family:var(--font-mono);font-size:.62rem;letter-spacing:.04em;line-height:1.3;color:var(--muted)}
+.yd-road li::before{content:counter(yd);display:grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:50%;border:1px solid var(--rule);background:var(--bg);font-size:.72rem;color:var(--muted)}
+.yd-road li:last-child::before{content:"✦"}
+.yd-road li.on{color:var(--ink)}
+.yd-road li.on::before{border-color:var(--silk-fill);background:var(--silk-fill);color:var(--on-fill);box-shadow:0 0 0 4px var(--silk-wash)}
+.yd-road li.next::before{border-color:var(--silk-fill);color:var(--silk)}
+.yd-ask{margin:0;color:var(--ink-2)}
+.yd-hand{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.yd-card{display:block;min-height:7.2rem;padding:14px 12px;text-align:left;font:inherit;font-size:.95rem;line-height:1.45;color:var(--ink);background:var(--bg);border:1px solid var(--rule);border-top:3px solid var(--peacock-fill);border-radius:var(--radius);cursor:pointer;transition:transform .2s,border-color .2s,background-color .2s}
+.yd-card:hover{transform:translateY(-3px);border-color:var(--peacock)}
+.yd-card.picked{background:var(--peacock-wash);border-color:var(--peacock);transform:translateY(-6px)}
+@media (max-width:480px){.yd-hand{grid-template-columns:minmax(0,1fr)}.yd-card{min-height:0}}
+.yd-out{display:grid;gap:12px}
+.yd-out:empty{display:none}
+.yd-frag{display:grid;gap:4px;justify-self:start;padding:10px 14px;border:1px dashed var(--silk-fill);border-radius:var(--radius);background:var(--silk-wash)}
+.yd-fk{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--silk)}
+.yd-ft{font-family:var(--font-display);font-size:1.08rem;color:var(--ink)}
+.yd-next{margin:0;font-size:.95rem;color:var(--ink-2)}
+@media (prefers-reduced-motion:reduce){.yd-card{transition:none}.yd-card:hover,.yd-card.picked{transform:none}}

@@ -27,6 +27,9 @@ var STATUS={
 var CH={s:T("Starter Set · lit","スターターセット ・ 明るい場所"),"1":T("Chapter १ · Your own archer","第一章 ・ 自分の射手"),"2":T("Chapter २ · Into the world","第二章 ・ 世界へ"),"3":T("Chapter ३ · With companions","第三章 ・ 仲間と")};
 var LINKS={starter:T("Open the Starter Set","スターターセットへ"),rpd:T("About Mahābhārata RPD","Mahābhārata RPD について"),engine:T("How judging works","判定のしくみへ"),premium:T("What Premium opens","Premium で開くもの"),schools:T("For yoga schools","ヨガの学校へ")};
 var PLACES=[
+ {id:"yatra",ch:"s",name:T("Yātrā, a journey of cards","Yātrā（旅のカード）"),short:T("Yātrā","Yātrā"),
+  desc:T("Where the road begins. A card game that takes you once round the whole of Prakrti GSA, on copies of the real screens: Prism, dialogue and the allegory play, the Sutra, a test run, a Field Trial and Chariot. You choose cards and press buttons; nothing has to be written. Prakrti answers from a script, and the judging runs on the real formula.","道の始まり。本物の画面の写しの上で、Prakrti GSA 全体をひと回りするカードゲームです。Prism、対話と寓話劇、Sutra、守りの走、Field Trial、Chariot。札を選び、ボタンを押すだけで、文章は書かなくてかまいません。Prakrti は台本で答え、判定は本物の式で動きます。"),
+  status:["launch","free","noai","guest"],page:"starter",app:"/yatra"},
  {id:"verse",ch:"s",name:T("The verse board and the language room","聖句盤と語学教室"),short:T("Verse Board","聖句盤"),
   desc:T("Every verse of the Gītā and the Yoga Sūtras with the Sanskrit, a translation and a full grammatical analysis. The language room turns the grammar into quizzes, and Vibhakti, a declension game, is being added.","ギーターとヨーガ・スートラの全句を、原文・訳・文法解析つきで読めます。語学教室では、文法をクイズで遊べます。格変化ゲーム『Vibhakti』も加える予定です。"),
   status:["launch","free","noai","read"],page:"starter",app:"/scripture"},
@@ -76,17 +79,17 @@ var PLACES=[
 ];
 PLACES.forEach(function(p,i){p.n=i+1});
 var BY={};PLACES.forEach(function(p,i){BY[p.id]=p;p.k=i});
-var SEEDS_L={archer:[.12,.86],rpd0:[.38,.89],verse:[.64,.85],prism:[.87,.64],kuru:[.65,.61],rupaka:[.44,.66],trial:[.23,.62],hall:[.13,.40],arena:[.43,.38],exchange:[.73,.41],ashram:[.90,.15],tables:[.70,.12],karuta:[.50,.16],board:[.30,.11],shop:[.10,.17]};
-var SEEDS_P={archer:[.18,.93],rpd0:[.50,.95],verse:[.82,.91],prism:[.84,.76],kuru:[.60,.71],rupaka:[.38,.76],trial:[.16,.71],hall:[.18,.52],arena:[.50,.50],exchange:[.82,.53],ashram:[.82,.31],tables:[.50,.29],karuta:[.18,.32],board:[.30,.10],shop:[.70,.10]};
+var SEEDS_L={yatra:[.90,.90],archer:[.12,.86],rpd0:[.38,.89],verse:[.64,.85],prism:[.87,.64],kuru:[.65,.61],rupaka:[.44,.66],trial:[.23,.62],hall:[.13,.40],arena:[.43,.38],exchange:[.73,.41],ashram:[.90,.15],tables:[.70,.12],karuta:[.50,.16],board:[.30,.11],shop:[.10,.17]};
+var SEEDS_P={yatra:[.88,.96],archer:[.16,.93],rpd0:[.42,.96],verse:[.66,.89],prism:[.84,.76],kuru:[.60,.71],rupaka:[.38,.76],trial:[.16,.71],hall:[.18,.52],arena:[.50,.50],exchange:[.82,.53],ashram:[.82,.31],tables:[.50,.29],karuta:[.18,.32],board:[.30,.10],shop:[.70,.10]};
 var DE=[[1,0],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1]], DO=[[1,0],[1,1],[0,1],[-1,0],[0,-1],[1,-1]];
 /* the three keys: hold one up, and the places it opens light up on the map */
 var KEYS={
- free:{name:T("Free account","無料のアカウント"),note:T("Sign up for free, and RPD Episode 0, writing and recording Sutras by hand, a Private Ashram with human game masters, and one Prism scan a day open. The verse board, published interpretations and The Charioteer and the Archer need no account.","無料で登録すると、RPD 第0話、Sutra を手で書くことと記録、Private Ashram と人の GM の卓、1日1回の Prism が開きます。聖句盤と公開された解釈、『御者と射手』は、登録しなくても使えます。"),page:"starter"},
+ free:{name:T("Free account","無料のアカウント"),note:T("Sign up for free, and RPD Episode 0, writing and recording Sutras by hand, a Private Ashram with human game masters, and one Prism scan a day open. Yātrā, the verse board, published interpretations and The Charioteer and the Archer need no account.","無料で登録すると、RPD 第0話、Sutra を手で書くことと記録、Private Ashram と人の GM の卓、1日1回の Prism が開きます。Yātrā、聖句盤と公開された解釈、『御者と射手』は、登録しなくても使えます。"),page:"starter"},
  premium:{name:T("Premium","Premium"),note:T("US$199 a month. Dialogues, drafts of Sutras and counterparts, test runs, Rūpaka and unlimited Prism scans: every AI feature for individual use opens. Everything free stays as it is.","月 199 米ドル。対話、Sutra と相手役の下書き、試走、寓話劇 Rūpaka、無制限の Prism。個人で使う AI の機能が、すべて開きます。無料の場所は、そのまま使えます。"),page:"premium"},
  school:{name:T("School License","School License"),note:T("For yoga schools, from US$199 a month. Inside the school's Ashram, trainees use the AI for dialogues, drafts and Challenges with a monthly seat, and tables can have an AI game master.","ヨガの学校のための契約で、月 199 米ドルから。学校の Ashram の中で、受講生は月ごとの席を使い、対話や下書き、Challenge に AI を使えます。卓では、AI が GM を務められます。"),page:"schools"}
 };
 /* the Eighteen-Day Board runs without AI, so it is free with an account (2026-10-22) */
-var KEYS_OF={verse:["free"],archer:["free"],rpd0:["free"],prism:["free","premium"],kuru:["free","premium"],rupaka:["premium"],trial:["free"],
+var KEYS_OF={yatra:["free"],verse:["free"],archer:["free"],rpd0:["free"],prism:["free","premium"],kuru:["free","premium"],rupaka:["premium"],trial:["free"],
  hall:["free","premium"],arena:["premium"],exchange:["premium"],ashram:["free","school"],tables:["free","school"],karuta:["free"],board:["free"],shop:["free"]};
 var keyOn=null;
 function keyOut(p){return !!keyOn&&(KEYS_OF[p.id]||[]).indexOf(keyOn)<0}
@@ -96,7 +99,7 @@ function hsh(a,b,c){var x=Math.sin(a*127.1+b*311.7+c*74.7)*43758.5453;return x-M
 function corners(cx,cy,s){var p=[];for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);p.push([cx+s*Math.cos(a),cy+s*Math.sin(a)])}return p}
 function f1(n){return Math.round(n*10)/10}
 var fog={lifted:false,seen:{}};
-var selected="verse";
+var selected="yatra";
 function fogged(p){return p.ch!=="s"&&!fog.lifted&&!fog.seen[p.id]}
 var maps=[];
 
@@ -140,7 +143,7 @@ function makeMap(host){
       if(x<90){anchor="start";dx=-10}else if(x>W-90){anchor="end";dx=10}
       labs+='<g class="wl" data-id="'+p.id+'" transform="translate('+f1(x)+','+f1(y)+')"><circle r="'+(portrait?11:10)+'"/><text class="wl-n" dy="0.35em" text-anchor="middle">'+p.n+'</text>'+(portrait?'':'<text class="wl-t" x="'+dx+'" y="27" text-anchor="'+anchor+'">'+esc(tr(p.short))+'</text>')+'</g>';
     });
-    var hp=pts[0], here='<g class="here" transform="translate('+f1(hp[0])+','+f1(hp[1])+')"><circle r="16"/>'+(portrait?'':'<text x="-10" y="-24" text-anchor="start">'+esc(tr(T("You are here · locative case","いまここ ・ 処格")))+'</text>')+'</g>';
+    var hp=pts[0], here='<g class="here" transform="translate('+f1(hp[0])+','+f1(hp[1])+')"><circle r="16"/>'+(portrait?'':'<text x="'+(hp[0]>W*0.7?10:-10)+'" y="-24" text-anchor="'+(hp[0]>W*0.7?"end":"start")+'">'+esc(tr(T("You are here · locative case","いまここ ・ 処格")))+'</text>')+'</g>';
     svg.setAttribute("viewBox","0 0 "+W+" "+H);
     svg.setAttribute("aria-label",tr(T("Map of the Prakrti GSA world. The Starter Set is lit; the other places are covered by fog until you select them.","Prakrti GSA の世界地図。スターターセットだけが明るく、ほかの場所は選ぶまで霧に覆われています。")));
     svg.innerHTML='<g>'+polys+'</g><g>'+bord+'</g><g>'+road+'</g>'+here+'<g>'+labs+'</g>';
@@ -582,6 +585,29 @@ document.addEventListener("click",function(e){
 });
 
 /* ---------- menu, copy buttons, start ---------- */
+/* ---------- Yātrā: a taste of chapter 1 (one card, one scripted reply, one fragment) ---------- */
+var YD=[
+ {say:T("You wrote “again”. Has it happened before?","「また」と書きましたね。前にもあったのですか。"),
+  part:T("Hidden want","本音"),frag:T("I don't want to be disliked.","嫌われたくない")},
+ {say:T("What did you not say back: the words, or the moment?","言い返せなかったのは、言葉ですか。それとも、その瞬間ですか。"),
+  part:T("Crack","亀裂"),frag:T("Silent exactly when it matters.","言うべきときに、黙る")},
+ {say:T("When did you decide it?","それを決めたのは、いつでしたか。"),
+  part:T("Method","手順"),frag:T("Start once the mood is right.","気分が整ってから始める")}
+];
+function yatraDemo(host){
+  var out=$(".yd-out",host), cards=$$(".yd-card",host), road=$$(".yd-road li",host);
+  cards.forEach(function(b){b.setAttribute("aria-pressed","false")});
+  host.addEventListener("click",function(e){
+    var b=e.target.closest(".yd-card");if(!b)return;
+    var d=YD[+b.getAttribute("data-yd")];if(!d)return;
+    cards.forEach(function(c){var on=c===b;c.classList.toggle("picked",on);c.setAttribute("aria-pressed",String(on))});
+    out.innerHTML='<div class="talk"><p class="ai"><span class="who">Prakrti · '+esc(tr(T("script","台本")))+'</span>'+esc(tr(d.say))+'</p></div>'+
+      '<div class="yd-frag"><span class="yd-fk">'+esc(tr(T("Fragment card","断片の札")))+' · '+esc(tr(d.part))+'</span><span class="yd-ft">'+esc(tr(d.frag))+'</span></div>'+
+      '<p class="yd-next">'+esc(tr(T("In the game, fragments like this become the fields of your first Sutra. Next: dialogue and the allegory play.","ゲームでは、こうした断片が、最初の Sutra の欄の材料になります。次の章は、対話と寓話劇です。")))+'</p>';
+    if(road[1])road[1].classList.add("next");
+  });
+}
+
 var menuBtn=$("#menu-btn"), nav=$("#site-nav");
 if(menuBtn&&nav){
   menuBtn.addEventListener("click",function(){var o=!nav.classList.contains("open");nav.classList.toggle("open",o);menuBtn.setAttribute("aria-expanded",String(o))});
@@ -600,6 +626,7 @@ $$("[data-realm-hero]").forEach(realmHero);
 $$("[data-realm-gallery]").forEach(realmGallery);
 $$("[data-realm-map],[data-realm-shape]").forEach(realmStill);
 if($("#vib")){renderVib()}
+$$("[data-yatra-demo]").forEach(yatraDemo);
 maps.forEach(function(m){m.layout(false)});
 /* Japanese browsers that land on an English page: offer the Japanese page once */
 (function(){
