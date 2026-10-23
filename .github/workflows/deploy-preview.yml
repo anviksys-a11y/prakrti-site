@@ -1,6 +1,12 @@
 # プルリクエストを出すと、確認用の仮のアドレスに公開し、そのアドレスをプルリクエストに書き込む（7日で消える）
 name: Deploy a preview
 on: pull_request
+# 仮のアドレスをプルリクエストに書き込み、結果の印（check）を付けるための許可。
+# これが無いと、GitHub の既定（読むだけ）のため、公開のあとの書き込みで止まる（Firebase が作る型と同じ指定）。
+permissions:
+  checks: write
+  contents: read
+  pull-requests: write
 jobs:
   preview:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
