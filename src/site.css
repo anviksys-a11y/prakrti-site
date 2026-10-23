@@ -492,6 +492,8 @@ img{max-width:100%}
 /* home: the four verbs beside the example */
 .flow-grid{margin-top:8px}
 .verbs-2{grid-template-columns:repeat(2,minmax(0,1fr));align-content:start}
+.verbs-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:860px){.verbs-3{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:560px){.verbs-2{grid-template-columns:minmax(0,1fr)}}
 /* phones and tablets: the hero's commentary moves below the map, so the map comes sooner */
 @media (max-width:1000px){
