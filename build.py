@@ -14,6 +14,7 @@ page shows Japanese text outside the legal original, if a link or font file is
 missing, or if a page loads anything from another host.
 """
 import bisect
+import hashlib
 import html
 import json
 import os
@@ -43,6 +44,12 @@ INVITE_OPEN = bool(CONFIG.get("invite_open", True))   # false until the test lau
 # src/fonts/fonts.css holds one @font-face per subset; only the subsets that cover
 # a character the site uses are copied into dist/assets/fonts/.
 FONT_DIR = os.path.join(SRC, "fonts")
+
+# The pages ask for assets/site.css and assets/site.js with "?v=" and a short hash of the
+# two files. The server lets a browser keep the two files for an hour; without the hash a
+# returning visitor could get a new page with the old script, and the new parts would not
+# draw. The hash is filled in after the files are made (see main()).
+ASSET_V = "@@ASSET_V@@"
 FACE = re.compile(r"@font-face\{[^}]*\}")
 
 # page token -> folder name ("" is the language home)
@@ -359,8 +366,8 @@ def build_page(raw, lang, token):
 <meta name="theme-color" content="#F0F2F6" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0F1528" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="{prefix}assets/site.css">
-<script src="{prefix}assets/site.js" defer></script>
+<link rel="stylesheet" href="{prefix}assets/site.css?v={ASSET_V}">
+<script src="{prefix}assets/site.js?v={ASSET_V}" defer></script>
 {org}</head>
 <body>
 <a class="skip" href="#main">{skip}</a>
@@ -378,7 +385,7 @@ def page_404():
 <title>Page not found | Prakrti GSA</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/site.css?v=""" + ASSET_V + """">
 </head>
 <body>
 <main id="main" class="wrap page-head">
@@ -496,7 +503,7 @@ def check(pages):
                 continue
             if not ref or re.match(r"^(https?:|mailto:|tel:|#|data:)", ref):
                 continue
-            target = posixpath.normpath(posixpath.join(here, ref.split("#")[0]))
+            target = posixpath.normpath(posixpath.join(here, ref.split("#")[0].split("?")[0]))
             full = os.path.join(DIST, target)
             if ref.endswith("/") or os.path.isdir(full):
                 full = os.path.join(full, "index.html")
@@ -521,15 +528,8 @@ def main():
     for lang in ("en", "ja"):
         for token, _ in PAGES:
             d = page_dir(lang, token)
-            out_dir = os.path.join(DIST, d)
-            os.makedirs(out_dir, exist_ok=True)
-            markup = build_page(raw, lang, token)
             path = posixpath.join(d, "index.html") if d else "index.html"
-            with open(os.path.join(DIST, path), "w", encoding="utf-8") as f:
-                f.write(markup)
-            pages[path] = (lang, markup)
-    with open(os.path.join(DIST, "404.html"), "w", encoding="utf-8") as f:
-        f.write(page_404())
+            pages[path] = (lang, build_page(raw, lang, token))
     used = used_codepoints([m for _, m in pages.values()] + [page_404(), js, css])
     rules, files = font_faces(used)
     for name in files:
@@ -537,8 +537,18 @@ def main():
     for name in os.listdir(FONT_DIR):
         if name.startswith("LICENSE"):
             shutil.copy(os.path.join(FONT_DIR, name), os.path.join(DIST, "assets", "fonts", name))
+    full_css = "/* fonts: SIL Open Font License 1.1, see fonts/LICENSE-*.txt */\n" + "\n".join(rules) + "\n" + css
     with open(os.path.join(DIST, "assets", "site.css"), "w", encoding="utf-8") as f:
-        f.write("/* fonts: SIL Open Font License 1.1, see fonts/LICENSE-*.txt */\n" + "\n".join(rules) + "\n" + css)
+        f.write(full_css)
+    version = hashlib.sha256((full_css + "\n/*js*/\n" + js).encode("utf-8")).hexdigest()[:10]
+    for path, (lang, markup) in list(pages.items()):
+        markup = markup.replace(ASSET_V, version)
+        os.makedirs(os.path.dirname(os.path.join(DIST, path)), exist_ok=True)
+        with open(os.path.join(DIST, path), "w", encoding="utf-8") as f:
+            f.write(markup)
+        pages[path] = (lang, markup)
+    with open(os.path.join(DIST, "404.html"), "w", encoding="utf-8") as f:
+        f.write(page_404().replace(ASSET_V, version))
     font_bytes = sum(os.path.getsize(os.path.join(DIST, "assets", "fonts", n)) for n in files)
     for name in ("og-en.png", "og-ja.png"):   # share images (made from the site's own fonts)
         shutil.copy(os.path.join(SRC, "og", name), os.path.join(DIST, name))
@@ -551,7 +561,7 @@ def main():
     problems = check(pages)
     for p in problems:
         print("PROBLEM:", p)
-    print(f"Built {len(pages)} pages into dist/ (invitations {'open' if INVITE_OPEN else 'closed until the test launch'}).")
+    print(f"Built {len(pages)} pages into dist/ (invitations {'open' if INVITE_OPEN else 'closed until the test launch'}; assets ?v={version}).")
     print(f"Fonts: {len(files)} of {len(FACE.findall(open(os.path.join(FONT_DIR, 'fonts.css'), encoding='utf-8').read()))} "
           f"subset files are needed ({font_bytes / 1e6:.1f} MB on the server; a visitor downloads only the ones a page uses).")
     if problems:

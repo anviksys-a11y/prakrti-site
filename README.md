@@ -106,6 +106,7 @@ python3 tools/check_site.py --base https://prakrti-site.web.app --v <sha>
 - **プルリクエストを出すと**、確認用の仮のアドレスに公開し、そのアドレスをプルリクエストに書き込みます（`deploy-preview.yml`、7 日で消えます）。見て問題なければ main に取り込むと、本番に反映されます。
 - GitHub と Firebase をつなぐ鍵は、GitHub の Secrets の `FIREBASE_SERVICE_ACCOUNT_PRAKRTI_SITE` です（`firebase init hosting:github` で登録）。
 - `dist/` は GitHub には置きません。毎回 GitHub の上で組み立てます。
+- **見た目と動きのファイルには「版の印」が付きます。** `firebase.json` は `assets/site.css` と `assets/site.js` をブラウザに一時間とっておかせます。そのままだと、公開のすぐあとに前にも来た人が「新しいページ＋古い site.js」を受け取り、新しく足した部分が描かれないことがあります（2026-10-23 に実際に起きました）。そこで `build.py` は、二つのファイルの中身から作った短い印（`?v=580a42ea59` のような形）をページのリンクの後ろに付けます。中身が変わると印も変わるので、ブラウザは必ず新しいファイルを取りに行きます。手で何かする必要はありません。
 
 ## 手で公開する（Firebase Hosting の場合）
 
