@@ -130,9 +130,9 @@ META = {
     },
     "join": {
         "en": ("Join us: open Mahābhārata RPD tables | Prakrti GSA",
-               "We are looking for yoga teachers and game masters to open Mahābhārata RPD tables with us, online, in their own Ashrams. Fees are shared."),
+               "We are looking for yoga teachers and game masters to open Mahābhārata RPD tables with us, online, in their own Ashrams. Any fee is the host's; we take no commission."),
         "ja": ("仲間を募る：Mahābhārata RPD の卓を一緒に開く人 | Prakrti GSA",
-               "Mahābhārata RPD の卓を一緒に開く、ヨガの先生と、卓を進める人（GM）を探しています。オンラインの卓を、ご自身の Ashram で。参加費は分け合います。"),
+               "Mahābhārata RPD の卓を一緒に開く、ヨガの先生と、卓を進める人（GM）を探しています。オンラインの卓を、ご自身の Ashram で。参加費は卓を開く人のもの。手数料はいただきません。"),
     },
     "company": {
         "en": ("Company | Prakrti GSA",
