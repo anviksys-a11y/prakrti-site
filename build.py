@@ -70,6 +70,7 @@ PAGES = [
     ("join", "join"),
     ("company", "company"),
     ("legal", "legal"),
+    ("official-terms", "official-table-terms"),   # 2026-10-24: linked from nowhere until official tables go on sale
 ]
 SLUG = dict(PAGES)
 
@@ -145,6 +146,12 @@ META = {
                "Where to find the Specified Commercial Transactions Act notice, the Terms of Service and the Privacy Policy for Prakrti GSA."),
         "ja": ("法務の表記 | Prakrti GSA",
                "Prakrti GSA の特定商取引法に基づく表記、利用規約、プライバシーポリシーの掲載先。"),
+    },
+    "official-terms": {
+        "en": ("Official Table Terms | Prakrti GSA",
+               "The terms for official tables, the paid online Mahābhārata RPD tables hosted by Anviksiki Simulation Systems Inc.: booking, cancellations and refunds, table rules and table records."),
+        "ja": ("公式の卓 参加規約 | Prakrti GSA",
+               "株式会社Anviksiki Simulation Systems が主催する有料のオンラインの卓「公式の卓」の参加規約。申込み、キャンセルと返金、卓の決まり、卓の記録の扱い。"),
     },
 }
 

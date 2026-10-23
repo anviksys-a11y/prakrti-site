@@ -83,6 +83,8 @@ ul,ol{margin:0;padding-left:1.2em}
 
 /* header */
 .site-head{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--rule)}
+/* a jump to a place on a page (#cancel, #contact) stops below the sticky header, not under it */
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 84px)}
 .head-row{display:flex;align-items:center;gap:12px 28px;flex-wrap:wrap;padding-block:12px}
 .mark{display:flex;align-items:baseline;gap:.55em;text-decoration:none;margin-right:auto}
 .mark-deva{font-family:var(--font-deva);font-size:1.35rem;color:var(--silk);line-height:1}
