@@ -138,7 +138,7 @@ META = {
     },
     "support": {
         "en": ("Classroom support | Prakrti GSA",
-               "Free help for yoga teachers and studios: the verse board, Sanskrit in the language room, writing Sutras, the games, running Mahābhārata RPD tables, and marketing to grow your classroom."),
+               "Free help for yoga teachers and studios: the verse board, Sanskrit in the language room, writing Sutras, ways to play, running Mahābhārata RPD tables, and marketing to grow your classroom."),
         "ja": ("教室の支援 | Prakrti GSA",
                "ヨガの先生とスタジオへの無償の支援。聖句盤、語学教室のサンスクリット、Sutra の書き方、遊び方、Mahābhārata RPD の卓の進め方、そして教室を大きくする集客まで。"),
     },
