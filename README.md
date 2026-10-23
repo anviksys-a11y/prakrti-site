@@ -155,6 +155,17 @@ Cloudflare Pages などほかの静的ホスティングでも、`dist/` をそ�
 - Krīḍā-sādhanā は「遊びの修練」と書きます。「遊びの行」は使いません。
 - 部屋は「Ashram」と書きます（2026-10-22 の社長の決定で、アプリも同じにそろえます。申し送り A15）。学校だとはっきりさせたいときは「学校の Ashram」と書きます。「教室」は、ヨガの学校のページの物語の例と「語学教室」にだけ使います。RPD を一緒に遊ぶ卓は、学校でも友人どうしの Private Ashram でも開けるので、「Ashram の卓」と書きます（「教室の卓」とは書きません）。
 
+## 検索に出さない（2026-10-24 から）
+
+社長の指示で、アプリの完成度が上がるまで、このサイトを検索エンジンに載せません（アイデアを見られないようにするため）。いまは次の二つで隠しています。
+
+- `site.config.json` の `"search_indexing": false` → build が全ページに `<meta name="robots" content="noindex, nofollow">` を入れ、`robots.txt` からサイトマップの行を外します。
+- `firebase.json` の `**` の見出しに `X-Robots-Tag: noindex, nofollow` → 画像・CSS・書体を含む全部のファイルに、同じ印を付けます。
+
+クロールは止めていません（`robots.txt` は `Allow: /`）。止めると、検索エンジンが noindex の印を読めず、よそからのリンクだけでアドレスが載ることがあるためです。アドレスを知っている人は、これまでどおり開けます。
+
+**検索に載せるとき**：`"search_indexing": true` にし、`firebase.json` の `X-Robots-Tag` の行を消して、build・公開します。その前に、独自のドメイン `prakrti.anviksys.com` をつなぎます（canonical・サイトマップ・robots.txt がこのドメインを指しているため。「手で公開する」の 5）。そのあとで Google Search Console に登録し、サイトマップを出します。
+
 ## 招待の受け付け
 
 いまは受け付けを止めています（`site.config.json` の `"invite_open": false`）。招待の欄には「テストローンチと同時に始めます」とだけ出て、「招待を申し込む」という言葉もボタンも出ません。

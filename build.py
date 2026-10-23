@@ -39,6 +39,10 @@ EMAIL = CONFIG["contact_email"]
 INVITE_URL = CONFIG.get("invite_form_url", "").strip()
 APP_URL = CONFIG["app_url"].rstrip("/")   # the app itself; "#app" and "#app:/path" in site.html point here
 INVITE_OPEN = bool(CONFIG.get("invite_open", True))   # false until the test launch
+# false: every page carries <meta name="robots" content="noindex, nofollow"> and robots.txt names no sitemap,
+# so search engines do not list the site (2026-10-24, until the app is ready). firebase.json also sends
+# X-Robots-Tag on every file; turn both back on together (README "検索に出さない").
+INDEXING = bool(CONFIG.get("search_indexing", True))
 
 # Fonts are served from the site itself, so a visit sends nothing to another host.
 # src/fonts/fonts.css holds one @font-face per subset; only the subsets that cover
@@ -165,6 +169,9 @@ JA_CHARS = re.compile(r"[　-ヿ㐀-鿿＀-￯]")
 # phrase boundaries with <wbr> for every browser.
 JA_PARSER = budoux.load_default_japanese_parser()
 PHRASED = "h1, h2, h3, h4, .eyebrow, .lede, .btn, .link-arrow, .motto, .big-verse blockquote p, .cta-note, .pd-line"
+
+
+ROBOTS = "" if INDEXING else '<meta name="robots" content="noindex, nofollow">\n'
 
 
 def page_dir(lang, token):
@@ -353,7 +360,7 @@ def build_page(raw, lang, token):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{html.escape(title)}</title>
+{ROBOTS}<title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
 <link rel="canonical" href="{canonical}">
 <link rel="alternate" hreflang="en" href="{absolute('en', token)}">
@@ -564,11 +571,13 @@ def main():
     with open(os.path.join(DIST, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write(sitemap())
     with open(os.path.join(DIST, "robots.txt"), "w", encoding="utf-8") as f:
-        f.write(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
+        # Crawling stays allowed so that a search engine can read the noindex; without indexing, no sitemap is named.
+        f.write(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n" if INDEXING else "User-agent: *\nAllow: /\n")
     problems = check(pages)
     for p in problems:
         print("PROBLEM:", p)
-    print(f"Built {len(pages)} pages into dist/ (invitations {'open' if INVITE_OPEN else 'closed until the test launch'}; assets ?v={version}).")
+    print(f"Built {len(pages)} pages into dist/ (invitations {'open' if INVITE_OPEN else 'closed until the test launch'}; "
+          f"{'listed in search engines' if INDEXING else 'hidden from search engines'}; assets ?v={version}).")
     print(f"Fonts: {len(files)} of {len(FACE.findall(open(os.path.join(FONT_DIR, 'fonts.css'), encoding='utf-8').read()))} "
           f"subset files are needed ({font_bytes / 1e6:.1f} MB on the server; a visitor downloads only the ones a page uses).")
     if problems:

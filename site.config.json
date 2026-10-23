@@ -3,5 +3,6 @@
   "app_url": "https://ai.anviksys.com",
   "contact_email": "anviksys@gmail.com",
   "invite_open": false,
-  "invite_form_url": ""
+  "invite_form_url": "",
+  "search_indexing": false
 }
