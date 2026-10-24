@@ -702,3 +702,7 @@ table.compare td:last-child{background:var(--silk-wash)}
 .page-head .doc-fiction{max-width:46rem;margin-top:4px}
 :root[data-lang="ja"] .page-head .doc-fiction{max-width:40em}
 .doc-body .mini-card{margin:4px 0}
+/* a short note under a page lede (the schools page's pointer to classroom support) */
+.page-head .head-note{max-width:52ch}
+:root[data-lang="ja"] .page-head .head-note{max-width:36em}
+#pm-story .mini-card{align-self:center}

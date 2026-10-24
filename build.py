@@ -159,9 +159,9 @@ META = {
     },
     "stories": {
         "en": ("Stories: in a classroom, and alone | Prakrti GSA",
-               "Three invented stories of how Prakrti GSA is meant to be used: a yoga teacher's philosophy half hour, a teacher training, and one person facing a Monday meeting. Fiction, labelled as such."),
+               "Four invented stories of how Prakrti GSA is meant to be used: a yoga teacher's philosophy half hour, a teacher training, one person facing a Monday meeting, and an engineering director's launch week. Fiction, labelled as such."),
         "ja": ("物語——教室で、ひとりで | Prakrti GSA",
-               "Prakrti GSA の設計が目指す使われ方を、三つの創作の物語にしました。ヨガの先生の哲学の時間、指導者養成講座、そして月曜の会議に向かう一人の人。"),
+               "Prakrti GSA の設計が目指す使われ方を、四つの創作の物語にしました。ヨガの先生の哲学の時間、指導者養成講座、月曜の会議に向かう一人の人、そしてエンジニアリング・ディレクターのローンチの週。"),
     },
     "company": {
         "en": ("Company | Prakrti GSA",
