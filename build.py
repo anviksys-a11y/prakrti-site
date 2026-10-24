@@ -69,6 +69,8 @@ PAGES = [
     ("readings", "readings"),
     ("join", "join"),
     ("support", "classroom-support"),   # 2026-10-24: free help for yoga classrooms
+    ("support-guide", "classroom-support/guide"),     # 2026-10-24: the guide (from the Claude Docs doc)
+    ("support-replay", "classroom-support/replay"),   # 2026-10-24: an invented replay (from the Claude Docs doc)
     ("company", "company"),
     ("legal", "legal"),
     ("official-terms", "official-table-terms"),   # 2026-10-24: linked from nowhere until official tables go on sale
@@ -142,6 +144,18 @@ META = {
         "ja": ("教室の支援 | Prakrti GSA",
                "ヨガの先生とスタジオへの無償の支援。聖句盤、語学教室のサンスクリット、Sutra の書き方、遊び方、Mahābhārata RPD の卓の進め方、そして教室を大きくする集客まで。"),
     },
+    "support-guide": {
+        "en": ("Running an RPD table in your classroom | Prakrti GSA",
+               "A guide for yoga teachers who run Mahābhārata RPD tables themselves, without AI: formats, preparation, the day's timetable, game master principles, dice and clocks, and safety."),
+        "ja": ("教室で開く RPD の卓——手引き | Prakrti GSA",
+               "ヨガの先生が、AI を使わずに Mahābhārata RPD の卓を開くための手引き。会の形、準備、当日の時間割、GM の心得、サイコロと時計、安全。"),
+    },
+    "support-replay": {
+        "en": ("Replay: The Rising Ford | Prakrti GSA",
+               "An invented two-hour session of The Rising Ford in a yoga classroom, written up to read. It gives away the whole story."),
+        "ja": ("リプレイ『増水の渡し場』——ある教室の雨の夜 | Prakrti GSA",
+               "架空のヨガの教室で開いた『増水の渡し場』の 2 時間の会を、読み物にしたもの。筋と結末を明かします。"),
+    },
     "company": {
         "en": ("Company | Prakrti GSA",
                "Anviksiki Simulation Systems Inc., Tokyo, the company behind Prakrti GSA."),
@@ -182,7 +196,8 @@ JA_CHARS = re.compile(r"[　-ヿ㐀-鿿＀-￯]")
 # (word-break: auto-phrase) but Safari and Firefox cannot, so the build marks the
 # phrase boundaries with <wbr> for every browser.
 JA_PARSER = budoux.load_default_japanese_parser()
-PHRASED = "h1, h2, h3, h4, .eyebrow, .lede, .btn, .link-arrow, .motto, .big-verse blockquote p, .cta-note, .pd-line"
+PHRASED = ("h1, h2, h3, h4, .eyebrow, .lede, .btn, .link-arrow, .motto, .big-verse blockquote p, .cta-note, .pd-line, "
+           ".doc-body td, .doc-body th")  # the guide and replay tables: short cells must not split mid-word
 
 
 ROBOTS = "" if INDEXING else '<meta name="robots" content="noindex, nofollow">\n'
@@ -252,6 +267,10 @@ def phrase_breaks(soup, root):
         nodes = [n for n in el.find_all(string=True) if n.parent.name not in ("script", "style")]
         text = "".join(nodes)
         if not JA_CHARS.search(text):
+            continue
+        # a short table cell (about six Japanese characters wide or less) stays on one line (.doc-body .nw in site.css)
+        if el.name in ("td", "th") and sum(1 if JA_CHARS.match(c) else 0.55 for c in text.strip()) <= 6.2:
+            el["class"] = el.get("class", []) + ["nw"]
             continue
         cuts, pos = [], 0
         for part in JA_PARSER.parse(text)[:-1]:

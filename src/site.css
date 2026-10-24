@@ -670,3 +670,31 @@ table.compare td:last-child{background:var(--silk-wash)}
 .lq-cell{overflow-wrap:anywhere}
 @media (max-width:640px){.lq-cell{font-size:.84rem;min-height:34px;padding:3px}}
 .ld-add input::placeholder{color:var(--muted);opacity:.7}
+
+/* long reads: the classroom guide and the replay (2026-10-24)
+   text keeps a reading width; a wide table (not .slim) may run wider so its cells don't wrap word by word */
+.doc-body .prose,:root[data-lang="ja"] .doc-body .prose{max-width:60rem}
+.doc-body .prose > *{max-width:46rem}
+:root[data-lang="ja"] .doc-body .prose > *{max-width:40em}
+.doc-body .prose > .tbl-wrap:has(> table:not(.slim)),
+:root[data-lang="ja"] .doc-body .prose > .tbl-wrap:has(> table:not(.slim)){max-width:none}
+/* build.py: short Japanese cells get .nw, longer ones break only between phrases (<wbr> + .ph) */
+.doc-body .nw{white-space:nowrap}
+:root[data-lang="ja"] .doc-body .ph:is(td,th):not(:first-child){overflow-wrap:anywhere}  /* a phrase longer than its column may still break, so a table never overflows a phone; the label column keeps whole phrases */
+/* the spoiler line under the replay's lede: same width as the lede */
+.page-head .doc-spoiler{max-width:52ch}
+:root[data-lang="ja"] .page-head .doc-spoiler{max-width:36em}
+.doc-note{display:grid;gap:4px;margin:0;padding:12px 16px;border-left:3px solid var(--peacock);background:var(--surface);border-radius:0 var(--radius) var(--radius) 0;color:var(--ink-2);font-size:.97rem}
+.doc-note .k{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--peacock)}
+:root[data-lang="ja"] .doc-note .k{font-family:var(--font-body);font-size:.8rem;letter-spacing:.02em;text-transform:none;font-weight:600}
+.doc-quote,.doc-verse{margin:0;padding:12px 16px;border-left:3px solid var(--silk);background:var(--surface);border-radius:0 var(--radius) var(--radius) 0}
+.doc-verse{border-left-color:var(--silk-fill);background:var(--silk-wash)}
+.doc-verse.iast{font-style:italic}
+.doc-line b{color:var(--ink)}
+.doc-narr{color:var(--ink-2)}
+.doc-stage{color:var(--muted)}
+.doc-roll{padding:10px 14px;border:1px dashed var(--silk);border-radius:var(--radius);font-weight:600}
+.doc-clock{font-family:var(--font-mono);font-size:.86rem;color:var(--muted);letter-spacing:.04em}
+.checklist{list-style:none;padding-left:0;display:grid;gap:.55em}
+.checklist li{position:relative;padding-left:1.7em}
+.checklist li::before{content:"";position:absolute;left:0;top:.4em;width:.95em;height:.95em;border:1.5px solid var(--ink-2);border-radius:3px}
