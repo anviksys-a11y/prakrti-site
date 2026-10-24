@@ -698,3 +698,7 @@ table.compare td:last-child{background:var(--silk-wash)}
 .checklist{list-style:none;padding-left:0;display:grid;gap:.55em}
 .checklist li{position:relative;padding-left:1.7em}
 .checklist li::before{content:"";position:absolute;left:0;top:.4em;width:.95em;height:.95em;border:1.5px solid var(--ink-2);border-radius:3px}
+/* the stories page: the fiction label under the lede (2026-10-24) */
+.page-head .doc-fiction{max-width:46rem;margin-top:4px}
+:root[data-lang="ja"] .page-head .doc-fiction{max-width:40em}
+.doc-body .mini-card{margin:4px 0}

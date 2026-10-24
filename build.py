@@ -71,6 +71,7 @@ PAGES = [
     ("support", "classroom-support"),   # 2026-10-24: free help for yoga classrooms
     ("support-guide", "classroom-support/guide"),     # 2026-10-24: the guide (from the Claude Docs doc)
     ("support-replay", "classroom-support/replay"),   # 2026-10-24: an invented replay (from the Claude Docs doc)
+    ("stories", "stories"),   # 2026-10-24: invented stories of what the design is for (labelled as fiction)
     ("company", "company"),
     ("legal", "legal"),
     ("official-terms", "official-table-terms"),   # 2026-10-24: linked from nowhere until official tables go on sale
@@ -155,6 +156,12 @@ META = {
                "An invented two-hour session of The Rising Ford in a yoga classroom, written up to read. It gives away the whole story."),
         "ja": ("リプレイ『増水の渡し場』——ある教室の雨の夜 | Prakrti GSA",
                "架空のヨガの教室で開いた『増水の渡し場』の 2 時間の会を、読み物にしたもの。筋と結末を明かします。"),
+    },
+    "stories": {
+        "en": ("Stories: in a classroom, and alone | Prakrti GSA",
+               "Three invented stories of how Prakrti GSA is meant to be used: a yoga teacher's philosophy half hour, a teacher training, and one person facing a Monday meeting. Fiction, labelled as such."),
+        "ja": ("物語——教室で、ひとりで | Prakrti GSA",
+               "Prakrti GSA の設計が目指す使われ方を、三つの創作の物語にしました。ヨガの先生の哲学の時間、指導者養成講座、そして月曜の会議に向かう一人の人。"),
     },
     "company": {
         "en": ("Company | Prakrti GSA",
